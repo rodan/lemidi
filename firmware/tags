@@ -1,0 +1,363 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+$(OBJS)	Makefile	/^$(OBJS): $(PROJ).cflags$/;"	t
+$(OBJS)	test/geofence_test/Makefile	/^$(OBJS): $(PROJ).cflags$/;"	t
+$(PROJ).cflags	Makefile	/^$(PROJ).cflags: force$/;"	t
+$(PROJ).cflags	test/geofence_test/Makefile	/^$(PROJ).cflags: force$/;"	t
+$(PROJ).dep	Makefile	/^$(PROJ).dep: $(SRCS)$/;"	t
+$(PROJ).dep	test/geofence_test/Makefile	/^$(PROJ).dep: $(SRCS)$/;"	t
+$(PROJ).elf	Makefile	/^$(PROJ).elf: $(OBJS)$/;"	t
+$(PROJ).elf	test/geofence_test/Makefile	/^$(PROJ).elf: $(OBJS)$/;"	t
+%.o	Makefile	/^%.o: %.c$/;"	t
+%.o	test/geofence_test/Makefile	/^%.o: %.c$/;"	t
+.c.o	test/read_mem/Makefile	/^.c.o:$/;"	t
+AR	Makefile	/^AR		= msp430-elf-ar$/;"	m
+AR	test/geofence_test/Makefile	/^AR		= ar$/;"	m
+AS	Makefile	/^AS		= msp430-elf-as$/;"	m
+AS	test/geofence_test/Makefile	/^AS		= as$/;"	m
+BASH	Makefile	/^BASH := $(shell which bash || which bash)$/;"	m
+BASH	test/geofence_test/Makefile	/^BASH := $(shell which bash || which bash)$/;"	m
+BUILD	version.h	/^#define BUILD /;"	d
+CC	Makefile	/^CC		= msp430-elf-gcc$/;"	m
+CC	test/geofence_test/Makefile	/^CC		= gcc$/;"	m
+CC	test/read_mem/Makefile	/^CC      = gcc$/;"	m
+CC_CMACH	Makefile	/^CC_CMACH	= -mmcu=msp430f5510$/;"	m
+CC_DMACH	Makefile	/^CC_DMACH	= -D__MSP430F5510__$/;"	m
+CFLAGS	test/read_mem/Makefile	/^CFLAGS  = -g -Wall -O2$/;"	m
+COMMIT	version.h	/^#define COMMIT /;"	d
+COMPILE_DAY	drivers/rtca_now.h	/^#define COMPILE_DAY /;"	d
+COMPILE_DOW	drivers/rtca_now.h	/^#define COMPILE_DOW /;"	d
+COMPILE_HOUR	drivers/rtca_now.h	/^#define COMPILE_HOUR /;"	d
+COMPILE_MIN	drivers/rtca_now.h	/^#define COMPILE_MIN /;"	d
+COMPILE_MON	drivers/rtca_now.h	/^#define COMPILE_MON /;"	d
+COMPILE_YEAR	drivers/rtca_now.h	/^#define COMPILE_YEAR /;"	d
+DEBUG	Makefile	/^DEBUG := $(shell grep "^\\#define CONFIG_DEBUG" config.h)$/;"	m
+DEBUG	test/geofence_test/Makefile	/^DEBUG := $(shell grep "^\\#define CONFIG_DEBUG" config.h)$/;"	m
+DSTNUM	drivers/rtc_dst.c	/^#define DSTNUM(/;"	d	file:
+DST_AUS	drivers/rtc_dst.h	/^#define DST_AUS /;"	d
+DST_BRZ	drivers/rtc_dst.h	/^#define DST_BRZ /;"	d
+DST_EU	drivers/rtc_dst.h	/^#define DST_EU /;"	d
+DST_MEX	drivers/rtc_dst.h	/^#define DST_MEX /;"	d
+DST_NZ	drivers/rtc_dst.h	/^#define DST_NZ /;"	d
+DST_US	drivers/rtc_dst.h	/^#define DST_US /;"	d
+Delay	drivers/lcd.c	/^void Delay(volatile unsigned long delay_counter)$/;"	f	typeref:typename:void
+EN_OFF	drivers/lcd.h	/^#define	EN_OFF	/;"	d
+EN_ON	drivers/lcd.h	/^#define	EN_ON	/;"	d
+EXIT_FAILURE	proj.h	/^#define EXIT_FAILURE /;"	d
+EXIT_SUCCESS	proj.h	/^#define EXIT_SUCCESS /;"	d
+EXTRA	test/read_mem/Makefile	/^EXTRA  = ..\/AUTHORS ..\/COPYING ..\/ChangeLog \\$/;"	m
+LAST_SUN_OF_MON	drivers/rtc_dst.c	/^#define LAST_SUN_OF_MON(/;"	d	file:
+LCD_Check_Busy_Flag	drivers/lcd.c	/^void LCD_Check_Busy_Flag(void)$/;"	f	typeref:typename:void
+LCD_Clear	drivers/lcd.c	/^void LCD_Clear(void)$/;"	f	typeref:typename:void
+LCD_Init	drivers/lcd.c	/^void LCD_Init(void)$/;"	f	typeref:typename:void
+LCD_PWR_DIS	drivers/lcd.h	/^#define LCD_PWR_DIS /;"	d
+LCD_PWR_E	drivers/lcd.h	/^#define LCD_PWR_E /;"	d
+LCD_Read_Symbol	drivers/lcd.c	/^void LCD_Read_Symbol(unsigned char row, unsigned char position)$/;"	f	typeref:typename:void
+LCD_SEND_CHR	drivers/lcd.c	/^void LCD_SEND_CHR(unsigned char character)$/;"	f	typeref:typename:void
+LCD_SEND_CMD	drivers/lcd.c	/^void LCD_SEND_CMD(unsigned char command)$/;"	f	typeref:typename:void
+LCD_Send_Long_STR	drivers/lcd.c	/^void LCD_Send_Long_STR(unsigned char row, unsigned long shift_rate,$/;"	f	typeref:typename:void
+LCD_Send_STR	drivers/lcd.c	/^void LCD_Send_STR(unsigned char row, char *dataPtr)$/;"	f	typeref:typename:void
+LCD_Send_Symbol	drivers/lcd.c	/^void LCD_Send_Symbol(unsigned char row, unsigned char position,$/;"	f	typeref:typename:void
+LCD_read_reg	drivers/lcd.h	/^#define LCD_read_reg /;"	d
+LCD_write_reg	drivers/lcd.h	/^#define LCD_write_reg /;"	d
+LD	Makefile	/^LD		= msp430-elf-ld$/;"	m
+LD	test/geofence_test/Makefile	/^LD		= ld$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS		= -lm$/;"	m
+LDFLAGS	test/geofence_test/Makefile	/^LDFLAGS		= -lm$/;"	m
+LED_OFF	proj.h	/^    #define LED_OFF /;"	d
+LED_ON	proj.h	/^    #define LED_ON /;"	d
+LED_SWITCH	proj.h	/^    #define LED_SWITCH /;"	d
+LOC_MAX	test/geofence_test/proj.h	/^#define LOC_MAX /;"	d
+MSP430F5510_DEVBOARD	config.h	/^#define MSP430F5510_DEVBOARD$/;"	d
+N_SUN_OF_MON	drivers/rtc_dst.c	/^#define N_SUN_OF_MON(/;"	d	file:
+OBJS	Makefile	/^OBJS := $(patsubst %.c,%.o,$(SRCS))$/;"	m
+OBJS	test/geofence_test/Makefile	/^OBJS := $(patsubst %.c,%.o,$(SRCS))$/;"	m
+PI	drivers/helper.h	/^#define PI /;"	d
+PI	test/geofence_test/drivers/helper.h	/^#define PI /;"	d
+PIBY2_FLOAT	drivers/helper.h	/^#define PIBY2_FLOAT /;"	d
+PIBY2_FLOAT	test/geofence_test/drivers/helper.h	/^#define PIBY2_FLOAT /;"	d
+PI_FLOAT	drivers/helper.h	/^#define PI_FLOAT /;"	d
+PI_FLOAT	test/geofence_test/drivers/helper.h	/^#define PI_FLOAT /;"	d
+PREC	drivers/helper.h	/^#define PREC /;"	d
+PREC	test/geofence_test/drivers/helper.h	/^#define PREC /;"	d
+PROGS	test/read_mem/Makefile	/^PROGS   = read_mem$/;"	m
+PROJ	Makefile	/^PROJ = proj$/;"	m
+PROJ	test/geofence_test/Makefile	/^PROJ = proj$/;"	m
+RS_OFF	drivers/lcd.h	/^#define	RS_OFF	/;"	d
+RS_ON	drivers/lcd.h	/^#define	RS_ON	/;"	d
+RTCA_EV_ALARM	drivers/rtc.h	/^    RTCA_EV_ALARM = BIT0,$/;"	e	enum:rtca_tevent
+RTCA_EV_DAY	drivers/rtc.h	/^    RTCA_EV_DAY = BIT4,$/;"	e	enum:rtca_tevent
+RTCA_EV_HOUR	drivers/rtc.h	/^    RTCA_EV_HOUR = BIT3,$/;"	e	enum:rtca_tevent
+RTCA_EV_MINUTE	drivers/rtc.h	/^    RTCA_EV_MINUTE = BIT2,$/;"	e	enum:rtca_tevent
+RTCA_EV_MONTH	drivers/rtc.h	/^    RTCA_EV_MONTH = BIT5,$/;"	e	enum:rtca_tevent
+RTCA_EV_SECOND	drivers/rtc.h	/^    RTCA_EV_SECOND = BIT1,$/;"	e	enum:rtca_tevent
+RTCA_EV_YEAR	drivers/rtc.h	/^    RTCA_EV_YEAR = BIT6$/;"	e	enum:rtca_tevent
+RTC_A_ISR	drivers/rtc.c	/^void RTC_A_ISR(void)$/;"	f	typeref:typename:void
+RTC_DST_H_	drivers/rtc_dst.h	/^#define RTC_DST_H_$/;"	d
+RTC_DST_STATE_DST	drivers/rtc_dst.h	/^#define RTC_DST_STATE_DST /;"	d
+RTC_DST_STATE_ST	drivers/rtc_dst.h	/^#define RTC_DST_STATE_ST /;"	d
+RTC_SET_INTERVAL	test/geofence_test/proj.h	/^#define RTC_SET_INTERVAL /;"	d
+RW_OFF	drivers/lcd.h	/^#define	RW_OFF	/;"	d
+RW_ON	drivers/lcd.h	/^#define	RW_ON	/;"	d
+SRCS	Makefile	/^SRCS := $(wildcard *.c)$/;"	m
+SRCS	test/geofence_test/Makefile	/^SRCS := $(wildcard *.c)$/;"	m
+SRCS	test/read_mem/Makefile	/^SRCS   = read_mem.c$/;"	m
+STR_LEN	proj.h	/^#define STR_LEN /;"	d
+STR_LEN	test/read_mem/read_mem.c	/^#define STR_LEN /;"	d	file:
+STR_MAX	test/geofence_test/proj.h	/^#define STR_MAX /;"	d
+SUBDIRS	Makefile	/^SUBDIRS = drivers$/;"	m
+SUBDIRS	test/geofence_test/Makefile	/^SUBDIRS = drivers$/;"	m
+SYS_MSG_PYRO_RX	drivers/sys_messagebus.h	/^    SYS_MSG_PYRO_RX = BITC,$/;"	e	enum:sys_message
+SYS_MSG_RTC_SECOND	drivers/sys_messagebus.h	/^    SYS_MSG_RTC_SECOND = BITF,  \/\/ second event from the hardware RTC$/;"	e	enum:sys_message
+SYS_MSG_TIMER0_CRR0	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR0 = BIT0,$/;"	e	enum:sys_message
+SYS_MSG_TIMER0_CRR1	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR1 = BIT1, \/\/ timer_a0_delay_noblk_ccr1$/;"	e	enum:sys_message
+SYS_MSG_TIMER0_CRR2	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR2 = BIT2, \/\/ timer_a0_delay_noblk_ccr2$/;"	e	enum:sys_message
+SYS_MSG_TIMER0_CRR3	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR3 = BIT3, \/\/ timer_a0_delay_noblk_ccr3$/;"	e	enum:sys_message
+SYS_MSG_TIMER0_CRR4	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR4 = BIT4,$/;"	e	enum:sys_message
+SYS_MSG_UART0_RX	drivers/sys_messagebus.h	/^    SYS_MSG_UART0_RX = BITA,$/;"	e	enum:sys_message
+SYS_MSG_UART1_RX	drivers/sys_messagebus.h	/^    SYS_MSG_UART1_RX = BITB,$/;"	e	enum:sys_message
+TARGET	Makefile	/^TARGET	:= DEBUG$/;"	m
+TARGET	Makefile	/^TARGET	:= RELEASE$/;"	m
+TARGET	test/geofence_test/Makefile	/^TARGET	:= DEBUG$/;"	m
+TARGET	test/geofence_test/Makefile	/^TARGET	:= RELEASE$/;"	m
+TIMER_A0_EVENT_CCR0	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR0 = BIT0,$/;"	e	enum:timer_a0_event
+TIMER_A0_EVENT_CCR1	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR1 = BIT1,$/;"	e	enum:timer_a0_event
+TIMER_A0_EVENT_CCR2	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR2 = BIT2,$/;"	e	enum:timer_a0_event
+TIMER_A0_EVENT_CCR3	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR3 = BIT3,$/;"	e	enum:timer_a0_event
+TIMER_A0_EVENT_CCR4	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR4 = BIT4,$/;"	e	enum:timer_a0_event
+TIMER_A0_EVENT_IFG	drivers/timer_a0.h	/^    TIMER_A0_EVENT_IFG = BIT5,$/;"	e	enum:timer_a0_event
+UART0_EV_RX	drivers/uart0.h	/^    UART0_EV_RX = BIT0,$/;"	e	enum:uart0_tevent
+UART0_EV_TX	drivers/uart0.h	/^    UART0_EV_TX = BIT1$/;"	e	enum:uart0_tevent
+UART0_RXBUF_SZ	drivers/uart0.h	/^#define UART0_RXBUF_SZ /;"	d
+USCI_A0_ISR	drivers/uart0.c	/^void USCI_A0_ISR(void)$/;"	f	typeref:typename:void
+USE_WATCHDOG	config.h	/^#define USE_WATCHDOG$/;"	d
+_10ms	drivers/timer_a0.h	/^#define _10ms /;"	d
+_10s	drivers/timer_a0.h	/^#define _10s /;"	d
+_10sp	drivers/timer_a0.h	/^#define _10sp /;"	d
+_1200ms	drivers/timer_a0.h	/^#define _1200ms /;"	d
+_14s	drivers/timer_a0.h	/^#define _14s /;"	d
+_1s	drivers/timer_a0.h	/^#define _1s /;"	d
+_2s	drivers/timer_a0.h	/^#define _2s /;"	d
+_30s	drivers/timer_a0.h	/^#define _30s /;"	d
+_3s	drivers/timer_a0.h	/^#define _3s /;"	d
+_3sp	drivers/timer_a0.h	/^#define _3sp /;"	d
+_500ms	drivers/timer_a0.h	/^#define _500ms /;"	d
+_5s	drivers/timer_a0.h	/^#define _5s /;"	d
+_5sp	drivers/timer_a0.h	/^#define _5sp /;"	d
+_60s	drivers/timer_a0.h	/^#define _60s /;"	d
+_6s	drivers/timer_a0.h	/^#define _6s /;"	d
+_6sp	drivers/timer_a0.h	/^#define _6sp /;"	d
+_75s	drivers/timer_a0.h	/^#define _75s /;"	d
+_CONFIG_H_	config.h	/^#define _CONFIG_H_$/;"	d
+__GPS_H__	test/geofence_test/drivers/gps.h	/^#define __GPS_H__$/;"	d
+__HELPER_H__	drivers/helper.h	/^#define __HELPER_H__$/;"	d
+__HELPER_H__	test/geofence_test/drivers/helper.h	/^#define __HELPER_H__$/;"	d
+__LCD_GDSC_0801WP_01_H	drivers/lcd.h	/^#define __LCD_GDSC_0801WP_01_H$/;"	d
+__PROJ_H_	test/geofence_test/proj.h	/^#define __PROJ_H_$/;"	d
+__PROJ_H__	proj.h	/^#define __PROJ_H__$/;"	d
+__QA_H__	qa.h	/^#define __QA_H__$/;"	d
+__RTCA_H__	drivers/rtc.h	/^#define __RTCA_H__$/;"	d
+__RTCA_H__	test/geofence_test/drivers/rtc.h	/^#define __RTCA_H__$/;"	d
+__RTCA_NOW_H__	drivers/rtca_now.h	/^#define __RTCA_NOW_H__$/;"	d
+__SYS_MESSAGEBUS_H__	drivers/sys_messagebus.h	/^#define __SYS_MESSAGEBUS_H__$/;"	d
+__TIMER_A0_H__	drivers/timer_a0.h	/^#define __TIMER_A0_H__$/;"	d
+__UART0_H__	drivers/uart0.h	/^#define __UART0_H__$/;"	d
+__VERSION_H__	version.h	/^#define __VERSION_H__$/;"	d
+__anonc71896ef0108	test/geofence_test/proj.h	/^struct {$/;"	s
+__anonff2530520108	drivers/rtc.h	/^struct {$/;"	s
+_atan2f	drivers/helper.c	/^float _atan2f(const float y, const float x)$/;"	f	typeref:typename:float
+_atan2f	test/geofence_test/drivers/helper.c	/^float _atan2f(const float y, const float x)$/;"	f	typeref:typename:float
+_cos	drivers/helper.c	/^float _cos(const float x)$/;"	f	typeref:typename:float
+_cos	test/geofence_test/drivers/helper.c	/^float _cos(const float x)$/;"	f	typeref:typename:float
+_sin	drivers/helper.c	/^float _sin(const float x)$/;"	f	typeref:typename:float
+_sin	test/geofence_test/drivers/helper.c	/^float _sin(const float x)$/;"	f	typeref:typename:float
+_sqrt	drivers/helper.c	/^float _sqrt(const float number)$/;"	f	typeref:typename:float
+_sqrt	test/geofence_test/drivers/helper.c	/^float _sqrt(const float number)$/;"	f	typeref:typename:float
+address	tools/msp430-ram-usage	/^address = objs['__stack'][0]$/;"	v
+all	Makefile	/^all: depend config.h tags $(PROJ).elf$/;"	t
+all	test/geofence_test/Makefile	/^all: depend tags $(PROJ).elf$/;"	t
+all	test/read_mem/Makefile	/^all: ${PROGS} tags$/;"	t
+bearing	test/geofence_test/drivers/gps.h	/^    uint16_t bearing;$/;"	m	struct:geofence_t	typeref:typename:uint16_t
+bearing_s_f	test/geofence_test/proj.h	/^    uint16_t bearing_s_f;$/;"	m	struct:loc_t	typeref:typename:uint16_t
+catch_alarm	test/read_mem/read_mem.c	/^void catch_alarm (int sig)$/;"	f	typeref:typename:void
+check_events	proj.c	/^void check_events(void)$/;"	f	typeref:typename:void
+clean	Makefile	/^clean: $(SUBDIRS)$/;"	t
+clean	test/geofence_test/Makefile	/^clean: $(SUBDIRS)$/;"	t
+clean	test/read_mem/Makefile	/^clean :$/;"	t
+config.h	Makefile	/^config.h:$/;"	t
+d2r	test/geofence_test/proj.c	/^    #define d2r /;"	d	file:
+day	drivers/rtc.h	/^    uint8_t day;$/;"	m	struct:__anonff2530520108	typeref:typename:uint8_t
+day	drivers/rtc_dst.h	/^    uint8_t day;$/;"	m	struct:rtc_dst_date_struct	typeref:typename:uint8_t
+day	test/geofence_test/drivers/gps.h	/^    uint8_t day;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+day	test/geofence_test/proj.h	/^    uint8_t day;$/;"	m	struct:__anonc71896ef0108	typeref:typename:uint8_t
+depend	Makefile	/^depend: $(PROJ).dep$/;"	t
+depend	test/geofence_test/Makefile	/^depend: $(PROJ).dep$/;"	t
+desc	tools/msp430-ram-usage	/^                desc = '%s | %s' % (mmap[address+x], desc)$/;"	v
+desc	tools/msp430-ram-usage	/^                desc = '%s%s (%d)' % ($/;"	v
+desc	tools/msp430-ram-usage	/^                desc = '%s%s' % ($/;"	v
+display_menu	qa.c	/^void display_menu(void)$/;"	f	typeref:typename:void
+dist_math_dbl	test/geofence_test/proj.h	/^    double dist_math_dbl;$/;"	m	struct:loc_t	typeref:typename:double
+dist_math_f	test/geofence_test/proj.h	/^    float dist_math_f;$/;"	m	struct:loc_t	typeref:typename:float
+dist_s_f	test/geofence_test/proj.h	/^    float dist_s_f;$/;"	m	struct:loc_t	typeref:typename:float
+distance	test/geofence_test/drivers/gps.h	/^    float distance;$/;"	m	struct:geofence_t	typeref:typename:float
+distance_between	test/geofence_test/drivers/gps.c	/^void distance_between(const float lat1, const float long1, const float lat2,$/;"	f	typeref:typename:void
+doc	Makefile	/^doc:$/;"	t
+doc	test/geofence_test/Makefile	/^doc:$/;"	t
+dow	drivers/rtc.h	/^    uint8_t dow;$/;"	m	struct:__anonff2530520108	typeref:typename:uint8_t
+dow	test/geofence_test/proj.h	/^    uint8_t dow;$/;"	m	struct:__anonc71896ef0108	typeref:typename:uint8_t
+false	proj.h	/^#define false /;"	d
+false	test/geofence_test/proj.h	/^#define false /;"	d
+fix	test/geofence_test/drivers/gps.h	/^    uint8_t fix;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+fixtime	test/geofence_test/drivers/gps.h	/^    uint32_t fixtime;  \/\/ system time when the fix was received$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint32_t
+flag_register	drivers/lcd.c	/^volatile unsigned char flag_register = 0x00;$/;"	v	typeref:typename:volatile unsigned char
+fn	drivers/sys_messagebus.h	/^    void (*fn) (enum sys_message);$/;"	m	struct:sys_messagebus	typeref:typename:void (*)(enum sys_message)
+free	tools/msp430-ram-usage	/^free = 0$/;"	v
+geo	test/geofence_test/drivers/gps.h	/^struct geofence_t geo;$/;"	v	typeref:struct:geofence_t
+geofence_calc	test/geofence_test/drivers/gps.c	/^void geofence_calc(void)$/;"	f	typeref:typename:void
+geofence_t	test/geofence_test/drivers/gps.h	/^struct geofence_t {$/;"	s
+haversine_dbl	test/geofence_test/proj.c	/^void haversine_dbl(const double lat1, const double long1, const double lat2, const double long2,/;"	f	typeref:typename:void
+haversine_f	test/geofence_test/proj.c	/^void haversine_f(const float lat1, const float long1, const float lat2, const float long2, float/;"	f	typeref:typename:void
+heading	test/geofence_test/drivers/gps.h	/^    uint16_t heading;  \/\/ heading in degrees$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint16_t
+hour	drivers/rtc.h	/^    uint8_t hour;$/;"	m	struct:__anonff2530520108	typeref:typename:uint8_t
+hour	test/geofence_test/drivers/gps.h	/^    uint8_t hour;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+hour	test/geofence_test/proj.h	/^    uint8_t hour;$/;"	m	struct:__anonc71896ef0108	typeref:typename:uint8_t
+install	Makefile	/^install: $(PROJ).elf$/;"	t
+keep_going	test/read_mem/read_mem.c	/^volatile sig_atomic_t keep_going = 1;$/;"	v	typeref:typename:volatile sig_atomic_t
+l	test/geofence_test/proj.h	/^struct loc_t l;$/;"	v	typeref:struct:loc_t
+lat	test/geofence_test/drivers/gps.h	/^    float lat;         \/\/ latitude$/;"	m	struct:nmea_gprmc_t	typeref:typename:float
+lat	test/geofence_test/drivers/gps.h	/^    float lat;$/;"	m	struct:mean_pos_t	typeref:typename:float
+lat	test/geofence_test/proj.h	/^    float lat[2];$/;"	m	struct:loc_t	typeref:typename:float[2]
+lat_cur	test/geofence_test/drivers/gps.h	/^    float lat_cur;$/;"	m	struct:geofence_t	typeref:typename:float
+lat_deg	test/geofence_test/drivers/gps.h	/^    uint8_t lat_deg;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+lat_fr	test/geofence_test/drivers/gps.h	/^    uint16_t lat_fr;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint16_t
+lat_home	test/geofence_test/drivers/gps.h	/^    float lat_home;$/;"	m	struct:geofence_t	typeref:typename:float
+lat_mean	test/geofence_test/drivers/gps.h	/^    int32_t lat_mean;$/;"	m	struct:nmea_gprmc_t	typeref:typename:int32_t
+lat_min	test/geofence_test/drivers/gps.h	/^    uint8_t lat_min;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+lat_suffix	test/geofence_test/drivers/gps.h	/^    uint8_t lat_suffix;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+listens	drivers/sys_messagebus.h	/^    enum sys_message listens;$/;"	m	struct:sys_messagebus	typeref:enum:sys_message
+loc_str	test/geofence_test/proj.c	/^char loc_str[LOC_MAX][STR_MAX] = {$/;"	v	typeref:typename:char[][]
+loc_t	test/geofence_test/proj.h	/^struct loc_t$/;"	s
+lon	test/geofence_test/drivers/gps.h	/^    float lon;         \/\/ longitude$/;"	m	struct:nmea_gprmc_t	typeref:typename:float
+lon	test/geofence_test/drivers/gps.h	/^    float lon;$/;"	m	struct:mean_pos_t	typeref:typename:float
+lon	test/geofence_test/proj.h	/^    float lon[2];$/;"	m	struct:loc_t	typeref:typename:float[2]
+lon_cur	test/geofence_test/drivers/gps.h	/^    float lon_cur;$/;"	m	struct:geofence_t	typeref:typename:float
+lon_deg	test/geofence_test/drivers/gps.h	/^    uint8_t lon_deg;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+lon_fr	test/geofence_test/drivers/gps.h	/^    uint16_t lon_fr;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint16_t
+lon_home	test/geofence_test/drivers/gps.h	/^    float lon_home;$/;"	m	struct:geofence_t	typeref:typename:float
+lon_mean	test/geofence_test/drivers/gps.h	/^    int32_t lon_mean;$/;"	m	struct:nmea_gprmc_t	typeref:typename:int32_t
+lon_min	test/geofence_test/drivers/gps.h	/^    uint8_t lon_min;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+lon_suffix	test/geofence_test/drivers/gps.h	/^    uint8_t lon_suffix;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+m	tools/msp430-ram-usage	/^    m = re_obj.search(line)$/;"	v
+main	proj.c	/^int main(void)$/;"	f	typeref:typename:int
+main	test/geofence_test/proj.c	/^int main()$/;"	f	typeref:typename:int
+main	test/read_mem/read_mem.c	/^int main()$/;"	f	typeref:typename:int
+main_init	proj.c	/^void main_init(void)$/;"	f	typeref:typename:void
+mc_f	test/geofence_test/drivers/gps.h	/^struct nmea_gprmc_t mc_f;$/;"	v	typeref:struct:nmea_gprmc_t
+mc_t	test/geofence_test/drivers/gps.h	/^struct nmea_gprmc_t mc_t;$/;"	v	typeref:struct:nmea_gprmc_t
+mc_t	test/geofence_test/proj.h	/^    struct nmea_gprmc_t mc_t[2];$/;"	m	struct:loc_t	typeref:struct:nmea_gprmc_t[2]
+mean_pos	test/geofence_test/drivers/gps.h	/^struct mean_pos_t mean_pos;$/;"	v	typeref:struct:mean_pos_t
+mean_pos_t	test/geofence_test/drivers/gps.h	/^struct mean_pos_t {$/;"	s
+messagebus	drivers/sys_messagebus.h	/^struct sys_messagebus *messagebus;$/;"	v	typeref:struct:sys_messagebus *
+min	drivers/rtc.h	/^    uint8_t min;$/;"	m	struct:__anonff2530520108	typeref:typename:uint8_t
+min	test/geofence_test/proj.h	/^    uint8_t min;$/;"	m	struct:__anonc71896ef0108	typeref:typename:uint8_t
+minute	test/geofence_test/drivers/gps.h	/^    uint8_t minute;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+mmap	tools/msp430-ram-usage	/^mmap = {}$/;"	v
+modinit.c	Makefile	/^modinit.c:$/;"	t
+modinit.o	Makefile	/^modinit.o: modinit.c$/;"	t
+modinit.o	test/geofence_test/Makefile	/^modinit.o: modinit.c$/;"	t
+mon	drivers/rtc.h	/^    uint8_t mon;$/;"	m	struct:__anonff2530520108	typeref:typename:uint8_t
+mon	test/geofence_test/proj.h	/^    uint8_t mon;$/;"	m	struct:__anonc71896ef0108	typeref:typename:uint8_t
+month	drivers/rtc_dst.h	/^    uint8_t month;$/;"	m	struct:rtc_dst_date_struct	typeref:typename:uint8_t
+month	test/geofence_test/drivers/gps.h	/^    uint8_t month;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+name	tools/msp430-ram-usage	/^        name = ' -'*20$/;"	v
+name	tools/msp430-ram-usage	/^        name = mmap[address]$/;"	v
+next	drivers/sys_messagebus.h	/^    struct sys_messagebus *next;$/;"	m	struct:sys_messagebus	typeref:struct:sys_messagebus *
+nmea	test/geofence_test/proj.h	/^    char nmea[2][STR_MAX];$/;"	m	struct:loc_t	typeref:typename:char[2][]
+nmea_gprmc_t	test/geofence_test/drivers/gps.h	/^struct nmea_gprmc_t {$/;"	s
+nmea_parse	test/geofence_test/drivers/gps.c	/^uint8_t nmea_parse(char *s, const uint8_t len)$/;"	f	typeref:typename:uint8_t
+nmea_to_float	test/geofence_test/drivers/gps.c	/^float nmea_to_float(const uint8_t deg, const uint8_t min, const uint16_t fr, const uint8_t suffi/;"	f	typeref:typename:float
+objs	tools/msp430-ram-usage	/^objs = {}$/;"	v
+parse_UI	proj.c	/^static void parse_UI(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+parse_user_input	qa.c	/^void parse_user_input(void)$/;"	f	typeref:typename:void
+parser	tools/msp430-ram-usage	/^parser = OptionParser()$/;"	v
+pdop	test/geofence_test/drivers/gps.h	/^    float pdop;$/;"	m	struct:mean_pos_t	typeref:typename:float
+pdop	test/geofence_test/drivers/gps.h	/^    uint16_t pdop;     \/\/ position dilution of precision$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint16_t
+pdop_mean	test/geofence_test/drivers/gps.h	/^    uint16_t pdop_mean;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint16_t
+radians	drivers/helper.c	/^float radians(const float x)$/;"	f	typeref:typename:float
+radians	test/geofence_test/drivers/helper.c	/^float radians(const float x)$/;"	f	typeref:typename:float
+re_obj	tools/msp430-ram-usage	/^re_obj = re.compile(r':[ \\t]+([0-9a-f]+)[ \\t]+([0-9a-f]+)[ \\t]+(\\w+)[ \\t]+.* (.*)$')$/;"	v
+read_mem	test/read_mem/Makefile	/^read_mem : $(read_mem_OBJS) $(read_mem_EXTRA)$/;"	t
+read_mem_EXTRA	test/read_mem/Makefile	/^read_mem_EXTRA   = read_mem.h$/;"	m
+read_mem_OBJS	test/read_mem/Makefile	/^read_mem_OBJS    = read_mem.o$/;"	m
+rtc_dst_calculate_dates	drivers/rtc_dst.c	/^void rtc_dst_calculate_dates(uint16_t year, uint8_t month, uint8_t day,$/;"	f	typeref:typename:void
+rtc_dst_date_struct	drivers/rtc_dst.h	/^struct rtc_dst_date_struct {$/;"	s
+rtc_dst_dates	drivers/rtc_dst.c	/^struct rtc_dst_date_struct rtc_dst_dates[2];$/;"	v	typeref:struct:rtc_dst_date_struct[2]
+rtc_dst_day_of_week	drivers/rtc_dst.c	/^uint8_t rtc_dst_day_of_week(uint16_t year, uint8_t month, uint8_t day)$/;"	f	typeref:typename:uint8_t
+rtc_dst_hourly_update	drivers/rtc_dst.c	/^void rtc_dst_hourly_update(void)$/;"	f	typeref:typename:void
+rtc_dst_init	drivers/rtc_dst.c	/^void rtc_dst_init(void)$/;"	f	typeref:typename:void
+rtc_dst_isDateInDST	drivers/rtc_dst.c	/^uint8_t rtc_dst_isDateInDST(uint8_t month, uint8_t day, uint8_t hour)$/;"	f	typeref:typename:uint8_t
+rtc_dst_state	drivers/rtc_dst.c	/^uint8_t rtc_dst_state;$/;"	v	typeref:typename:uint8_t
+rtc_not_set	test/geofence_test/proj.h	/^uint8_t rtc_not_set;$/;"	v	typeref:typename:uint8_t
+rtca_init	drivers/rtc.c	/^void rtca_init(void)$/;"	f	typeref:typename:void
+rtca_last_event	drivers/rtc.h	/^volatile enum rtca_tevent rtca_last_event;$/;"	v	typeref:typename:volatile enum rtca_tevent
+rtca_set_next	test/geofence_test/proj.h	/^uint32_t rtca_set_next;$/;"	v	typeref:typename:uint32_t
+rtca_set_time	drivers/rtc.c	/^void rtca_set_time()$/;"	f	typeref:typename:void
+rtca_start	drivers/rtc.h	/^#define rtca_start(/;"	d
+rtca_stop	drivers/rtc.h	/^#define rtca_stop(/;"	d
+rtca_tevent	drivers/rtc.h	/^enum rtca_tevent {$/;"	g
+rtca_time	drivers/rtc.h	/^} rtca_time;$/;"	v	typeref:struct:__anonff2530520108
+rtca_time	test/geofence_test/proj.h	/^} rtca_time;$/;"	v	typeref:struct:__anonc71896ef0108
+samples	test/geofence_test/drivers/gps.h	/^    uint16_t samples;$/;"	m	struct:mean_pos_t	typeref:typename:uint16_t
+schedule	proj.c	/^static void schedule(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+sec	drivers/rtc.h	/^    uint8_t sec;$/;"	m	struct:__anonff2530520108	typeref:typename:uint8_t
+sec	test/geofence_test/proj.h	/^    uint8_t sec;$/;"	m	struct:__anonc71896ef0108	typeref:typename:uint8_t
+second	test/geofence_test/drivers/gps.h	/^    uint8_t second;$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint8_t
+size	tools/msp430-ram-usage	/^size = objs['__stack'][0] - objs['__data_start'][0]$/;"	v
+speed	test/geofence_test/drivers/gps.h	/^    float speed;$/;"	m	struct:mean_pos_t	typeref:typename:float
+speed	test/geofence_test/drivers/gps.h	/^    uint16_t speed;    \/\/ speed in _knots_ ?!$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint16_t
+speed_samples	test/geofence_test/drivers/gps.h	/^    uint16_t speed_samples;$/;"	m	struct:mean_pos_t	typeref:typename:uint16_t
+speed_sum	test/geofence_test/drivers/gps.h	/^    uint16_t speed_sum;$/;"	m	struct:mean_pos_t	typeref:typename:uint16_t
+sq	drivers/helper.c	/^float sq(const float x)$/;"	f	typeref:typename:float
+sq	test/geofence_test/drivers/helper.c	/^float sq(const float x)$/;"	f	typeref:typename:float
+stackmem	tools/msp430-ram-usage	/^stackmem = 0$/;"	v
+str_temp	proj.h	/^char str_temp[STR_LEN];$/;"	v	typeref:typename:char[]
+str_to_uint16	drivers/helper.c	/^uint8_t str_to_uint16(char *str, uint16_t * out, const uint8_t seek,$/;"	f	typeref:typename:uint8_t
+str_to_uint16	test/geofence_test/drivers/helper.c	/^uint8_t str_to_uint16(char *str, uint16_t * out, const uint8_t seek,$/;"	f	typeref:typename:uint8_t
+str_to_uint32	drivers/helper.c	/^uint8_t str_to_uint32(char *str, uint32_t * out, const uint8_t seek,$/;"	f	typeref:typename:uint8_t
+str_to_uint32	test/geofence_test/drivers/helper.c	/^uint8_t str_to_uint32(char *str, uint32_t * out, const uint8_t seek,$/;"	f	typeref:typename:uint8_t
+strip	test/read_mem/Makefile	/^strip : $(read_mem_OBJS) $(read_mem_EXTRA)$/;"	t
+strip_zero	tools/update_rtca_now.sh	/^strip_zero()$/;"	f
+syms	tools/msp430-ram-usage	/^syms = os.popen('msp430-readelf -a -W "%s"' % args[0])$/;"	v
+sys	drivers/rtc.h	/^    uint32_t sys;               \/\/ system time: number of seconds since power on$/;"	m	struct:__anonff2530520108	typeref:typename:uint32_t
+sys	test/geofence_test/proj.h	/^    uint32_t sys;$/;"	m	struct:__anonc71896ef0108	typeref:typename:uint32_t
+sys_message	drivers/sys_messagebus.h	/^enum sys_message {$/;"	g
+sys_messagebus	drivers/sys_messagebus.h	/^struct sys_messagebus {$/;"	s
+sys_messagebus_register	drivers/sys_messagebus.c	/^void sys_messagebus_register(void (*callback) (enum sys_message),$/;"	f	typeref:typename:void
+sys_messagebus_unregister	drivers/sys_messagebus.c	/^void sys_messagebus_unregister(void (*callback) (enum sys_message))$/;"	f	typeref:typename:void
+tags	Makefile	/^tags: $(SRCS)$/;"	t
+tags	test/geofence_test/Makefile	/^tags: $(SRCS)$/;"	t
+tags	test/read_mem/Makefile	/^tags : $(read_mem_OBJS) $(read_mem_EXTRA)$/;"	t
+timer0_A1_ISR	drivers/timer_a0.c	/^void timer0_A1_ISR(void)$/;"	f	typeref:typename:void
+timer_a0_delay_noblk_ccr1	drivers/timer_a0.c	/^void timer_a0_delay_noblk_ccr1(uint16_t ticks)$/;"	f	typeref:typename:void
+timer_a0_delay_noblk_ccr2	drivers/timer_a0.c	/^void timer_a0_delay_noblk_ccr2(uint16_t ticks)$/;"	f	typeref:typename:void
+timer_a0_delay_noblk_ccr3	drivers/timer_a0.c	/^void timer_a0_delay_noblk_ccr3(uint16_t ticks)$/;"	f	typeref:typename:void
+timer_a0_event	drivers/timer_a0.h	/^enum timer_a0_event {$/;"	g
+timer_a0_init	drivers/timer_a0.c	/^void timer_a0_init(void)$/;"	f	typeref:typename:void
+timer_a0_last_event	drivers/timer_a0.h	/^volatile enum timer_a0_event timer_a0_last_event;$/;"	v	typeref:typename:volatile enum timer_a0_event
+timer_a0_ovf	drivers/timer_a0.h	/^volatile uint16_t timer_a0_ovf;$/;"	v	typeref:typename:volatile uint16_t
+true	proj.h	/^#define true /;"	d
+true	test/geofence_test/proj.h	/^#define true /;"	d
+uart0_init	drivers/uart0.c	/^void uart0_init(void)$/;"	f	typeref:typename:void
+uart0_last_event	drivers/uart0.h	/^volatile enum uart0_tevent uart0_last_event;$/;"	v	typeref:typename:volatile enum uart0_tevent
+uart0_p	drivers/uart0.h	/^volatile uint8_t uart0_p;$/;"	v	typeref:typename:volatile uint8_t
+uart0_rx_buf	drivers/uart0.h	/^volatile char uart0_rx_buf[UART0_RXBUF_SZ];$/;"	v	typeref:typename:volatile char[]
+uart0_rx_enable	drivers/uart0.h	/^volatile uint8_t uart0_rx_enable;$/;"	v	typeref:typename:volatile uint8_t
+uart0_tevent	drivers/uart0.h	/^enum uart0_tevent {$/;"	g
+uart0_tx_str	drivers/uart0.c	/^uint16_t uart0_tx_str(char *str, const uint16_t size)$/;"	f	typeref:typename:uint16_t
+year	drivers/rtc.h	/^    uint16_t year;$/;"	m	struct:__anonff2530520108	typeref:typename:uint16_t
+year	test/geofence_test/drivers/gps.h	/^    uint16_t year;     \/\/ date and time received from the sattelites$/;"	m	struct:nmea_gprmc_t	typeref:typename:uint16_t
+year	test/geofence_test/proj.h	/^    uint16_t year;$/;"	m	struct:__anonc71896ef0108	typeref:typename:uint16_t

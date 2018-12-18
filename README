@@ -1,0 +1,22 @@
+
+
+UNDER ACTIVE DEVELOPMENT, please ignore this project for now.
+once the prototype is ready and working I will remove this warning.
+
+
+
+
+
+
+ an interface based on a MSP430F5510 that allows the use of usb 2.0 joysticks to be used with retro gaming PCs that have a midi/joystick port.
+
+ source:       https://github.com/rodan/retrojoy 
+ author:       Petre Rodan <2b4eda@subdimension.ro>
+ license:      GNU GPLv3
+
+Features:
+ - both hardware and software are opensource
+
+ prototype pictures available here:  
+ documentation available here:       
+ 
