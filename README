@@ -10,7 +10,8 @@ once the prototype is ready and working I will remove this warning.
 
  an interface based on a MSP430F5510 that allows the use of usb 2.0 joysticks to be used with retro gaming PCs that have a midi/joystick port.
 
- source:       https://github.com/rodan/retrojoy 
+ source:        https://github.com/rodan/lemidi
+                https://cadlab.io/projects/lemidi
  author:       Petre Rodan <2b4eda@subdimension.ro>
  license:      GNU GPLv3
 
