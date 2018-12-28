@@ -32,11 +32,10 @@ static void schedule(enum sys_message msg)
 int main(void)
 {
     main_init();
-    rtca_init();
-    timer_a0_init();
+    //rtca_init();
+    //timer_a0_init();
     uart0_init();
 
-    uart0_tx_str("debug state\r\n", 13);
     display_menu();
 
     sys_messagebus_register(&schedule, SYS_MSG_RTC_SECOND);
@@ -45,6 +44,7 @@ int main(void)
     // main loop
     while (1) {
         _BIS_SR(LPM3_bits + GIE);
+        //_BIS_SR(LPM0_bits + GIE);
         //wake_up();
 #ifdef USE_WATCHDOG
         // reset watchdog counter
@@ -77,28 +77,55 @@ void main_init(void)
 #endif
     //SetVCore(3);
 
-    // enable LF crystal
-    P5SEL |= BIT5 + BIT4;
-    UCSCTL6 &= ~(XT1OFF | XT1DRIVE0);
+#ifdef USE_XT1
+    // enable external LF crystal if one is present
+    P5SEL |= BIT4+BIT5;
+    UCSCTL6 &= ~XT1OFF;
+    // Loop until XT1 stabilizes
+    do {
+        UCSCTL7 &= ~XT1LFOFFG;                 // clear XT1 fault flags
+        SFRIFG1 &= ~OFIFG;                     // clear fault flags
+    } while ( UCSCTL7 & XT1LFOFFG );           // test XT1 fault flag
+    UCSCTL6 &= ~(XT1DRIVE0 + XT1DRIVE1);
+    UCSCTL4 |= SELA__XT1CLK;
+#else
+    // use internal 32768 Hz oscillator
+    UCSCTL4 |= SELA__REFOCLK;
+#endif
 
-    P1SEL = 0x0;
+#ifdef USE_XT2
+    // enable HF crystal if one is present
+    P5SEL |= BIT2+BIT3;                       // port select XT2
+    UCSCTL6 &= ~XT2OFF;                       // set XT2 On
+    // Loop until XT2 & DCO stabilizes
+    do {
+        UCSCTL7 &= ~(XT2OFFG + DCOFFG);        // clear XT2, DCO fault flags
+        SFRIFG1 &= ~OFIFG;                     // clear fault flags
+    } while ( UCSCTL7 & (XT2OFFG + DCOFFG) );  // test fault flags
+
+    UCSCTL6 &= ~XT2DRIVE1;                      // Decrease XT2 drive
+    UCSCTL4 |= SELS__XT2CLK + SELM__XT2CLK;
+#endif
+
+    P1SEL = BIT0;
+    P1DIR = BIT0;
+    //P1OUT = 0x2;
     //P1DIR = 0x85;
     // make sure CTS is pulled low so the software doesn't get stuck 
     // in case the sim900 is missing - or broken.
     //P1REN = 0x22;
-    //P1OUT = 0x2;
 
     P2SEL = 0x0;
-    //P2DIR = 0x1;
     //P2OUT = 0x0;
+    //P2DIR = 0x1;
 
     P3SEL = 0x0;
-    //P3DIR = 0x1f;
     //P3OUT = 0x0;
+    //P3DIR = 0x1f;
 
+    //P4OUT = 0x0;
     //P4DIR = 0x00;
     //P4DIR = 0x3;
-    //P4OUT = 0x0;
 
     PMAPPWD = 0x02D52;
     // set up UART port mappings
@@ -113,9 +140,9 @@ void main_init(void)
 
 #ifdef MSP430F5510_DEVBOARD
     //Initialization of ports (all unused pins as outputs with low-level
-    P1REN |= BIT0;                //Enable BUT1 pullup
-    P1OUT = 0x01;
-    P1DIR = 0xFE;                 //LCD pins are outputs
+    //P1REN |= BIT0;                //Enable BUT1 pullup
+    //P1OUT = 0x01;
+    //P1DIR = 0xFE;                 //LCD pins are outputs
 
     // led
     P4DIR |= BIT7;
@@ -123,16 +150,16 @@ void main_init(void)
 
     PMAPPWD = 0;
 
+    P5OUT = 0x0;
     //P5SEL is set above
     P5DIR = 0xf;
-    P5OUT = 0x0;
 
     //P6SEL = 0xc;
-    //P6DIR = 0x3;
     //P6OUT = 0x2;
+    //P6DIR = 0x3;
 
-    //PJDIR = 0xFF;
     //PJOUT = 0x00;
+    //PJDIR = 0xFF;
 
     // disable VUSB LDO and SLDO
     USBKEYPID = 0x9628;
