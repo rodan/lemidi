@@ -12554,7 +12554,7 @@ In this library the device names are the same as the pin names of the symbols, t
 <part name="GND29" library="SparkFun" deviceset="GND" device=""/>
 <part name="U$11" library="Simplex-Jumpers" deviceset="SJ_3P" device=""/>
 <part name="SUPPLY9" library="supply2" deviceset="+5V" device=""/>
-<part name="C14" library="rcl" deviceset="C-EU" device="C0805" value="10nF"/>
+<part name="C14" library="rcl" deviceset="C-EU" device="C0805" value="2.2nF"/>
 <part name="GND31" library="SparkFun" deviceset="GND" device=""/>
 <part name="Y2" library="Simplex-FreqCtrl" deviceset="CRYSTAL" device="" value="12MHz 0.25%"/>
 <part name="Y3" library="Simplex-FreqCtrl" deviceset="CRYSTAL" device="" value="8MHz"/>
@@ -13059,6 +13059,12 @@ In this library the device names are the same as the pin names of the symbols, t
 <pinref part="TP6" gate="G$1" pin="TP"/>
 <wire x1="187.96" y1="15.24" x2="187.96" y2="17.78" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="GND"/>
+<pinref part="GND38" gate="1" pin="GND"/>
+<wire x1="101.6" y1="144.78" x2="116.84" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="116.84" y1="144.78" x2="116.84" y2="139.7" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="+3V3" class="0">
 <segment>
@@ -13527,6 +13533,7 @@ In this library the device names are the same as the pin names of the symbols, t
 <pinref part="C13" gate="G$1" pin="2"/>
 <wire x1="208.28" y1="139.7" x2="200.66" y2="139.7" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="139.7" x2="200.66" y2="137.16" width="0.1524" layer="91"/>
+<junction x="208.28" y="139.7"/>
 </segment>
 <segment>
 <pinref part="U$11" gate="G$1" pin="2"/>
@@ -13727,14 +13734,6 @@ In this library the device names are the same as the pin names of the symbols, t
 <pinref part="U$1" gate="G$1" pin="2"/>
 <wire x1="104.14" y1="73.66" x2="101.6" y2="73.66" width="0.1524" layer="91"/>
 <label x="91.44" y="73.66" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="N$10" class="0">
-<segment>
-<pinref part="GND38" gate="1" pin="GND"/>
-<pinref part="U$3" gate="G$1" pin="GND"/>
-<wire x1="101.6" y1="144.78" x2="116.84" y2="144.78" width="0.1524" layer="91"/>
-<wire x1="116.84" y1="144.78" x2="116.84" y2="139.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="USB_INT" class="0">
@@ -13958,15 +13957,28 @@ In this library the device names are the same as the pin names of the symbols, t
 </sheet>
 </sheets>
 <errors>
-<approved hash="104,1,345.44,157.48,U$1,10,GND,,,"/>
-<approved hash="104,1,345.44,152.4,U$1,12,GND,,,"/>
-<approved hash="104,1,345.44,149.86,U$1,13,N$6,,,"/>
-<approved hash="104,1,396.24,127,U$1,27,GND,,,"/>
-<approved hash="104,1,396.24,152.4,U$1,37,GND,,,"/>
-<approved hash="104,1,396.24,162.56,U$1,41,GND,,,"/>
-<approved hash="204,1,396.24,165.1,U$1,42,,,,"/>
-<approved hash="204,1,396.24,167.64,U$1,43,,,,"/>
-<approved hash="104,1,396.24,170.18,U$1,44,GND,,,"/>
+<approved hash="104,1,104.14,60.96,U$1,7,+3V3,,,"/>
+<approved hash="104,1,104.14,53.34,U$1,10,GND,,,"/>
+<approved hash="104,1,104.14,50.8,U$1,11,+3V3,,,"/>
+<approved hash="104,1,104.14,48.26,U$1,12,GND,,,"/>
+<approved hash="104,1,104.14,45.72,U$1,13,N$6,,,"/>
+<approved hash="104,1,154.94,25.4,U$1,28,+3V3,,,"/>
+<approved hash="104,1,154.94,22.86,U$1,27,GND,,,"/>
+<approved hash="104,1,154.94,48.26,U$1,37,GND,,,"/>
+<approved hash="104,1,154.94,58.42,U$1,41,GND,,,"/>
+<approved hash="204,1,154.94,60.96,U$1,42,,,,"/>
+<approved hash="204,1,154.94,63.5,U$1,43,,,,"/>
+<approved hash="104,1,154.94,66.04,U$1,44,GND,,,"/>
+<approved hash="104,1,154.94,71.12,U$1,46,XT2OUT,,,"/>
+<approved hash="104,1,172.72,119.38,U$8,IN,+5V,,,"/>
+<approved hash="104,1,142.24,119.38,U$8,OUT,VBUS,,,"/>
+<approved hash="202,1,60.96,149.86,U$3,GPIN6,,,,"/>
+<approved hash="202,1,60.96,147.32,U$3,GPIN5,,,,"/>
+<approved hash="202,1,60.96,144.78,U$3,GPIN4,,,,"/>
+<approved hash="202,1,60.96,142.24,U$3,GPIN3,,,,"/>
+<approved hash="202,1,60.96,139.7,U$3,GPIN2,,,,"/>
+<approved hash="202,1,60.96,137.16,U$3,GPIN1,,,,"/>
+<approved hash="202,1,60.96,134.62,U$3,GPIN0,,,,"/>
 </errors>
 </schematic>
 </drawing>
