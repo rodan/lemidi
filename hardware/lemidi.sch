@@ -8673,7 +8673,7 @@ Standard 150mA LDO voltage regulator in SOT-23 layout. Micrel part MIC5205. BP (
 <text x="-0.8255" y="1.778" size="0.4064" layer="25">&gt;NAME</text>
 <text x="-1.016" y="-0.1905" size="0.4064" layer="27">&gt;VALUE</text>
 </package>
-<package name="SOT23-3_POWER">
+<package name="SOT23-3_POWER@1">
 <description>Vishay LITTLE FOOT SOT-23 Power MOSFET footprint</description>
 <wire x1="1.4336" y1="0.27626875" x2="1.4336" y2="-1.04453125" width="0.1524" layer="51"/>
 <wire x1="1.4336" y1="-1.04453125" x2="-1.4112" y2="-1.04453125" width="0.1524" layer="51"/>
@@ -8721,6 +8721,21 @@ Source: http://www.irf.com/product-info/datasheets/data/irfr5305pbf.pdf</descrip
 <vertex x="2.5654" y="3.937"/>
 </polygon>
 </package>
+<package name="SOT23-3_POWER">
+<wire x1="1.4336" y1="0.27626875" x2="1.4336" y2="-1.04453125" width="0.1524" layer="51"/>
+<wire x1="1.4336" y1="-1.04453125" x2="-1.4112" y2="-1.04453125" width="0.1524" layer="51"/>
+<wire x1="-1.4112" y1="-1.04453125" x2="-1.4112" y2="0.27626875" width="0.1524" layer="51"/>
+<wire x1="-1.4112" y1="0.27626875" x2="1.4336" y2="0.27626875" width="0.1524" layer="51"/>
+<wire x1="-0.7888" y1="0.31586875" x2="-1.3888" y2="0.31586875" width="0.2032" layer="21"/>
+<wire x1="-1.3888" y1="0.31586875" x2="-1.3888" y2="-0.48413125" width="0.2032" layer="21"/>
+<wire x1="0.8112" y1="0.31586875" x2="1.4112" y2="0.31586875" width="0.2032" layer="21"/>
+<wire x1="1.4112" y1="0.31586875" x2="1.4112" y2="-0.48413125" width="0.2032" layer="21"/>
+<smd name="3" x="0.0112" y="0.71586875" dx="2.9" dy="2.05" layer="1"/>
+<smd name="2" x="0.9612" y="-1.38413125" dx="1" dy="1.5" layer="1"/>
+<smd name="1" x="-0.9388" y="-1.38413125" dx="1" dy="1.5" layer="1"/>
+<text x="-0.8143" y="1.39386875" size="0.4064" layer="25">&gt;NAME</text>
+<text x="-1.0048" y="-0.57463125" size="0.4064" layer="27">&gt;VALUE</text>
+</package>
 </packages>
 <symbols>
 <symbol name="MOSFET-NCHANNEL">
@@ -8765,6 +8780,47 @@ Source: http://www.irf.com/product-info/datasheets/data/irfr5305pbf.pdf</descrip
 <wire x1="0" y1="-1.897" x2="0" y2="-0.008" width="0.1524" layer="94"/>
 <wire x1="0" y1="-1.905" x2="2.56" y2="-1.905" width="0.1524" layer="94"/>
 </symbol>
+<symbol name="MOSFET-PCHANNEL">
+<wire x1="-3.6576" y1="2.413" x2="-3.6576" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="0" y1="1.905" x2="-2.0066" y2="1.905" width="0.1524" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="-1.905" width="0.1524" layer="94"/>
+<wire x1="-2.032" y1="-1.905" x2="0" y2="-1.905" width="0.1524" layer="94"/>
+<wire x1="0" y1="2.54" x2="0" y2="1.905" width="0.1524" layer="94"/>
+<wire x1="0" y1="1.905" x2="2.54" y2="1.905" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-1.905" x2="0" y2="-1.905" width="0.1524" layer="94"/>
+<wire x1="0" y1="-1.905" x2="0" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-1.905" x2="2.54" y2="-0.762" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-0.762" x2="3.175" y2="0.635" width="0.1524" layer="94"/>
+<wire x1="3.175" y1="0.635" x2="1.905" y2="0.635" width="0.1524" layer="94"/>
+<wire x1="1.905" y1="0.635" x2="2.54" y2="-0.762" width="0.1524" layer="94"/>
+<wire x1="3.175" y1="-0.762" x2="2.54" y2="-0.762" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-0.762" x2="1.905" y2="-0.762" width="0.1524" layer="94"/>
+<wire x1="1.905" y1="-0.762" x2="1.651" y2="-1.016" width="0.1524" layer="94"/>
+<wire x1="3.175" y1="-0.762" x2="3.429" y2="-0.508" width="0.1524" layer="94"/>
+<wire x1="0" y1="0" x2="-1.27" y2="0.508" width="0.1524" layer="94"/>
+<wire x1="-1.27" y1="0.508" x2="-1.27" y2="-0.508" width="0.1524" layer="94"/>
+<wire x1="-1.27" y1="-0.508" x2="0" y2="0" width="0.1524" layer="94"/>
+<wire x1="-1.143" y1="0" x2="-2.032" y2="0" width="0.1524" layer="94"/>
+<wire x1="-1.143" y1="-0.254" x2="-0.254" y2="0" width="0.3048" layer="94"/>
+<wire x1="-0.254" y1="0" x2="-1.143" y2="0.254" width="0.3048" layer="94"/>
+<wire x1="-1.143" y1="0.254" x2="-1.143" y2="0" width="0.3048" layer="94"/>
+<wire x1="-1.143" y1="0" x2="-0.889" y2="0" width="0.3048" layer="94"/>
+<wire x1="-3.81" y1="0" x2="-5.08" y2="0" width="0.1524" layer="94"/>
+<circle x="0" y="-1.905" radius="0.127" width="0.4064" layer="94"/>
+<circle x="0" y="1.905" radius="0.127" width="0.4064" layer="94"/>
+<text x="5.08" y="2.54" size="1.778" layer="95">&gt;NAME</text>
+<text x="5.08" y="0" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-1.27" y="2.54" size="0.8128" layer="93">D</text>
+<text x="-1.27" y="-3.556" size="0.8128" layer="93">S</text>
+<text x="-5.08" y="-1.27" size="0.8128" layer="93">G</text>
+<rectangle x1="-2.794" y1="-2.54" x2="-2.032" y2="-1.27" layer="94"/>
+<rectangle x1="-2.794" y1="1.27" x2="-2.032" y2="2.54" layer="94"/>
+<rectangle x1="-2.794" y1="-0.889" x2="-2.032" y2="0.889" layer="94"/>
+<pin name="G" x="-7.62" y="0" visible="off" length="short" direction="pas"/>
+<pin name="D" x="0" y="5.08" visible="off" length="short" direction="pas" rot="R270"/>
+<pin name="S" x="0" y="-5.08" visible="off" length="short" direction="pas" rot="R90"/>
+<wire x1="2.54" y1="0.695" x2="2.54" y2="1.8961125" width="0.1524" layer="94"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="MOSFET-NCHANNEL" prefix="Q">
@@ -8783,7 +8839,7 @@ Source: http://www.irf.com/product-info/datasheets/data/irfr5305pbf.pdf</descrip
 <technology name=""/>
 </technologies>
 </device>
-<device name="_SOT23-3_POWER" package="SOT23-3_POWER">
+<device name="_SOT23-3_POWER" package="SOT23-3_POWER@1">
 <connects>
 <connect gate="G$1" pin="D" pad="3"/>
 <connect gate="G$1" pin="G" pad="1"/>
@@ -8798,6 +8854,34 @@ Source: http://www.irf.com/product-info/datasheets/data/irfr5305pbf.pdf</descrip
 <connect gate="G$1" pin="D" pad="2"/>
 <connect gate="G$1" pin="G" pad="1"/>
 <connect gate="G$1" pin="S" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MOSFET-PCHANNEL" prefix="Q">
+<description>Generic PMOSFET</description>
+<gates>
+<gate name="G$1" symbol="MOSFET-PCHANNEL" x="0" y="0"/>
+</gates>
+<devices>
+<device name="SMD" package="SOT23-3">
+<connects>
+<connect gate="G$1" pin="D" pad="3"/>
+<connect gate="G$1" pin="G" pad="1"/>
+<connect gate="G$1" pin="S" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SMD_POWER" package="SOT23-3_POWER">
+<connects>
+<connect gate="G$1" pin="D" pad="3"/>
+<connect gate="G$1" pin="G" pad="1"/>
+<connect gate="G$1" pin="S" pad="2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -13024,6 +13108,86 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 </deviceset>
 </devicesets>
 </library>
+<library name="Simplex-Fuses">
+<packages>
+<package name="1210">
+<description>resettable fuse in a 1210 package</description>
+<smd name="P$1" x="-1.5" y="0" dx="1" dy="2.5" layer="1"/>
+<smd name="P$2" x="1.5" y="0" dx="1" dy="2.5" layer="1"/>
+<wire x1="-1.7" y1="1.4" x2="-1.4" y2="1.4" width="0.05" layer="21"/>
+<wire x1="-1.4" y1="1.4" x2="1.4" y2="1.4" width="0.05" layer="21"/>
+<wire x1="1.4" y1="1.4" x2="1.7" y2="1.4" width="0.05" layer="21"/>
+<wire x1="-1.7" y1="-1.4" x2="-1.4" y2="-1.4" width="0.05" layer="21"/>
+<wire x1="-1.4" y1="-1.4" x2="1.4" y2="-1.4" width="0.05" layer="21"/>
+<wire x1="1.4" y1="-1.4" x2="1.7" y2="-1.4" width="0.05" layer="21"/>
+<wire x1="-1.4" y1="1.4" x2="-1.4" y2="-1.4" width="0.05" layer="21"/>
+<wire x1="1.4" y1="1.4" x2="1.4" y2="-1.4" width="0.05" layer="21"/>
+<wire x1="-1.7" y1="1.4" x2="-1.7" y2="0.2" width="0.05" layer="21"/>
+<wire x1="-1.7" y1="-0.2" x2="-1.7" y2="-1.4" width="0.05" layer="21"/>
+<wire x1="-1.7" y1="0.2" x2="-1.7" y2="-0.2" width="0.05" layer="21" curve="-180"/>
+<wire x1="1.7" y1="1.4" x2="1.7" y2="0.2" width="0.05" layer="21"/>
+<wire x1="1.7" y1="-0.2" x2="1.7" y2="0.2" width="0.05" layer="21" curve="-180"/>
+<wire x1="1.7" y1="-0.2" x2="1.7" y2="-1.4" width="0.05" layer="21"/>
+</package>
+<package name="0805W">
+<description>&lt;b&gt;FUSE&lt;/b&gt; wave soldering&lt;p&gt;</description>
+<wire x1="-0.41" y1="0.635" x2="0.41" y2="0.635" width="0.1524" layer="51"/>
+<wire x1="-0.41" y1="-0.635" x2="0.41" y2="-0.635" width="0.1524" layer="51"/>
+<wire x1="-1.973" y1="0.983" x2="1.973" y2="0.983" width="0.0508" layer="39"/>
+<wire x1="1.973" y1="0.983" x2="1.973" y2="-0.983" width="0.0508" layer="39"/>
+<wire x1="1.973" y1="-0.983" x2="-1.973" y2="-0.983" width="0.0508" layer="39"/>
+<wire x1="-1.973" y1="-0.983" x2="-1.973" y2="0.983" width="0.0508" layer="39"/>
+<smd name="1" x="-1.0525" y="0" dx="1.5" dy="1" layer="1"/>
+<smd name="2" x="1.0525" y="0" dx="1.5" dy="1" layer="1"/>
+<text x="-0.635" y="1.27" size="1.27" layer="25">&gt;NAME</text>
+<text x="-0.635" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="0.4064" y1="-0.6985" x2="1.0564" y2="0.7015" layer="51"/>
+<rectangle x1="-1.0668" y1="-0.6985" x2="-0.4168" y2="0.7015" layer="51"/>
+<rectangle x1="-0.1999" y1="-0.5001" x2="0.1999" y2="0.5001" layer="35"/>
+</package>
+</packages>
+<symbols>
+<symbol name="PTC">
+<pin name="P$1" x="-5.08" y="0" visible="off" length="short"/>
+<pin name="P$2" x="5.08" y="0" visible="off" length="short" rot="R180"/>
+<wire x1="-2.54" y1="0" x2="2.54" y2="0" width="0.0762" layer="94"/>
+<wire x1="-2.54" y1="0" x2="-2.54" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-1.27" x2="2.54" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-1.27" x2="2.54" y2="0" width="0.254" layer="94"/>
+<wire x1="2.54" y1="0" x2="2.54" y2="1.27" width="0.254" layer="94"/>
+<wire x1="2.54" y1="1.27" x2="-2.54" y2="1.27" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="1.27" x2="-2.54" y2="0" width="0.254" layer="94"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="RESETTABLE">
+<description>resettable fuse</description>
+<gates>
+<gate name="G$1" symbol="PTC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="_1210" package="1210">
+<connects>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+<connect gate="G$1" pin="P$2" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="_0805" package="0805W">
+<connects>
+<connect gate="G$1" pin="P$1" pad="1"/>
+<connect gate="G$1" pin="P$2" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -13171,6 +13335,10 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="GND46" library="SparkFun" deviceset="GND" device=""/>
 <part name="TP5" library="testpad" deviceset="TP" device="TP12R" value=""/>
 <part name="JP1" library="SparkFun-Connectors" deviceset="M02" device="PTH" value="external 5v"/>
+<part name="U$12" library="Simplex-Fuses" deviceset="RESETTABLE" device="_1210"/>
+<part name="Q5" library="Simplex-DiscreteSemi" deviceset="MOSFET-PCHANNEL" device="SMD_POWER" value="si2305cd"/>
+<part name="R11" library="rcl" deviceset="R-EU_" device="R0805W" value="4k7"/>
+<part name="GND47" library="SparkFun" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -13220,7 +13388,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <instance part="C9" gate="G$1" x="40.64" y="66.04" rot="R180"/>
 <instance part="GND10" gate="1" x="40.64" y="58.42"/>
 <instance part="U$2" gate="G$1" x="96.52" y="27.94" rot="R180"/>
-<instance part="GND15" gate="1" x="304.8" y="7.62"/>
+<instance part="GND15" gate="1" x="292.1" y="33.02"/>
 <instance part="R6" gate="G$1" x="332.74" y="88.9" rot="R270"/>
 <instance part="GND36" gate="1" x="332.74" y="63.5"/>
 <instance part="LED1" gate="G$1" x="332.74" y="76.2"/>
@@ -13288,8 +13456,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <instance part="SUPPLY8" gate="+5V" x="223.52" y="144.78"/>
 <instance part="C13" gate="G$1" x="200.66" y="132.08" rot="R180"/>
 <instance part="GND29" gate="1" x="200.66" y="124.46"/>
-<instance part="U$11" gate="G$1" x="309.88" y="35.56" rot="R270"/>
-<instance part="SUPPLY9" gate="+5V" x="309.88" y="45.72"/>
+<instance part="U$11" gate="G$1" x="332.74" y="38.1" rot="R270"/>
+<instance part="SUPPLY9" gate="+5V" x="332.74" y="48.26"/>
 <instance part="C14" gate="G$1" x="243.84" y="15.24" rot="R180"/>
 <instance part="GND31" gate="1" x="243.84" y="7.62"/>
 <instance part="Y2" gate="G$1" x="50.8" y="129.54" rot="MR90"/>
@@ -13328,7 +13496,11 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <instance part="TP2" gate="G$1" x="187.96" y="20.32"/>
 <instance part="GND46" gate="1" x="187.96" y="12.7"/>
 <instance part="TP5" gate="G$1" x="167.64" y="45.72" rot="R270"/>
-<instance part="JP1" gate="G$1" x="317.5" y="20.32" rot="R180"/>
+<instance part="JP1" gate="G$1" x="279.4" y="45.72" rot="MR180"/>
+<instance part="U$12" gate="G$1" x="345.44" y="45.72"/>
+<instance part="Q5" gate="G$1" x="312.42" y="45.72" rot="R90"/>
+<instance part="R11" gate="G$1" x="312.42" y="30.48" rot="MR270"/>
+<instance part="GND47" gate="1" x="312.42" y="20.32"/>
 </instances>
 <busses>
 </busses>
@@ -13431,8 +13603,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 </segment>
 <segment>
 <pinref part="GND15" gate="1" pin="GND"/>
-<wire x1="304.8" y1="17.78" x2="304.8" y2="10.16" width="0.1524" layer="91"/>
-<wire x1="304.8" y1="17.78" x2="309.88" y2="17.78" width="0.1524" layer="91"/>
+<wire x1="292.1" y1="43.18" x2="292.1" y2="35.56" width="0.1524" layer="91"/>
+<wire x1="292.1" y1="43.18" x2="287.02" y2="43.18" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="G$1" pin="2"/>
 </segment>
 <segment>
@@ -13645,6 +13817,11 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="GND38" gate="1" pin="GND"/>
 <wire x1="101.6" y1="144.78" x2="116.84" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="144.78" x2="116.84" y2="139.7" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R11" gate="G$1" pin="2"/>
+<pinref part="GND47" gate="1" pin="GND"/>
+<wire x1="312.42" y1="25.4" x2="312.42" y2="22.86" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -13971,19 +14148,9 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="414.02" y="93.98" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$10" gate="G$1" pin="8"/>
-<wire x1="424.18" y1="76.2" x2="421.64" y2="76.2" width="0.1524" layer="91"/>
-<label x="414.02" y="76.2" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="U$10" gate="G$1" pin="9"/>
 <wire x1="424.18" y1="73.66" x2="421.64" y2="73.66" width="0.1524" layer="91"/>
 <label x="414.02" y="73.66" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="U$10" gate="G$1" pin="15"/>
-<wire x1="424.18" y1="58.42" x2="421.64" y2="58.42" width="0.1524" layer="91"/>
-<label x="414.02" y="58.42" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="U$4" gate="G$1" pin="HA"/>
@@ -14004,12 +14171,6 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="U$5" gate="G$1" pin="HB"/>
 <wire x1="284.48" y1="144.78" x2="287.02" y2="144.78" width="0.1524" layer="91"/>
 <label x="287.02" y="144.78" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="U$11" gate="G$1" pin="1"/>
-<wire x1="312.42" y1="40.64" x2="312.42" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="312.42" y1="43.18" x2="314.96" y2="43.18" width="0.1524" layer="91"/>
-<label x="314.96" y="43.18" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="J1X" class="0">
@@ -14119,7 +14280,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <segment>
 <pinref part="U$11" gate="G$1" pin="2"/>
 <pinref part="SUPPLY9" gate="+5V" pin="+5V"/>
-<wire x1="309.88" y1="40.64" x2="309.88" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="332.74" y1="43.18" x2="332.74" y2="45.72" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$8" gate="G$1" pin="IN"/>
@@ -14193,15 +14354,10 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 </net>
 <net name="5V_EXT" class="0">
 <segment>
-<wire x1="309.88" y1="20.32" x2="304.8" y2="20.32" width="0.1524" layer="91"/>
-<label x="297.18" y="20.32" size="1.778" layer="95"/>
+<label x="292.1" y="45.72" size="1.778" layer="95"/>
 <pinref part="JP1" gate="G$1" pin="1"/>
-</segment>
-<segment>
-<pinref part="U$11" gate="G$1" pin="3"/>
-<wire x1="307.34" y1="40.64" x2="307.34" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="307.34" y1="43.18" x2="304.8" y2="43.18" width="0.1524" layer="91"/>
-<label x="297.18" y="43.18" size="1.778" layer="95"/>
+<wire x1="287.02" y1="45.72" x2="307.34" y2="45.72" width="0.1524" layer="91"/>
+<pinref part="Q5" gate="G$1" pin="D"/>
 </segment>
 </net>
 <net name="MOSI" class="0">
@@ -14533,6 +14689,46 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="U$3" gate="G$1" pin="!SS"/>
 <wire x1="101.6" y1="114.3" x2="106.68" y2="114.3" width="0.1524" layer="91"/>
 <label x="114.3" y="114.3" size="1.778" layer="95" rot="MR0"/>
+</segment>
+</net>
+<net name="5V_PC2" class="0">
+<segment>
+<pinref part="U$10" gate="G$1" pin="8"/>
+<wire x1="424.18" y1="76.2" x2="421.64" y2="76.2" width="0.1524" layer="91"/>
+<label x="414.02" y="76.2" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$10" gate="G$1" pin="15"/>
+<wire x1="424.18" y1="58.42" x2="421.64" y2="58.42" width="0.1524" layer="91"/>
+<label x="414.02" y="58.42" size="1.778" layer="95"/>
+</segment>
+<segment>
+<wire x1="350.52" y1="45.72" x2="355.6" y2="45.72" width="0.1524" layer="91"/>
+<label x="355.6" y="45.72" size="1.778" layer="95"/>
+<pinref part="U$12" gate="G$1" pin="P$2"/>
+</segment>
+</net>
+<net name="N$10" class="0">
+<segment>
+<pinref part="U$11" gate="G$1" pin="1"/>
+<wire x1="335.28" y1="43.18" x2="335.28" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="335.28" y1="45.72" x2="340.36" y2="45.72" width="0.1524" layer="91"/>
+<pinref part="U$12" gate="G$1" pin="P$1"/>
+</segment>
+</net>
+<net name="N$23" class="0">
+<segment>
+<pinref part="Q5" gate="G$1" pin="S"/>
+<pinref part="U$11" gate="G$1" pin="3"/>
+<wire x1="317.5" y1="45.72" x2="330.2" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="330.2" y1="45.72" x2="330.2" y2="43.18" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$24" class="0">
+<segment>
+<pinref part="Q5" gate="G$1" pin="G"/>
+<pinref part="R11" gate="G$1" pin="1"/>
+<wire x1="312.42" y1="38.1" x2="312.42" y2="35.56" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
