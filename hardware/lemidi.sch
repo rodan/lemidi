@@ -12591,6 +12591,7 @@ In this library the device names are the same as the pin names of the symbols, t
 <part name="TP5" library="testpad" deviceset="TP" device="TP12R" value=""/>
 <part name="TP6" library="testpad" deviceset="TP" device="TP12R" value=""/>
 <part name="GND46" library="SparkFun" deviceset="GND" device=""/>
+<part name="TP7" library="testpad" deviceset="TP" device="TP12R" value=""/>
 </parts>
 <sheets>
 <sheet>
@@ -12748,6 +12749,7 @@ In this library the device names are the same as the pin names of the symbols, t
 <instance part="TP5" gate="G$1" x="167.64" y="27.94" rot="R270"/>
 <instance part="TP6" gate="G$1" x="187.96" y="20.32"/>
 <instance part="GND46" gate="1" x="187.96" y="12.7"/>
+<instance part="TP7" gate="G$1" x="167.64" y="45.72" rot="R270"/>
 </instances>
 <busses>
 </busses>
@@ -13919,8 +13921,9 @@ In this library the device names are the same as the pin names of the symbols, t
 <net name="CS_J1" class="0">
 <segment>
 <pinref part="U$1" gate="G$1" pin="36"/>
-<wire x1="154.94" y1="45.72" x2="157.48" y2="45.72" width="0.1524" layer="91"/>
+<wire x1="154.94" y1="45.72" x2="165.1" y2="45.72" width="0.1524" layer="91"/>
 <label x="157.48" y="45.72" size="1.778" layer="95"/>
+<pinref part="TP7" gate="G$1" pin="TP"/>
 </segment>
 <segment>
 <pinref part="U$6" gate="G$1" pin="A1"/>
