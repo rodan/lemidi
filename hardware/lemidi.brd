@@ -139,8 +139,8 @@
 <text x="34.73" y="0.97" size="0.8128" layer="109" font="vector" ratio="15" rot="MR0">ext 5V</text>
 <text x="1.8" y="9.4" size="1.016" layer="1" font="vector" ratio="15" rot="R90">1</text>
 <text x="1.8" y="11.2" size="1.016" layer="16" font="vector" ratio="15" rot="R90">2</text>
-<text x="72.7" y="1.13" size="0.8128" layer="109" font="vector" ratio="15" rot="MR90">github.com/rodan/lemidi</text>
-<text x="74.13" y="1.15" size="0.8128" layer="109" font="vector" ratio="15" rot="MR90">Petre Rodan 201901 rev1</text>
+<text x="71.7" y="7.53" size="0.8128" layer="109" font="vector" ratio="15" rot="MR90">github.com/rodan/lemidi</text>
+<text x="73.13" y="7.55" size="0.8128" layer="109" font="vector" ratio="15" rot="MR90">Petre Rodan 201901 rev1</text>
 <text x="2.23" y="36.83" size="0.8128" layer="109" font="vector" ratio="15" rot="MR270">debug</text>
 <wire x1="1.35" y1="9.35" x2="1.35" y2="12.15" width="1.6764" layer="41"/>
 <rectangle x1="17.8" y1="5.1" x2="21.8" y2="9.4" layer="30"/>
@@ -1048,7 +1048,7 @@ design rules under a new name.</description>
 <element name="C1" library="rcl" package="C0805" value="100nF" x="26.55" y="11.53"/>
 <element name="C4" library="rcl" package="C0805" value="1uF" x="29.75" y="8.53" rot="R90"/>
 <element name="C6" library="rcl" package="C0805" value="100nF" x="26.55" y="5.43"/>
-<element name="U$7" library="SparkFun" package="OSHW-LOGO-M" value="OSHW-LOGOM" x="71.81" y="4.35" rot="MR90"/>
+<element name="U$7" library="SparkFun" package="OSHW-LOGO-M" value="OSHW-LOGOM" x="72.21" y="3.75" rot="MR90"/>
 <element name="U$1" library="TI_MSP430_v16" package="PT48" value="MSP430F5510" x="28.8" y="28.8"/>
 <element name="C10" library="rcl" package="C0805" value="470nF" x="20.8" y="25" rot="R180"/>
 <element name="R34" library="rcl" package="R0805W" value="47k" x="8.8" y="35.4" rot="R180"/>
