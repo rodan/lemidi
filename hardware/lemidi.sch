@@ -12129,6 +12129,31 @@ Source: http://www.semicon.toshiba.co.jp/td/en/Opto/Photocoupler/en_20050928_TLP
 <wire x1="0.675" y1="-4.45" x2="0.675" y2="0.55" width="0.127" layer="21"/>
 <circle x="1.5" y="-0.3" radius="0.3" width="0.127" layer="21"/>
 </package>
+<package name="SO-14">
+<description>&lt;b&gt;SO-14&lt;/b&gt; 14-lead plastic small outline
+3.90x8.69mm</description>
+<wire x1="-0.535" y1="4.315" x2="8.155" y2="4.315" width="0.2032" layer="21"/>
+<wire x1="8.155" y1="4.315" x2="8.155" y2="0.415" width="0.2032" layer="21"/>
+<wire x1="8.155" y1="0.415" x2="-0.535" y2="0.415" width="0.2032" layer="21"/>
+<wire x1="-0.535" y1="0.415" x2="-0.535" y2="4.315" width="0.2032" layer="21"/>
+<circle x="0.4" y="1.4" radius="0.449" width="0.2032" layer="21"/>
+<smd name="2" x="1.27" y="0" dx="0.6" dy="2" layer="1"/>
+<smd name="13" x="1.27" y="4.73" dx="0.6" dy="2" layer="1"/>
+<smd name="1" x="0" y="0" dx="0.6" dy="2" layer="1"/>
+<smd name="3" x="2.54" y="0" dx="0.6" dy="2" layer="1"/>
+<smd name="4" x="3.81" y="0" dx="0.6" dy="2" layer="1"/>
+<smd name="14" x="0" y="4.73" dx="0.6" dy="2" layer="1"/>
+<smd name="12" x="2.54" y="4.73" dx="0.6" dy="2" layer="1"/>
+<smd name="11" x="3.81" y="4.73" dx="0.6" dy="2" layer="1"/>
+<smd name="6" x="6.35" y="0" dx="0.6" dy="2" layer="1"/>
+<smd name="9" x="6.35" y="4.73" dx="0.6" dy="2" layer="1"/>
+<smd name="5" x="5.08" y="0" dx="0.6" dy="2" layer="1"/>
+<smd name="7" x="7.62" y="0" dx="0.6" dy="2" layer="1"/>
+<smd name="10" x="5.08" y="4.73" dx="0.6" dy="2" layer="1"/>
+<smd name="8" x="7.62" y="4.73" dx="0.6" dy="2" layer="1"/>
+<text x="10.16" y="2.54" size="1.27" layer="25">&gt;NAME</text>
+<text x="10.16" y="0" size="1.27" layer="27">&gt;VALUE</text>
+</package>
 </packages>
 <symbols>
 <symbol name="MAX4789">
@@ -12186,30 +12211,6 @@ Source: http://www.semicon.toshiba.co.jp/td/en/Opto/Photocoupler/en_20050928_TLP
 <pin name="XO" x="20.32" y="-10.16" length="middle" direction="out" rot="R180"/>
 <circle x="-12.7" y="10.16" radius="1.27" width="0.254" layer="94"/>
 </symbol>
-<symbol name="MAX5415">
-<description>&lt;b&gt;MAX5413 / MAX5414 / MAX5415&lt;/b&gt;
-dual linear taper digital potentiometer</description>
-<wire x1="-7.62" y1="12.7" x2="-7.62" y2="-12.7" width="0.254" layer="94"/>
-<wire x1="-7.62" y1="-12.7" x2="7.62" y2="-12.7" width="0.254" layer="94"/>
-<wire x1="7.62" y1="-12.7" x2="7.62" y2="12.7" width="0.254" layer="94"/>
-<wire x1="7.62" y1="12.7" x2="-7.62" y2="12.7" width="0.254" layer="94"/>
-<pin name="GND" x="-12.7" y="-10.16" length="middle"/>
-<pin name="VDD" x="-12.7" y="10.16" length="middle"/>
-<pin name="DIN" x="-12.7" y="2.54" length="middle" direction="in"/>
-<pin name="SCLK" x="-12.7" y="0" length="middle" direction="in" function="clk"/>
-<pin name="!CS" x="-12.7" y="-2.54" length="middle" direction="in" function="dot"/>
-<pin name="HA" x="12.7" y="10.16" length="middle" rot="R180"/>
-<pin name="WA" x="12.7" y="7.62" length="middle" rot="R180"/>
-<pin name="LA" x="12.7" y="5.08" length="middle" rot="R180"/>
-<pin name="HB" x="12.7" y="0" length="middle" rot="R180"/>
-<pin name="WB" x="12.7" y="-2.54" length="middle" rot="R180"/>
-<pin name="LB" x="12.7" y="-5.08" length="middle" rot="R180"/>
-<pin name="NC1" x="-2.54" y="-17.78" visible="off" length="middle" direction="nc" rot="R90"/>
-<pin name="NC2" x="0" y="-17.78" visible="off" length="middle" direction="nc" rot="R90"/>
-<pin name="NC3" x="2.54" y="-17.78" visible="off" length="middle" direction="nc" rot="R90"/>
-<text x="7.62" y="17.78" size="1.778" layer="95">&gt;NAME</text>
-<text x="7.62" y="15.24" size="1.778" layer="96">&gt;VALUE</text>
-</symbol>
 <symbol name="ADG3304">
 <description>&lt;b&gt;ADG3304&lt;/b&gt; 4channel bi-directional logic level translator</description>
 <pin name="VCCA" x="-12.7" y="7.62" length="short"/>
@@ -12230,6 +12231,29 @@ dual linear taper digital potentiometer</description>
 <wire x1="10.16" y1="10.16" x2="-10.16" y2="10.16" width="0.254" layer="94"/>
 <text x="-5.08" y="-25.4" size="1.778" layer="95">&gt;NAME</text>
 <text x="-5.08" y="-27.94" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
+<symbol name="MCP42XX">
+<description>&lt;b&gt;MCP42xx&lt;/b&gt; dual digital potentiometer</description>
+<wire x1="-10.16" y1="15.24" x2="-10.16" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="-15.24" x2="10.16" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-15.24" x2="10.16" y2="15.24" width="0.254" layer="94"/>
+<wire x1="10.16" y1="15.24" x2="-10.16" y2="15.24" width="0.254" layer="94"/>
+<pin name="VSS" x="-15.24" y="-12.7" length="middle"/>
+<pin name="VDD" x="-15.24" y="12.7" length="middle"/>
+<pin name="SI" x="-15.24" y="0" length="middle" direction="in"/>
+<pin name="SCLK" x="-15.24" y="-2.54" length="middle" direction="in" function="clk"/>
+<pin name="!CS" x="-15.24" y="-5.08" length="middle" direction="in" function="dot"/>
+<pin name="PB1" x="15.24" y="5.08" length="middle" rot="R180"/>
+<pin name="PW1" x="15.24" y="7.62" length="middle" rot="R180"/>
+<pin name="PA1" x="15.24" y="10.16" length="middle" rot="R180"/>
+<pin name="PB0" x="15.24" y="-10.16" length="middle" rot="R180"/>
+<pin name="PW0" x="15.24" y="-7.62" length="middle" rot="R180"/>
+<pin name="PA0" x="15.24" y="-5.08" length="middle" rot="R180"/>
+<pin name="!RS" x="-15.24" y="5.08" length="middle"/>
+<pin name="!SHDN" x="-15.24" y="7.62" length="middle"/>
+<text x="10.16" y="20.32" size="1.778" layer="95">&gt;NAME</text>
+<text x="10.16" y="17.78" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="SO" x="-15.24" y="-7.62" length="middle"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -12301,36 +12325,6 @@ current limit switch</description>
 </device>
 </devices>
 </deviceset>
-<deviceset name="MAX5413">
-<description>&lt;b&gt;MAX5413 / MAX5414 / MAX 5415&lt;/b&gt;
-dual digital potentiometers</description>
-<gates>
-<gate name="G$1" symbol="MAX5415" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="TSSOP14">
-<connects>
-<connect gate="G$1" pin="!CS" pad="7"/>
-<connect gate="G$1" pin="DIN" pad="8"/>
-<connect gate="G$1" pin="GND" pad="1"/>
-<connect gate="G$1" pin="HA" pad="13"/>
-<connect gate="G$1" pin="HB" pad="3"/>
-<connect gate="G$1" pin="LA" pad="14"/>
-<connect gate="G$1" pin="LB" pad="2"/>
-<connect gate="G$1" pin="NC1" pad="5"/>
-<connect gate="G$1" pin="NC2" pad="6"/>
-<connect gate="G$1" pin="NC3" pad="10"/>
-<connect gate="G$1" pin="SCLK" pad="9"/>
-<connect gate="G$1" pin="VDD" pad="11"/>
-<connect gate="G$1" pin="WA" pad="12"/>
-<connect gate="G$1" pin="WB" pad="4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="ADG3304">
 <description>&lt;b&gt;ADG3304&lt;/b&gt; 4channel bi-directional voltage level translator</description>
 <gates>
@@ -12351,6 +12345,35 @@ dual digital potentiometers</description>
 <connect gate="G$1" pin="Y2" pad="12"/>
 <connect gate="G$1" pin="Y3" pad="11"/>
 <connect gate="G$1" pin="Y4" pad="10"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MCP42XX">
+<description>&lt;b&gt;MCP42xx&lt;/b&gt; dual digital potentiometer</description>
+<gates>
+<gate name="G$1" symbol="MCP42XX" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SO-14">
+<connects>
+<connect gate="G$1" pin="!CS" pad="1"/>
+<connect gate="G$1" pin="!RS" pad="11"/>
+<connect gate="G$1" pin="!SHDN" pad="12"/>
+<connect gate="G$1" pin="PA0" pad="8"/>
+<connect gate="G$1" pin="PA1" pad="7"/>
+<connect gate="G$1" pin="PB0" pad="10"/>
+<connect gate="G$1" pin="PB1" pad="5"/>
+<connect gate="G$1" pin="PW0" pad="9"/>
+<connect gate="G$1" pin="PW1" pad="6"/>
+<connect gate="G$1" pin="SCLK" pad="2"/>
+<connect gate="G$1" pin="SI" pad="3"/>
+<connect gate="G$1" pin="SO" pad="13"/>
+<connect gate="G$1" pin="VDD" pad="14"/>
+<connect gate="G$1" pin="VSS" pad="4"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -13272,8 +13295,6 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="U$9" library="Simplex-Connectors" deviceset="UBA-4R-D14T-4D" device="" value="USB-A"/>
 <part name="U$8" library="Simplex-ICs" deviceset="MAX4789" device=""/>
 <part name="U$3" library="Simplex-ICs" deviceset="MAX3421E" device=""/>
-<part name="U$4" library="Simplex-ICs" deviceset="MAX5413" device=""/>
-<part name="U$5" library="Simplex-ICs" deviceset="MAX5413" device=""/>
 <part name="U$10" library="Simplex-Connectors" deviceset="ADAM_TECH-DSUB_DA-15" device="" value="DA-15"/>
 <part name="GND19" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND20" library="SparkFun" deviceset="GND" device=""/>
@@ -13346,6 +13367,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="+3V9" library="supply1" deviceset="+3V3" device=""/>
 <part name="C22" library="rcl" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="GND48" library="SparkFun" deviceset="GND" device=""/>
+<part name="U$11" library="Simplex-ICs" deviceset="MCP42XX" device=""/>
+<part name="U$4" library="Simplex-ICs" deviceset="MCP42XX" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -13437,18 +13460,16 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <instance part="U$9" gate="G$1" x="76.2" y="147.32"/>
 <instance part="U$8" gate="G$1" x="50.8" y="114.3"/>
 <instance part="U$3" gate="G$1" x="129.54" y="139.7"/>
-<instance part="U$4" gate="G$1" x="276.86" y="193.04"/>
-<instance part="U$5" gate="G$1" x="276.86" y="144.78"/>
 <instance part="U$10" gate="G$1" x="429.26" y="180.34"/>
 <instance part="GND19" gate="1" x="421.64" y="142.24"/>
-<instance part="GND20" gate="1" x="261.62" y="170.18"/>
+<instance part="GND20" gate="1" x="261.62" y="177.8"/>
 <instance part="GND21" gate="1" x="261.62" y="121.92"/>
 <instance part="SUPPLY1" gate="+5V" x="330.2" y="213.36"/>
 <instance part="SUPPLY2" gate="+5V" x="330.2" y="157.48"/>
 <instance part="SUPPLY3" gate="+5V" x="378.46" y="157.48"/>
 <instance part="SUPPLY4" gate="+5V" x="378.46" y="213.36"/>
-<instance part="SUPPLY5" gate="+5V" x="261.62" y="210.82"/>
-<instance part="SUPPLY6" gate="+5V" x="261.62" y="157.48"/>
+<instance part="SUPPLY5" gate="+5V" x="261.62" y="213.36"/>
+<instance part="SUPPLY6" gate="+5V" x="261.62" y="165.1"/>
 <instance part="SUPPLY7" gate="+5V" x="238.76" y="213.36"/>
 <instance part="+3V5" gate="G$1" x="203.2" y="215.9"/>
 <instance part="U$6" gate="G$1" x="220.98" y="195.58"/>
@@ -13511,6 +13532,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <instance part="+3V9" gate="G$1" x="93.98" y="157.48"/>
 <instance part="C22" gate="G$1" x="15.24" y="109.22" rot="R180"/>
 <instance part="GND48" gate="1" x="15.24" y="101.6"/>
+<instance part="U$11" gate="G$1" x="279.4" y="195.58"/>
+<instance part="U$4" gate="G$1" x="279.4" y="147.32"/>
 </instances>
 <busses>
 </busses>
@@ -13709,16 +13732,16 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="416.56" y="162.56" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$5" gate="G$1" pin="GND"/>
 <pinref part="GND21" gate="1" pin="GND"/>
 <wire x1="264.16" y1="134.62" x2="261.62" y2="134.62" width="0.1524" layer="91"/>
 <wire x1="261.62" y1="134.62" x2="261.62" y2="124.46" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="VSS"/>
 </segment>
 <segment>
-<pinref part="U$4" gate="G$1" pin="GND"/>
 <pinref part="GND20" gate="1" pin="GND"/>
 <wire x1="264.16" y1="182.88" x2="261.62" y2="182.88" width="0.1524" layer="91"/>
-<wire x1="261.62" y1="182.88" x2="261.62" y2="172.72" width="0.1524" layer="91"/>
+<wire x1="261.62" y1="182.88" x2="261.62" y2="180.34" width="0.1524" layer="91"/>
+<pinref part="U$11" gate="G$1" pin="VSS"/>
 </segment>
 <segment>
 <pinref part="U$6" gate="G$1" pin="GND"/>
@@ -14160,24 +14183,20 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 </net>
 <net name="5V_PC" class="0">
 <segment>
-<pinref part="U$4" gate="G$1" pin="HA"/>
-<wire x1="289.56" y1="203.2" x2="292.1" y2="203.2" width="0.1524" layer="91"/>
-<label x="292.1" y="203.2" size="1.778" layer="95"/>
+<wire x1="294.64" y1="157.48" x2="297.18" y2="157.48" width="0.1524" layer="91"/>
+<label x="297.18" y="157.48" size="1.778" layer="95"/>
+<pinref part="U$4" gate="G$1" pin="PA1"/>
+<pinref part="U$4" gate="G$1" pin="PW1"/>
+<wire x1="294.64" y1="154.94" x2="297.18" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="297.18" y1="154.94" x2="297.18" y2="157.48" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U$4" gate="G$1" pin="HB"/>
-<wire x1="289.56" y1="193.04" x2="292.1" y2="193.04" width="0.1524" layer="91"/>
-<label x="292.1" y="193.04" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="U$5" gate="G$1" pin="HA"/>
-<wire x1="289.56" y1="154.94" x2="292.1" y2="154.94" width="0.1524" layer="91"/>
-<label x="292.1" y="154.94" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="U$5" gate="G$1" pin="HB"/>
-<wire x1="289.56" y1="144.78" x2="292.1" y2="144.78" width="0.1524" layer="91"/>
-<label x="292.1" y="144.78" size="1.778" layer="95"/>
+<wire x1="294.64" y1="142.24" x2="297.18" y2="142.24" width="0.1524" layer="91"/>
+<label x="297.18" y="142.24" size="1.778" layer="95"/>
+<pinref part="U$4" gate="G$1" pin="PA0"/>
+<pinref part="U$4" gate="G$1" pin="PW0"/>
+<wire x1="294.64" y1="139.7" x2="297.18" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="297.18" y1="139.7" x2="297.18" y2="142.24" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U$10" gate="G$1" pin="8"/>
@@ -14189,6 +14208,22 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <wire x1="426.72" y1="154.94" x2="424.18" y2="154.94" width="0.1524" layer="91"/>
 <label x="416.56" y="154.94" size="1.778" layer="95"/>
 </segment>
+<segment>
+<wire x1="294.64" y1="205.74" x2="297.18" y2="205.74" width="0.1524" layer="91"/>
+<label x="297.18" y="205.74" size="1.778" layer="95"/>
+<pinref part="U$11" gate="G$1" pin="PA1"/>
+<pinref part="U$11" gate="G$1" pin="PW1"/>
+<wire x1="294.64" y1="203.2" x2="297.18" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="297.18" y1="203.2" x2="297.18" y2="205.74" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<wire x1="294.64" y1="190.5" x2="297.18" y2="190.5" width="0.1524" layer="91"/>
+<label x="297.18" y="190.5" size="1.778" layer="95"/>
+<pinref part="U$11" gate="G$1" pin="PA0"/>
+<pinref part="U$11" gate="G$1" pin="PW0"/>
+<wire x1="294.64" y1="187.96" x2="297.18" y2="187.96" width="0.1524" layer="91"/>
+<wire x1="297.18" y1="187.96" x2="297.18" y2="190.5" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="J1X" class="0">
 <segment>
@@ -14197,9 +14232,9 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="416.56" y="185.42" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$4" gate="G$1" pin="WA"/>
-<wire x1="289.56" y1="200.66" x2="292.1" y2="200.66" width="0.1524" layer="91"/>
-<label x="292.1" y="200.66" size="1.778" layer="95"/>
+<wire x1="294.64" y1="200.66" x2="297.18" y2="200.66" width="0.1524" layer="91"/>
+<label x="297.18" y="200.66" size="1.778" layer="95"/>
+<pinref part="U$11" gate="G$1" pin="PB1"/>
 </segment>
 </net>
 <net name="J1Y" class="0">
@@ -14209,9 +14244,9 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="416.56" y="177.8" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$4" gate="G$1" pin="WB"/>
-<wire x1="289.56" y1="190.5" x2="292.1" y2="190.5" width="0.1524" layer="91"/>
-<label x="292.1" y="190.5" size="1.778" layer="95"/>
+<wire x1="294.64" y1="185.42" x2="297.18" y2="185.42" width="0.1524" layer="91"/>
+<label x="297.18" y="185.42" size="1.778" layer="95"/>
+<pinref part="U$11" gate="G$1" pin="PB0"/>
 </segment>
 </net>
 <net name="J2X" class="0">
@@ -14221,9 +14256,9 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="416.56" y="165.1" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$5" gate="G$1" pin="WA"/>
-<wire x1="289.56" y1="152.4" x2="292.1" y2="152.4" width="0.1524" layer="91"/>
-<label x="292.1" y="152.4" size="1.778" layer="95"/>
+<wire x1="294.64" y1="152.4" x2="297.18" y2="152.4" width="0.1524" layer="91"/>
+<label x="297.18" y="152.4" size="1.778" layer="95"/>
+<pinref part="U$4" gate="G$1" pin="PB1"/>
 </segment>
 </net>
 <net name="J2Y" class="0">
@@ -14233,9 +14268,9 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="416.56" y="160.02" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="U$5" gate="G$1" pin="WB"/>
-<wire x1="289.56" y1="142.24" x2="292.1" y2="142.24" width="0.1524" layer="91"/>
-<label x="292.1" y="142.24" size="1.778" layer="95"/>
+<wire x1="294.64" y1="137.16" x2="297.18" y2="137.16" width="0.1524" layer="91"/>
+<label x="297.18" y="137.16" size="1.778" layer="95"/>
+<pinref part="U$4" gate="G$1" pin="PB0"/>
 </segment>
 </net>
 <net name="+5V" class="0">
@@ -14260,11 +14295,6 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <wire x1="378.46" y1="210.82" x2="381" y2="210.82" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U$5" gate="G$1" pin="VDD"/>
-<pinref part="SUPPLY6" gate="+5V" pin="+5V"/>
-<wire x1="261.62" y1="154.94" x2="264.16" y2="154.94" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="SUPPLY7" gate="+5V" pin="+5V"/>
 <wire x1="233.68" y1="203.2" x2="238.76" y2="203.2" width="0.1524" layer="91"/>
 <wire x1="238.76" y1="203.2" x2="238.76" y2="210.82" width="0.1524" layer="91"/>
@@ -14272,9 +14302,17 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 </segment>
 <segment>
 <pinref part="SUPPLY5" gate="+5V" pin="+5V"/>
+<wire x1="261.62" y1="210.82" x2="261.62" y2="208.28" width="0.1524" layer="91"/>
 <wire x1="261.62" y1="208.28" x2="261.62" y2="203.2" width="0.1524" layer="91"/>
-<pinref part="U$4" gate="G$1" pin="VDD"/>
 <wire x1="261.62" y1="203.2" x2="264.16" y2="203.2" width="0.1524" layer="91"/>
+<pinref part="U$11" gate="G$1" pin="!SHDN"/>
+<pinref part="U$11" gate="G$1" pin="VDD"/>
+<wire x1="264.16" y1="208.28" x2="261.62" y2="208.28" width="0.1524" layer="91"/>
+<pinref part="U$11" gate="G$1" pin="!RS"/>
+<wire x1="264.16" y1="200.66" x2="261.62" y2="200.66" width="0.1524" layer="91"/>
+<wire x1="261.62" y1="200.66" x2="261.62" y2="203.2" width="0.1524" layer="91"/>
+<junction x="261.62" y="203.2"/>
+<junction x="261.62" y="208.28"/>
 </segment>
 <segment>
 <pinref part="C7" gate="G$1" pin="2"/>
@@ -14327,47 +14365,61 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="SUPPLY11" gate="+5V" pin="+5V"/>
 <wire x1="86.36" y1="205.74" x2="86.36" y2="208.28" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="U$4" gate="G$1" pin="VDD"/>
+<pinref part="SUPPLY6" gate="+5V" pin="+5V"/>
+<wire x1="264.16" y1="160.02" x2="261.62" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="261.62" y1="160.02" x2="261.62" y2="162.56" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="!SHDN"/>
+<wire x1="264.16" y1="154.94" x2="261.62" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="261.62" y1="154.94" x2="261.62" y2="160.02" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="!RS"/>
+<wire x1="264.16" y1="152.4" x2="261.62" y2="152.4" width="0.1524" layer="91"/>
+<wire x1="261.62" y1="152.4" x2="261.62" y2="154.94" width="0.1524" layer="91"/>
+<junction x="261.62" y="154.94"/>
+<junction x="261.62" y="160.02"/>
+</segment>
 </net>
 <net name="HIGH_MOSI" class="0">
 <segment>
-<pinref part="U$4" gate="G$1" pin="DIN"/>
 <wire x1="243.84" y1="195.58" x2="264.16" y2="195.58" width="0.1524" layer="91"/>
-<pinref part="U$5" gate="G$1" pin="DIN"/>
 <wire x1="243.84" y1="195.58" x2="243.84" y2="182.88" width="0.1524" layer="91"/>
 <wire x1="243.84" y1="182.88" x2="243.84" y2="147.32" width="0.1524" layer="91"/>
 <wire x1="243.84" y1="147.32" x2="264.16" y2="147.32" width="0.1524" layer="91"/>
 <pinref part="U$6" gate="G$1" pin="Y4"/>
 <wire x1="233.68" y1="182.88" x2="243.84" y2="182.88" width="0.1524" layer="91"/>
 <junction x="243.84" y="182.88"/>
+<pinref part="U$11" gate="G$1" pin="SI"/>
+<pinref part="U$4" gate="G$1" pin="SI"/>
 </segment>
 </net>
 <net name="HIGH_SCLK" class="0">
 <segment>
-<pinref part="U$4" gate="G$1" pin="SCLK"/>
 <wire x1="246.38" y1="193.04" x2="264.16" y2="193.04" width="0.1524" layer="91"/>
-<pinref part="U$5" gate="G$1" pin="SCLK"/>
 <wire x1="246.38" y1="193.04" x2="246.38" y2="185.42" width="0.1524" layer="91"/>
 <wire x1="246.38" y1="185.42" x2="246.38" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="246.38" y1="144.78" x2="264.16" y2="144.78" width="0.1524" layer="91"/>
 <pinref part="U$6" gate="G$1" pin="Y3"/>
 <wire x1="233.68" y1="185.42" x2="246.38" y2="185.42" width="0.1524" layer="91"/>
 <junction x="246.38" y="185.42"/>
+<pinref part="U$11" gate="G$1" pin="SCLK"/>
+<pinref part="U$4" gate="G$1" pin="SCLK"/>
 </segment>
 </net>
 <net name="HIGH_CS1" class="0">
 <segment>
-<pinref part="U$4" gate="G$1" pin="!CS"/>
 <pinref part="U$6" gate="G$1" pin="Y1"/>
 <wire x1="233.68" y1="190.5" x2="264.16" y2="190.5" width="0.1524" layer="91"/>
+<pinref part="U$11" gate="G$1" pin="!CS"/>
 </segment>
 </net>
 <net name="HIGH_CS2" class="0">
 <segment>
-<pinref part="U$5" gate="G$1" pin="!CS"/>
 <wire x1="248.92" y1="187.96" x2="248.92" y2="142.24" width="0.1524" layer="91"/>
 <wire x1="248.92" y1="142.24" x2="264.16" y2="142.24" width="0.1524" layer="91"/>
 <pinref part="U$6" gate="G$1" pin="Y2"/>
 <wire x1="233.68" y1="187.96" x2="248.92" y2="187.96" width="0.1524" layer="91"/>
+<pinref part="U$4" gate="G$1" pin="!CS"/>
 </segment>
 </net>
 <net name="5V_EXT" class="0">
