@@ -13367,8 +13367,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="+3V9" library="supply1" deviceset="+3V3" device=""/>
 <part name="C22" library="rcl" deviceset="C-EU" device="C0805" value="100nF"/>
 <part name="GND48" library="SparkFun" deviceset="GND" device=""/>
-<part name="U$11" library="Simplex-ICs" deviceset="MCP42XX" device=""/>
-<part name="U$4" library="Simplex-ICs" deviceset="MCP42XX" device=""/>
+<part name="U$11" library="Simplex-ICs" deviceset="MCP42XX" device="" value="MCP42100"/>
+<part name="U$4" library="Simplex-ICs" deviceset="MCP42XX" device="" value="MCP42100"/>
 </parts>
 <sheets>
 <sheet>
