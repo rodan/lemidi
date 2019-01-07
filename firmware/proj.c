@@ -10,9 +10,11 @@
 
 #include "proj.h"
 #include "drivers/sys_messagebus.h"
-#include "drivers/rtc.h"
 #include "drivers/timer_a0.h"
 #include "drivers/uart0.h"
+#include "drivers/spi.h"
+#include "drivers/mcp42xxx.h"
+#include "drivers/max3421.h"
 #include "qa.h"
 
 
@@ -27,30 +29,41 @@ static void parse_UI(enum sys_message msg)
     uart0_rx_enable = 1;
 }
 
-static void schedule(enum sys_message msg)
-{
-}
-
 static void port1_gpx_irq(enum sys_message msg)
 {
-    LED_SWITCH;
+    mcp42_set_pot( 0, 0xaa, 0x33 );
+    //LED_SWITCH;
 }
 
 static void port1_int_irq(enum sys_message msg)
 {
-    LED_SWITCH;
+    //LED_SWITCH;
 }
 
+static void timer_a0_ovf_irq(enum sys_message msg)
+{
+    //LED_SWITCH;
+    /*
+    if (timer_a0_ovf >= tfr) {
+        if (timer_a0_ovf > 65535 - SLOW_REFRESH_DELAY) {
+            return;
+        }
+        tfr = timer_a0_ovf + SLOW_REFRESH_DELAY;
+        get_temperature();
+    }
+    */
+}
 
 int main(void)
 {
     main_init();
-    //rtca_init();
     timer_a0_init();
     uart0_init();
+    spi_init();
+    //spi_fast_mode();
     display_menu();
 
-    //sys_messagebus_register(&schedule, SYS_MSG_RTC_SECOND);
+    sys_messagebus_register(&timer_a0_ovf_irq, SYS_MSG_TIMER0_IFG);
     sys_messagebus_register(&parse_UI, SYS_MSG_UART0_RX);
     sys_messagebus_register(&port1_gpx_irq, SYS_MSG_P1IFG_GPX);
     sys_messagebus_register(&port1_int_irq, SYS_MSG_P1IFG_INT);
@@ -84,7 +97,11 @@ void main_init(void)
     P1SEL = 0;
     P1OUT = 0;
     P1DIR = 0xf0;
-    P1REN = 0xc;
+    P1REN = 0xf;
+
+#ifdef MSP430F5510_DEVBOARD
+    P1OUT = 0x1;
+#endif
 
     // IRQ triggers on rising edge
     P1IES &= ~(TRIG0 + TRIG1);
@@ -120,9 +137,6 @@ void main_init(void)
 
     //PJOUT = 0x00;
     //PJDIR = 0xFF;
-
-#ifdef MSP430F5510_DEVBOARD
-#endif
 
     // disable VUSB LDO and SLDO
     USBKEYPID = 0x9628;
@@ -190,13 +204,6 @@ void check_events(void)
         port1_ifg_int_last_event = 0;
     }
 
-    /*
-    // drivers/rtca
-    if (rtca_last_event & RTCA_EV_SECOND) {
-        msg |= BITF;
-        rtca_last_event = 0;
-    }
-    */
     while (p) {
         // notify listener if he registered for any of these messages
         if (msg & p->listens) {

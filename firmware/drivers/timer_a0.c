@@ -19,7 +19,7 @@ void timer_a0_init(void)
     timer_a0_ovf = 0;
 
     TA0EX0 |= TAIDEX_7;
-    TA0CTL |= TASSEL__ACLK + MC__CONTINOUS + TACLR + ID__8;
+    TA0CTL |= TASSEL__ACLK + MC__CONTINOUS + TACLR + ID__8 + TAIE;
     __enable_interrupt();
 }
 

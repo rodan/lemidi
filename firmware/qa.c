@@ -4,7 +4,6 @@
 
 #include "drivers/uart0.h"
 #include "drivers/timer_a0.h"
-#include "drivers/rtc.h"
 #include "version.h"
 #include "qa.h"
 
@@ -41,8 +40,6 @@ void parse_user_input(void)
                 LED_OFF;
             }
         } else if (strstr(in, "stat")) {
-            snprintf(str_temp, STR_LEN, "  rtca %lus\r\n", rtca_time.sys );
-            uart0_tx_str(str_temp, strlen(str_temp));
             snprintf(str_temp, STR_LEN, "  fault 0x%x, UCSCTL7 0x%x\r\n", SFRIFG1&OFIFG, UCSCTL7 );
             uart0_tx_str(str_temp, strlen(str_temp));
             snprintf(str_temp, STR_LEN, "  UCSCTL4 0x%x, UCSCTL6 0x%x\r\n", UCSCTL4, UCSCTL6 );

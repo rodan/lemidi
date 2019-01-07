@@ -1,0 +1,16 @@
+proj.txt
+proj.elf
+proj.dep
+proj.cflags
+*.[oa]
+*.pyc
+*.*~
+*.s
+*.swp
+*.?#?
+*.lck
+.gitignore
+*.pyc
+output.map
+tags
+docs

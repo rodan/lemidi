@@ -16,6 +16,7 @@ enum sys_message {
     SYS_MSG_TIMER0_CRR2 = BIT2, // timer_a0_delay_noblk_ccr2
     SYS_MSG_TIMER0_CRR3 = BIT3, // timer_a0_delay_noblk_ccr3
     SYS_MSG_TIMER0_CRR4 = BIT4,
+    SYS_MSG_TIMER0_IFG = BIT5,  // timer_a0 overflow
     // UARTs
     SYS_MSG_UART0_RX = BITA,
     // interrupts
