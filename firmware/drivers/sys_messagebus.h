@@ -18,8 +18,9 @@ enum sys_message {
     SYS_MSG_TIMER0_CRR4 = BIT4,
     // UARTs
     SYS_MSG_UART0_RX = BITA,
-    SYS_MSG_UART1_RX = BITB,
-    SYS_MSG_PYRO_RX = BITC,
+    // interrupts
+    SYS_MSG_P1IFG_GPX = BITD,   // port1 interrupt
+    SYS_MSG_P1IFG_INT = BITE,   // port1 interrupt
     // RTC
     SYS_MSG_RTC_SECOND = BITF,  // second event from the hardware RTC
 };
