@@ -23,6 +23,10 @@
     #define LED_OFF         P4OUT &= ~BIT7
 #endif
 
+// customize the chip select pin for your environment
+#define MAX3421_CS_SELECT   P4OUT &= ~BIT6
+#define MAX3421_CS_DESELECT  P4OUT |= BIT6
+
 
 // USB interrupts
 #define TRIG0               BIT0

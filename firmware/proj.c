@@ -32,6 +32,9 @@ static void parse_UI(enum sys_message msg)
 static void port1_gpx_irq(enum sys_message msg)
 {
     mcp42_set_pot( 0, 0xaa, 0x33 );
+    max3421_write(21, 0x4); //status led1 on
+    max3421_write(21, 0x8); //status led2 on
+
     //LED_SWITCH;
 }
 
