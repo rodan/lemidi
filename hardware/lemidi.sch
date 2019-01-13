@@ -13484,7 +13484,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <instance part="SUPPLY8" gate="+5V" x="228.6" y="144.78"/>
 <instance part="C13" gate="G$1" x="205.74" y="132.08" rot="R180"/>
 <instance part="GND29" gate="1" x="205.74" y="124.46"/>
-<instance part="J1" gate="G$1" x="48.26" y="198.12" rot="R270"/>
+<instance part="J1" gate="G$1" x="48.26" y="198.12" rot="MR270"/>
 <instance part="SUPPLY9" gate="+5V" x="48.26" y="210.82"/>
 <instance part="C14" gate="G$1" x="254" y="35.56" rot="R180"/>
 <instance part="GND31" gate="1" x="254" y="27.94"/>
@@ -14773,18 +14773,18 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 </net>
 <net name="N$10" class="0">
 <segment>
-<pinref part="J1" gate="G$1" pin="1"/>
-<wire x1="50.8" y1="203.2" x2="50.8" y2="205.74" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="205.74" x2="55.88" y2="205.74" width="0.1524" layer="91"/>
 <pinref part="U$12" gate="G$1" pin="P$1"/>
+<pinref part="J1" gate="G$1" pin="3"/>
+<wire x1="50.8" y1="203.2" x2="50.8" y2="205.74" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$23" class="0">
 <segment>
 <pinref part="Q5" gate="G$1" pin="S"/>
-<pinref part="J1" gate="G$1" pin="3"/>
 <wire x1="40.64" y1="205.74" x2="45.72" y2="205.74" width="0.1524" layer="91"/>
-<wire x1="45.72" y1="205.74" x2="45.72" y2="203.2" width="0.1524" layer="91"/>
+<pinref part="J1" gate="G$1" pin="1"/>
+<wire x1="45.72" y1="203.2" x2="45.72" y2="205.74" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$24" class="0">
