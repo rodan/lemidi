@@ -13271,17 +13271,17 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="R8" library="rcl" deviceset="R-EU_" device="R0805W" value="4k7"/>
 <part name="+3V2" library="supply1" deviceset="+3V3" device=""/>
 <part name="OK1" library="optocoupler" deviceset="TLP283-4" device=""/>
-<part name="Q2" library="Simplex-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="_SOT23-3" value="IRLML6246"/>
+<part name="Q2" library="Simplex-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="_SOT23-3" value="PMBF170"/>
 <part name="R26" library="rcl" deviceset="R-EU_" device="R0805W" value="820"/>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
-<part name="Q1" library="Simplex-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="_SOT23-3" value="IRLML6246"/>
+<part name="Q1" library="Simplex-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="_SOT23-3" value="PMBF170"/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="R0805W" value="820"/>
 <part name="GND7" library="SparkFun" deviceset="GND" device=""/>
-<part name="Q3" library="Simplex-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="_SOT23-3" value="IRLML6246"/>
+<part name="Q3" library="Simplex-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="_SOT23-3" value="PMBF170"/>
 <part name="R3" library="rcl" deviceset="R-EU_" device="R0805W" value="820"/>
 <part name="GND8" library="SparkFun" deviceset="GND" device=""/>
-<part name="Q4" library="Simplex-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="_SOT23-3" value="IRLML6246"/>
+<part name="Q4" library="Simplex-DiscreteSemi" deviceset="MOSFET-NCHANNEL" device="_SOT23-3" value="PMBF170"/>
 <part name="R4" library="rcl" deviceset="R-EU_" device="R0805W" value="820"/>
 <part name="GND11" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND12" library="SparkFun" deviceset="GND" device=""/>
@@ -13373,7 +13373,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <sheets>
 <sheet>
 <plain>
-<text x="449.58" y="7.62" size="3.81" layer="97">2.1</text>
+<text x="449.58" y="7.62" size="3.81" layer="97">2.0</text>
 <text x="30.48" y="53.34" size="1.778" layer="97">uC pins: 7 11 28</text>
 <text x="30.48" y="22.86" size="1.778" layer="97">digital output pins: 
  - MOSI
@@ -13916,6 +13916,9 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="C21" gate="G$1" pin="2"/>
 <wire x1="203.2" y1="203.2" x2="193.04" y2="203.2" width="0.1524" layer="91"/>
 <junction x="203.2" y="203.2"/>
+<pinref part="U$6" gate="G$1" pin="EN"/>
+<wire x1="208.28" y1="198.12" x2="203.2" y2="198.12" width="0.1524" layer="91"/>
+<wire x1="203.2" y1="198.12" x2="203.2" y2="203.2" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C17" gate="G$1" pin="2"/>
@@ -14063,7 +14066,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="OK1" gate="A" pin="C"/>
 </segment>
 </net>
-<net name="B1_EN" class="0">
+<net name="B0_EN" class="0">
 <segment>
 <pinref part="Q4" gate="G$1" pin="G"/>
 <wire x1="322.58" y1="182.88" x2="317.5" y2="182.88" width="0.1524" layer="91"/>
@@ -14075,7 +14078,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="86.36" y="25.4" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
-<net name="B2_EN" class="0">
+<net name="B1_EN" class="0">
 <segment>
 <pinref part="Q3" gate="G$1" pin="G"/>
 <wire x1="370.84" y1="182.88" x2="365.76" y2="182.88" width="0.1524" layer="91"/>
@@ -14087,7 +14090,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="86.36" y="27.94" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
-<net name="B3_EN" class="0">
+<net name="B2_EN" class="0">
 <segment>
 <pinref part="Q1" gate="G$1" pin="G"/>
 <wire x1="322.58" y1="127" x2="317.5" y2="127" width="0.1524" layer="91"/>
@@ -14099,7 +14102,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="86.36" y="30.48" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
-<net name="B4_EN" class="0">
+<net name="B3_EN" class="0">
 <segment>
 <pinref part="Q2" gate="G$1" pin="G"/>
 <wire x1="370.84" y1="127" x2="365.76" y2="127" width="0.1524" layer="91"/>
@@ -14111,7 +14114,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="86.36" y="33.02" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
-<net name="B1" class="0">
+<net name="B0" class="0">
 <segment>
 <pinref part="OK1" gate="A" pin="COL"/>
 <wire x1="350.52" y1="210.82" x2="355.6" y2="210.82" width="0.1524" layer="91"/>
@@ -14123,7 +14126,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="416.56" y="187.96" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="B2" class="0">
+<net name="B1" class="0">
 <segment>
 <pinref part="OK1" gate="B" pin="COL"/>
 <wire x1="398.78" y1="210.82" x2="403.86" y2="210.82" width="0.1524" layer="91"/>
@@ -14135,7 +14138,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="416.56" y="175.26" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="B3" class="0">
+<net name="B2" class="0">
 <segment>
 <pinref part="OK1" gate="C" pin="COL"/>
 <wire x1="350.52" y1="154.94" x2="355.6" y2="154.94" width="0.1524" layer="91"/>
@@ -14147,7 +14150,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <label x="416.56" y="167.64" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="B4" class="0">
+<net name="B3" class="0">
 <segment>
 <pinref part="OK1" gate="D" pin="COL"/>
 <wire x1="398.78" y1="154.94" x2="403.86" y2="154.94" width="0.1524" layer="91"/>
@@ -14225,7 +14228,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <wire x1="297.18" y1="187.96" x2="297.18" y2="190.5" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="J1X" class="0">
+<net name="J0X" class="0">
 <segment>
 <pinref part="U$10" gate="G$1" pin="3"/>
 <wire x1="426.72" y1="185.42" x2="424.18" y2="185.42" width="0.1524" layer="91"/>
@@ -14237,7 +14240,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="U$11" gate="G$1" pin="PB1"/>
 </segment>
 </net>
-<net name="J1Y" class="0">
+<net name="J0Y" class="0">
 <segment>
 <pinref part="U$10" gate="G$1" pin="6"/>
 <wire x1="426.72" y1="177.8" x2="424.18" y2="177.8" width="0.1524" layer="91"/>
@@ -14249,7 +14252,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="U$11" gate="G$1" pin="PB0"/>
 </segment>
 </net>
-<net name="J2X" class="0">
+<net name="J1X" class="0">
 <segment>
 <pinref part="U$10" gate="G$1" pin="11"/>
 <wire x1="426.72" y1="165.1" x2="424.18" y2="165.1" width="0.1524" layer="91"/>
@@ -14261,7 +14264,7 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pinref part="U$4" gate="G$1" pin="PB1"/>
 </segment>
 </net>
-<net name="J2Y" class="0">
+<net name="J1Y" class="0">
 <segment>
 <pinref part="U$10" gate="G$1" pin="13"/>
 <wire x1="426.72" y1="160.02" x2="424.18" y2="160.02" width="0.1524" layer="91"/>

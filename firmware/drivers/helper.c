@@ -122,23 +122,30 @@ float sq(const float x)
 uint8_t str_to_uint16(char *str, uint16_t * out, const uint8_t seek,
                       const uint8_t len, const uint16_t min, const uint16_t max)
 {
-    uint16_t val = 0;//, pow = 1;
-    uint8_t i;
-    char c;
+    uint16_t val = 0;
+    uint32_t pow = 1;
+    uint8_t i, c;
 
-    for (i = 0; i < len; i++) {
-        c = str[seek + i];
-        if ((c > 47) && (c < 58)) {
-            val *= 10;
-            val += c - 48;
+    for (i = len; i > seek; i--) {
+        c = str[i-1] - 48;
+        if (c < 10) {
+            val += c * pow;
+            pow *= 10;
+        } else {
+            if (val) {
+                // if we already have a number and this char is unexpected
+                break;
+            }
         }
     }
+
     if ((val >= min) && (val <= max)) {
         *out = val;
-        return EXIT_SUCCESS;
     } else {
         return EXIT_FAILURE;
     }
+
+    return EXIT_SUCCESS;
 }
 
 uint8_t str_to_uint32(char *str, uint32_t * out, const uint8_t seek,

@@ -29,11 +29,10 @@ MAX3421_CS_DESELECT	proj.h	/^#define MAX3421_CS_DESELECT /;"	d
 MAX3421_CS_SELECT	proj.h	/^#define MAX3421_CS_SELECT /;"	d
 MAX3421_READ	drivers/max3421.h	/^#define MAX3421_READ /;"	d
 MAX3421_WRITE	drivers/max3421.h	/^#define MAX3421_WRITE /;"	d
-MCP42XXX_CS_OUT	drivers/mcp42xxx.h	/^static const uint16_t MCP42XXX_CS_OUT[6] = { 0x223, 0x222 };$/;"	v	typeref:typename:const uint16_t[6]
+MCP42XXX_CS_OUT	drivers/mcp42xxx.h	/^static const uint16_t MCP42XXX_CS_OUT[6] = { 0x223, 0x223 };$/;"	v	typeref:typename:const uint16_t[6]
 MCP42XXX_CS_PORT	drivers/mcp42xxx.h	/^static const uint8_t MCP42XXX_CS_PORT[6] = { BIT7, BIT6 };$/;"	v	typeref:typename:const uint8_t[6]
 MCP42XXX_SHUTDOWN	drivers/mcp42xxx.h	/^#define MCP42XXX_SHUTDOWN /;"	d
 MCP42XXX_WRITE_DATA	drivers/mcp42xxx.h	/^#define MCP42XXX_WRITE_DATA /;"	d
-MSP430F5510_DEVBOARD	config.h	/^#define MSP430F5510_DEVBOARD$/;"	d
 OBJS	Makefile	/^OBJS := $(patsubst %.c,%.o,$(SRCS))$/;"	m
 PI	drivers/helper.h	/^#define PI /;"	d
 PIBY2_FLOAT	drivers/helper.h	/^#define PIBY2_FLOAT /;"	d
@@ -68,13 +67,13 @@ TIMER_A0_EVENT_CCR2	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR2 = BIT2,$/;"	e	e
 TIMER_A0_EVENT_CCR3	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR3 = BIT3,$/;"	e	enum:timer_a0_event
 TIMER_A0_EVENT_CCR4	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR4 = BIT4,$/;"	e	enum:timer_a0_event
 TIMER_A0_EVENT_IFG	drivers/timer_a0.h	/^    TIMER_A0_EVENT_IFG = BIT5,$/;"	e	enum:timer_a0_event
+TIMER_A0_EVENT_NONE	drivers/timer_a0.h	/^    TIMER_A0_EVENT_NONE = 0,$/;"	e	enum:timer_a0_event
 TRIG0	proj.h	/^#define TRIG0 /;"	d
 TRIG1	proj.h	/^#define TRIG1 /;"	d
 UART0_EV_RX	drivers/uart0.h	/^    UART0_EV_RX = BIT0,$/;"	e	enum:uart0_tevent
 UART0_EV_TX	drivers/uart0.h	/^    UART0_EV_TX = BIT1$/;"	e	enum:uart0_tevent
 UART0_RXBUF_SZ	drivers/uart0.h	/^#define UART0_RXBUF_SZ /;"	d
 USCI_A0_ISR	drivers/uart0.c	/^void USCI_A0_ISR(void)$/;"	f	typeref:typename:void
-USE_WATCHDOG	config.h	/^#define USE_WATCHDOG$/;"	d
 USE_XT2	config.h	/^#define USE_XT2$/;"	d
 _10ms	drivers/timer_a0.h	/^#define _10ms /;"	d
 _10s	drivers/timer_a0.h	/^#define _10s /;"	d
@@ -110,9 +109,24 @@ _sin	drivers/helper.c	/^float _sin(const float x)$/;"	f	typeref:typename:float
 _sqrt	drivers/helper.c	/^float _sqrt(const float number)$/;"	f	typeref:typename:float
 address	tools/msp430-ram-usage	/^address = objs['__stack'][0]$/;"	v
 all	Makefile	/^all: depend config.h tags $(PROJ).elf$/;"	t
+b	proj.h	/^    uint8_t b[4];$/;"	m	struct:controller_t	typeref:typename:uint8_t[4]
+b0_off	proj.h	/^#define b0_off /;"	d
+b0_on	proj.h	/^#define b0_on /;"	d
+b0_switch	proj.h	/^#define b0_switch /;"	d
+b1_off	proj.h	/^#define b1_off /;"	d
+b1_on	proj.h	/^#define b1_on /;"	d
+b1_switch	proj.h	/^#define b1_switch /;"	d
+b2_off	proj.h	/^#define b2_off /;"	d
+b2_on	proj.h	/^#define b2_on /;"	d
+b2_switch	proj.h	/^#define b2_switch /;"	d
+b3_off	proj.h	/^#define b3_off /;"	d
+b3_on	proj.h	/^#define b3_on /;"	d
+b3_switch	proj.h	/^#define b3_switch /;"	d
 check_events	proj.c	/^void check_events(void)$/;"	f	typeref:typename:void
 clean	Makefile	/^clean: $(SUBDIRS)$/;"	t
 config.h	Makefile	/^config.h:$/;"	t
+controller_t	proj.h	/^struct controller_t {$/;"	s
+ctrl	proj.h	/^struct controller_t ctrl;$/;"	v	typeref:struct:controller_t
 depend	Makefile	/^depend: $(PROJ).dep$/;"	t
 desc	tools/msp430-ram-usage	/^                desc = '%s | %s' % (mmap[address+x], desc)$/;"	v
 desc	tools/msp430-ram-usage	/^                desc = '%s%s (%d)' % ($/;"	v
@@ -123,6 +137,8 @@ false	proj.h	/^#define false /;"	d
 fn	drivers/sys_messagebus.h	/^    void (*fn) (enum sys_message);$/;"	m	struct:sys_messagebus	typeref:typename:void (*)(enum sys_message)
 free	tools/msp430-ram-usage	/^free = 0$/;"	v
 install	Makefile	/^install: $(PROJ).elf$/;"	t
+j0	proj.h	/^    uint8_t j0[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
+j1	proj.h	/^    uint8_t j1[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
 listens	drivers/sys_messagebus.h	/^    enum sys_message listens;$/;"	m	struct:sys_messagebus	typeref:enum:sys_message
 m	tools/msp430-ram-usage	/^    m = re_obj.search(line)$/;"	v
 main	proj.c	/^int main(void)$/;"	f	typeref:typename:int

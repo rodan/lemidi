@@ -56,7 +56,7 @@ void mcp42_set_pot(const uint8_t mcp42_id, const uint8_t pot_ch0_val, const uint
     ptr = (uint8_t *) MCP42XXX_CS_OUT[mcp42_id];
     *ptr &= ~MCP42XXX_CS_PORT[mcp42_id];
 
-    // set volume
+    // set wipers
     spi_send_frame(data, 4);
 
     // deselect slave

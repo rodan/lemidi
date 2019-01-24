@@ -31,9 +31,9 @@ static void parse_UI(enum sys_message msg)
 
 static void port1_gpx_irq(enum sys_message msg)
 {
-    mcp42_set_pot( 0, 0xaa, 0x33 );
-    max3421_write(21, 0x4); //status led1 on
-    max3421_write(21, 0x8); //status led2 on
+    //mcp42_set_pot( 0, 0xaa, 0x33 );
+    //max3421_write(21, 0x4); //status led1 on
+    //max3421_write(21, 0x8); //status led2 on
 
     //LED_SWITCH;
 }
@@ -96,15 +96,10 @@ void main_init(void)
     //SetVCore(3);
 
     // ports - consult pinout.ods
-    
     P1SEL = 0;
-    P1OUT = 0;
-    P1DIR = 0xf0;
-    P1REN = 0xf;
-
-#ifdef MSP430F5510_DEVBOARD
-    P1OUT = 0x1;
-#endif
+    P1OUT = 0x3;
+    P1DIR = 0xfc;
+    P1REN = 0x3;
 
     // IRQ triggers on rising edge
     P1IES &= ~(TRIG0 + TRIG1);
@@ -115,8 +110,13 @@ void main_init(void)
 
     P2SEL = 0;
     P2OUT = 0;
-    P2DIR = 0;
-    P2REN = 0x1;
+    P2DIR = 0xff;
+    P2REN = 0;
+
+    P3SEL = 0;
+    P3OUT = 0;
+    P3DIR = 0x1f;
+    P3REN = 0;
 
     PMAPPWD = 0x02D52;
     // set up port mappings
@@ -135,8 +135,46 @@ void main_init(void)
 
     P6SEL = 0;
     P6OUT = 0;
-    P6DIR = 0x2;
-    P6REN = 0xd;
+    P6DIR = 0xff;
+    P6REN = 0x0;
+
+/*
+    P1SEL = 0;
+    P1OUT = 0x0;
+    P1DIR = 0x0;
+    P1REN = 0x0;
+
+    // IRQ triggers on rising edge
+    //P1IES &= ~(TRIG0 + TRIG1);
+    // Reset IRQ flags
+    //P1IFG &= ~(TRIG0 + TRIG1);
+    // Enable interrupts
+    //P1IE |= TRIG0 + TRIG1;
+
+    P2SEL = 0;
+    P2OUT = 0;
+    P2DIR = 0;
+    P2REN = 0;
+
+    P3SEL = 0;
+    P3OUT = 0;
+    P3DIR = 0;
+    P3REN = 0;
+
+    P4SEL = 0;
+    P4OUT = 0;
+    P4DIR = 0;
+    P4REN = 0;
+
+    P5SEL = 0;
+    P5OUT = 0;
+    P5DIR = 0;
+
+    P6SEL = 0;
+    P6OUT = 0;
+    P6DIR = 0;
+    P6REN = 0;
+*/
 
     //PJOUT = 0x00;
     //PJDIR = 0xFF;

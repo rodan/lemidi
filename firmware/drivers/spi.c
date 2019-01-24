@@ -25,7 +25,7 @@ void spi_init(void)
     //Initialize USCI_B1 for SPI Master operation
     UCB1CTL1 |= UCSWRST;        //Put state machine in reset
     //UCB1CTL0 = UCCKPH | UCCKPL | UCMSB | UCMST | UCMODE_0 | UCSYNC;      //3-pin, 8-bit SPI master
-    UCB1CTL0 = UCMSB | UCMST | UCMODE_0 | UCSYNC;      //3-pin, 8-bit SPI master
+    UCB1CTL0 = UCCKPL | UCMSB | UCMST | UCMODE_0 | UCSYNC;      //3-pin, 8-bit SPI master
     //Clock polarity select - The inactive state is high
     //MSB first
     UCB1CTL1 = UCSWRST | UCSSEL_2;      //Use SMCLK, keep RESET
