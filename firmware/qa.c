@@ -91,6 +91,12 @@ void parse_user_input(void)
                 uart0_tx_str(str_temp, strlen(str_temp));
             }
         }
+    } else if (d == 'l') {
+        if (strstr(in, "1 on")) {
+            max3421_write(21, 0x4); //status led1 on
+        } else if (strstr(in, "2 on")) {
+            max3421_write(21, 0x8); //status led2 on
+        }
     } else if (strstr(in, "stat")) {
             snprintf(str_temp, STR_LEN, "  fault 0x%x, UCSCTL7 0x%x\r\n", SFRIFG1&OFIFG, UCSCTL7 );
             uart0_tx_str(str_temp, strlen(str_temp));

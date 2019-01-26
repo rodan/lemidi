@@ -20,4 +20,9 @@ Features:
 
  prototype pictures available here:  
  documentation available here:       
- 
+
+ power consumption
+   800uA without the USB subsystem
+   +5mA for each active button
+
+

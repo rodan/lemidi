@@ -40,8 +40,8 @@
 #define b3_switch   P1OUT ^= BIT4
 
 // customize the chip select pin for your environment
-#define MAX3421_CS_SELECT   P4OUT &= ~BIT6
-#define MAX3421_CS_DESELECT  P4OUT |= BIT6
+#define MAX3421_CS_SELECT   P4OUT &= ~BIT0
+#define MAX3421_CS_DESELECT  P4OUT |= BIT0
 
 
 // USB interrupts
