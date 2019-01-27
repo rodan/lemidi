@@ -71,6 +71,8 @@ int main(void)
     sys_messagebus_register(&port1_gpx_irq, SYS_MSG_P1IFG_GPX);
     sys_messagebus_register(&port1_int_irq, SYS_MSG_P1IFG_INT);
 
+    MAX3421_init();
+
     // main loop
     while (1) {
         _BIS_SR(LPM3_bits + GIE);

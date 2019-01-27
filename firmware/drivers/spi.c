@@ -2,7 +2,7 @@
 #include "spi.h"
 
 #define SPI_SIMO        BIT1
-//#define SPI_SOMI        BIT2
+#define SPI_SOMI        BIT2
 #define SPI_CLK         BIT3
 #define SPI_SEL         P4SEL
 #define SPI_DIR         P4DIR

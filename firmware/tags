@@ -20,19 +20,28 @@ COMMIT	version.h	/^#define COMMIT /;"	d
 DEBUG	Makefile	/^DEBUG := $(shell grep "^\\#define CONFIG_DEBUG" config.h)$/;"	m
 EXIT_FAILURE	proj.h	/^#define EXIT_FAILURE /;"	d
 EXIT_SUCCESS	proj.h	/^#define EXIT_SUCCESS /;"	d
+GPX_BUSACT	drivers/max3421e.h	/^#define GPX_BUSACT /;"	d
+GPX_OPERATE	drivers/max3421e.h	/^#define GPX_OPERATE /;"	d
+GPX_SOF	drivers/max3421e.h	/^#define GPX_SOF /;"	d
+GPX_VBDET	drivers/max3421e.h	/^#define GPX_VBDET /;"	d
 LD	Makefile	/^LD		= msp430-elf-ld$/;"	m
 LDFLAGS	Makefile	/^LDFLAGS		= -lm$/;"	m
 LED_OFF	proj.h	/^    #define LED_OFF /;"	d
 LED_ON	proj.h	/^    #define LED_ON /;"	d
 LED_SWITCH	proj.h	/^    #define LED_SWITCH /;"	d
+MAX3421E_RST_OFF	proj.h	/^#define MAX3421E_RST_OFF /;"	d
+MAX3421E_RST_ON	proj.h	/^#define MAX3421E_RST_ON /;"	d
 MAX3421_CS_DESELECT	proj.h	/^#define MAX3421_CS_DESELECT /;"	d
 MAX3421_CS_SELECT	proj.h	/^#define MAX3421_CS_SELECT /;"	d
 MAX3421_READ	drivers/max3421.h	/^#define MAX3421_READ /;"	d
 MAX3421_WRITE	drivers/max3421.h	/^#define MAX3421_WRITE /;"	d
+MAX3421_init	drivers/max3421.c	/^uint8_t MAX3421_init(void)$/;"	f	typeref:typename:uint8_t
 MCP42XXX_CS_OUT	drivers/mcp42xxx.h	/^static const uint16_t MCP42XXX_CS_OUT[6] = { 0x223, 0x223 };$/;"	v	typeref:typename:const uint16_t[6]
 MCP42XXX_CS_PORT	drivers/mcp42xxx.h	/^static const uint8_t MCP42XXX_CS_PORT[6] = { BIT7, BIT6 };$/;"	v	typeref:typename:const uint8_t[6]
 MCP42XXX_SHUTDOWN	drivers/mcp42xxx.h	/^#define MCP42XXX_SHUTDOWN /;"	d
 MCP42XXX_WRITE_DATA	drivers/mcp42xxx.h	/^#define MCP42XXX_WRITE_DATA /;"	d
+MODE_FS_HOST	drivers/max3421e.h	/^#define MODE_FS_HOST /;"	d
+MODE_LS_HOST	drivers/max3421e.h	/^#define MODE_LS_HOST /;"	d
 OBJS	Makefile	/^OBJS := $(patsubst %.c,%.o,$(SRCS))$/;"	m
 PI	drivers/helper.h	/^#define PI /;"	d
 PIBY2_FLOAT	drivers/helper.h	/^#define PIBY2_FLOAT /;"	d
@@ -46,6 +55,7 @@ SPI_OUT	drivers/spi.c	/^#define SPI_OUT /;"	d	file:
 SPI_REN	drivers/spi.c	/^#define SPI_REN /;"	d	file:
 SPI_SEL	drivers/spi.c	/^#define SPI_SEL /;"	d	file:
 SPI_SIMO	drivers/spi.c	/^#define SPI_SIMO /;"	d	file:
+SPI_SOMI	drivers/spi.c	/^#define SPI_SOMI /;"	d	file:
 SRCS	Makefile	/^SRCS := $(wildcard *.c)$/;"	m
 STR_LEN	proj.h	/^#define STR_LEN /;"	d
 SUBDIRS	Makefile	/^SUBDIRS = drivers$/;"	m
@@ -105,6 +115,7 @@ __UART0_H__	drivers/uart0.h	/^#define __UART0_H__$/;"	d
 __VERSION_H__	version.h	/^#define __VERSION_H__$/;"	d
 _atan2f	drivers/helper.c	/^float _atan2f(const float y, const float x)$/;"	f	typeref:typename:float
 _cos	drivers/helper.c	/^float _cos(const float x)$/;"	f	typeref:typename:float
+_max3421e_h_	drivers/max3421e.h	/^#define _max3421e_h_$/;"	d
 _sin	drivers/helper.c	/^float _sin(const float x)$/;"	f	typeref:typename:float
 _sqrt	drivers/helper.c	/^float _sqrt(const float number)$/;"	f	typeref:typename:float
 address	tools/msp430-ram-usage	/^address = objs['__stack'][0]$/;"	v
@@ -122,6 +133,101 @@ b2_switch	proj.h	/^#define b2_switch /;"	d
 b3_off	proj.h	/^#define b3_off /;"	d
 b3_on	proj.h	/^#define b3_on /;"	d
 b3_switch	proj.h	/^#define b3_switch /;"	d
+bmBUSEVENTIE	drivers/max3421e.h	/^#define bmBUSEVENTIE /;"	d
+bmBUSEVENTIRQ	drivers/max3421e.h	/^#define bmBUSEVENTIRQ /;"	d
+bmBUSRST	drivers/max3421e.h	/^#define bmBUSRST /;"	d
+bmCHIPRES	drivers/max3421e.h	/^#define bmCHIPRES /;"	d
+bmCONDETIE	drivers/max3421e.h	/^#define bmCONDETIE /;"	d
+bmCONDETIRQ	drivers/max3421e.h	/^#define bmCONDETIRQ /;"	d
+bmDELAYISO	drivers/max3421e.h	/^#define bmDELAYISO /;"	d
+bmDMPULLDN	drivers/max3421e.h	/^#define bmDMPULLDN /;"	d
+bmDPPULLDN	drivers/max3421e.h	/^#define bmDPPULLDN /;"	d
+bmFDUPSPI	drivers/max3421e.h	/^#define bmFDUPSPI /;"	d
+bmFRAMEIE	drivers/max3421e.h	/^#define bmFRAMEIE /;"	d
+bmFRAMEIRQ	drivers/max3421e.h	/^#define bmFRAMEIRQ /;"	d
+bmFRMRST	drivers/max3421e.h	/^#define bmFRMRST /;"	d
+bmGPIN0	drivers/max3421e.h	/^#define bmGPIN0 /;"	d
+bmGPIN1	drivers/max3421e.h	/^#define bmGPIN1 /;"	d
+bmGPIN2	drivers/max3421e.h	/^#define bmGPIN2 /;"	d
+bmGPIN3	drivers/max3421e.h	/^#define bmGPIN3 /;"	d
+bmGPIN4	drivers/max3421e.h	/^#define bmGPIN4 /;"	d
+bmGPIN5	drivers/max3421e.h	/^#define bmGPIN5 /;"	d
+bmGPIN6	drivers/max3421e.h	/^#define bmGPIN6 /;"	d
+bmGPIN7	drivers/max3421e.h	/^#define bmGPIN7 /;"	d
+bmGPINIEN0	drivers/max3421e.h	/^#define bmGPINIEN0 /;"	d
+bmGPINIEN1	drivers/max3421e.h	/^#define bmGPINIEN1 /;"	d
+bmGPINIEN2	drivers/max3421e.h	/^#define bmGPINIEN2 /;"	d
+bmGPINIEN3	drivers/max3421e.h	/^#define bmGPINIEN3 /;"	d
+bmGPINIEN4	drivers/max3421e.h	/^#define bmGPINIEN4 /;"	d
+bmGPINIEN5	drivers/max3421e.h	/^#define bmGPINIEN5 /;"	d
+bmGPINIEN6	drivers/max3421e.h	/^#define bmGPINIEN6 /;"	d
+bmGPINIEN7	drivers/max3421e.h	/^#define bmGPINIEN7 /;"	d
+bmGPINIRQ0	drivers/max3421e.h	/^#define bmGPINIRQ0 /;"	d
+bmGPINIRQ1	drivers/max3421e.h	/^#define bmGPINIRQ1 /;"	d
+bmGPINIRQ2	drivers/max3421e.h	/^#define bmGPINIRQ2 /;"	d
+bmGPINIRQ3	drivers/max3421e.h	/^#define bmGPINIRQ3 /;"	d
+bmGPINIRQ4	drivers/max3421e.h	/^#define bmGPINIRQ4 /;"	d
+bmGPINIRQ5	drivers/max3421e.h	/^#define bmGPINIRQ5 /;"	d
+bmGPINIRQ6	drivers/max3421e.h	/^#define bmGPINIRQ6 /;"	d
+bmGPINIRQ7	drivers/max3421e.h	/^#define bmGPINIRQ7 /;"	d
+bmGPINPOL0	drivers/max3421e.h	/^#define bmGPINPOL0 /;"	d
+bmGPINPOL1	drivers/max3421e.h	/^#define bmGPINPOL1 /;"	d
+bmGPINPOL2	drivers/max3421e.h	/^#define bmGPINPOL2 /;"	d
+bmGPINPOL3	drivers/max3421e.h	/^#define bmGPINPOL3 /;"	d
+bmGPINPOL4	drivers/max3421e.h	/^#define bmGPINPOL4 /;"	d
+bmGPINPOL5	drivers/max3421e.h	/^#define bmGPINPOL5 /;"	d
+bmGPINPOL6	drivers/max3421e.h	/^#define bmGPINPOL6 /;"	d
+bmGPINPOL7	drivers/max3421e.h	/^#define bmGPINPOL7 /;"	d
+bmGPOUT0	drivers/max3421e.h	/^#define bmGPOUT0 /;"	d
+bmGPOUT1	drivers/max3421e.h	/^#define bmGPOUT1 /;"	d
+bmGPOUT2	drivers/max3421e.h	/^#define bmGPOUT2 /;"	d
+bmGPOUT3	drivers/max3421e.h	/^#define bmGPOUT3 /;"	d
+bmGPOUT4	drivers/max3421e.h	/^#define bmGPOUT4 /;"	d
+bmGPOUT5	drivers/max3421e.h	/^#define bmGPOUT5 /;"	d
+bmGPOUT6	drivers/max3421e.h	/^#define bmGPOUT6 /;"	d
+bmGPOUT7	drivers/max3421e.h	/^#define bmGPOUT7 /;"	d
+bmGPXA	drivers/max3421e.h	/^#define bmGPXA /;"	d
+bmGPXB	drivers/max3421e.h	/^#define bmGPXB /;"	d
+bmHOST	drivers/max3421e.h	/^#define bmHOST /;"	d
+bmHUBPRE	drivers/max3421e.h	/^#define bmHUBPRE /;"	d
+bmHXFRDNIE	drivers/max3421e.h	/^#define bmHXFRDNIE /;"	d
+bmHXFRDNIRQ	drivers/max3421e.h	/^#define bmHXFRDNIRQ /;"	d
+bmIE	drivers/max3421e.h	/^#define bmIE /;"	d
+bmINTLEVEL	drivers/max3421e.h	/^#define bmINTLEVEL /;"	d
+bmJSTATUS	drivers/max3421e.h	/^#define bmJSTATUS /;"	d
+bmKSTATUS	drivers/max3421e.h	/^#define bmKSTATUS /;"	d
+bmLOWSPEED	drivers/max3421e.h	/^#define bmLOWSPEED /;"	d
+bmNOVBUSIE	drivers/max3421e.h	/^#define bmNOVBUSIE /;"	d
+bmNOVBUSIRQ	drivers/max3421e.h	/^#define bmNOVBUSIRQ /;"	d
+bmOSCOKIE	drivers/max3421e.h	/^#define bmOSCOKIE /;"	d
+bmOSCOKIRQ	drivers/max3421e.h	/^#define bmOSCOKIRQ /;"	d
+bmPOSINT	drivers/max3421e.h	/^#define bmPOSINT /;"	d
+bmPULSEWID0	drivers/max3421e.h	/^#define bmPULSEWID0 /;"	d
+bmPUSLEWID1	drivers/max3421e.h	/^#define bmPUSLEWID1 /;"	d
+bmPWRDOWN	drivers/max3421e.h	/^#define bmPWRDOWN /;"	d
+bmRCVDAVIE	drivers/max3421e.h	/^#define bmRCVDAVIE /;"	d
+bmRCVDAVIRQ	drivers/max3421e.h	/^#define bmRCVDAVIRQ /;"	d
+bmRCVTOG0	drivers/max3421e.h	/^#define bmRCVTOG0 /;"	d
+bmRCVTOG1	drivers/max3421e.h	/^#define bmRCVTOG1 /;"	d
+bmRCVTOGRD	drivers/max3421e.h	/^#define bmRCVTOGRD /;"	d
+bmRWUIE	drivers/max3421e.h	/^#define bmRWUIE /;"	d
+bmRWUIRQ	drivers/max3421e.h	/^#define bmRWUIRQ /;"	d
+bmSAMPLEBUS	drivers/max3421e.h	/^#define bmSAMPLEBUS /;"	d
+bmSE0	drivers/max3421e.h	/^#define bmSE0 /;"	d
+bmSE1	drivers/max3421e.h	/^#define bmSE1 /;"	d
+bmSEPIRQ	drivers/max3421e.h	/^#define bmSEPIRQ /;"	d
+bmSIGRSM	drivers/max3421e.h	/^#define bmSIGRSM /;"	d
+bmSNDBAVIE	drivers/max3421e.h	/^#define bmSNDBAVIE /;"	d
+bmSNDBAVIRQ	drivers/max3421e.h	/^#define bmSNDBAVIRQ /;"	d
+bmSNDTOG0	drivers/max3421e.h	/^#define bmSNDTOG0 /;"	d
+bmSNDTOG1	drivers/max3421e.h	/^#define bmSNDTOG1 /;"	d
+bmSNDTOGRD	drivers/max3421e.h	/^#define bmSNDTOGRD /;"	d
+bmSOFKAENAB	drivers/max3421e.h	/^#define bmSOFKAENAB /;"	d
+bmSUSDNIE	drivers/max3421e.h	/^#define bmSUSDNIE /;"	d
+bmSUSDNIRQ	drivers/max3421e.h	/^#define bmSUSDNIRQ /;"	d
+bmVBUSIE	drivers/max3421e.h	/^#define bmVBUSIE /;"	d
+bmVBUSIRQ	drivers/max3421e.h	/^#define bmVBUSIRQ /;"	d
+bytesRd	drivers/max3421.c	/^uint8_t *bytesRd(uint8_t reg, uint8_t nbytes, uint8_t* data_p)$/;"	f	typeref:typename:uint8_t *
 check_events	proj.c	/^void check_events(void)$/;"	f	typeref:typename:void
 clean	Makefile	/^clean: $(SUBDIRS)$/;"	t
 config.h	Makefile	/^config.h:$/;"	t
@@ -136,6 +242,22 @@ doc	Makefile	/^doc:$/;"	t
 false	proj.h	/^#define false /;"	d
 fn	drivers/sys_messagebus.h	/^    void (*fn) (enum sys_message);$/;"	m	struct:sys_messagebus	typeref:typename:void (*)(enum sys_message)
 free	tools/msp430-ram-usage	/^free = 0$/;"	v
+hrBABBLE	drivers/max3421e.h	/^#define hrBABBLE /;"	d
+hrBADBC	drivers/max3421e.h	/^#define hrBADBC /;"	d
+hrBADREQ	drivers/max3421e.h	/^#define hrBADREQ /;"	d
+hrBUSY	drivers/max3421e.h	/^#define hrBUSY /;"	d
+hrCRCERR	drivers/max3421e.h	/^#define hrCRCERR /;"	d
+hrJERR	drivers/max3421e.h	/^#define hrJERR /;"	d
+hrKERR	drivers/max3421e.h	/^#define hrKERR /;"	d
+hrNAK	drivers/max3421e.h	/^#define hrNAK /;"	d
+hrPIDERR	drivers/max3421e.h	/^#define hrPIDERR /;"	d
+hrPKTERR	drivers/max3421e.h	/^#define hrPKTERR /;"	d
+hrSTALL	drivers/max3421e.h	/^#define hrSTALL /;"	d
+hrSUCCESS	drivers/max3421e.h	/^#define hrSUCCESS /;"	d
+hrTIMEOUT	drivers/max3421e.h	/^#define hrTIMEOUT /;"	d
+hrTOGERR	drivers/max3421e.h	/^#define hrTOGERR /;"	d
+hrUNDEF	drivers/max3421e.h	/^#define hrUNDEF /;"	d
+hrWRONGPID	drivers/max3421e.h	/^#define hrWRONGPID /;"	d
 install	Makefile	/^install: $(PROJ).elf$/;"	t
 j0	proj.h	/^    uint8_t j0[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
 j1	proj.h	/^    uint8_t j1[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
@@ -143,7 +265,6 @@ listens	drivers/sys_messagebus.h	/^    enum sys_message listens;$/;"	m	struct:sy
 m	tools/msp430-ram-usage	/^    m = re_obj.search(line)$/;"	v
 main	proj.c	/^int main(void)$/;"	f	typeref:typename:int
 main_init	proj.c	/^void main_init(void)$/;"	f	typeref:typename:void
-max3421_write	drivers/max3421.c	/^void max3421_write(const uint8_t reg, const uint8_t val)$/;"	f	typeref:typename:void
 mcp42_set_pot	drivers/mcp42xxx.c	/^void mcp42_set_pot(const uint8_t mcp42_id, const uint8_t pot_ch0_val, const uint8_t pot_ch1_val)$/;"	f	typeref:typename:void
 mcp42_set_pot_ch	drivers/mcp42xxx.c	/^void mcp42_set_pot_ch(const uint8_t mcp42_id, const uint8_t pot_id,$/;"	f	typeref:typename:void
 mcp42_shutdown_pot	drivers/mcp42xxx.c	/^void mcp42_shutdown_pot(const uint8_t mcp42_id, const uint8_t pot_id)$/;"	f	typeref:typename:void
@@ -162,8 +283,33 @@ port1_gpx_irq	proj.c	/^static void port1_gpx_irq(enum sys_message msg)$/;"	f	typ
 port1_ifg_gpx_last_event	proj.c	/^volatile uint8_t port1_ifg_gpx_last_event;$/;"	v	typeref:typename:volatile uint8_t
 port1_ifg_int_last_event	proj.c	/^volatile uint8_t port1_ifg_int_last_event;$/;"	v	typeref:typename:volatile uint8_t
 port1_int_irq	proj.c	/^static void port1_int_irq(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+rCPUCTL	drivers/max3421e.h	/^#define rCPUCTL /;"	d
+rGPINIEN	drivers/max3421e.h	/^#define rGPINIEN /;"	d
+rGPINIRQ	drivers/max3421e.h	/^#define rGPINIRQ /;"	d
+rGPINPOL	drivers/max3421e.h	/^#define rGPINPOL /;"	d
+rHCTL	drivers/max3421e.h	/^#define rHCTL /;"	d
+rHIEN	drivers/max3421e.h	/^#define rHIEN /;"	d
+rHIRQ	drivers/max3421e.h	/^#define rHIRQ /;"	d
+rHRSL	drivers/max3421e.h	/^#define rHRSL /;"	d
+rHXFR	drivers/max3421e.h	/^#define rHXFR /;"	d
+rIOPINS1	drivers/max3421e.h	/^#define rIOPINS1 /;"	d
+rIOPINS2	drivers/max3421e.h	/^#define rIOPINS2 /;"	d
+rMODE	drivers/max3421e.h	/^#define rMODE /;"	d
+rPERADDR	drivers/max3421e.h	/^#define rPERADDR /;"	d
+rPINCTL	drivers/max3421e.h	/^#define rPINCTL /;"	d
+rRCVBC	drivers/max3421e.h	/^#define rRCVBC /;"	d
+rRCVFIFO	drivers/max3421e.h	/^#define rRCVFIFO /;"	d
+rREVISION	drivers/max3421e.h	/^#define rREVISION /;"	d
+rSNDBC	drivers/max3421e.h	/^#define rSNDBC /;"	d
+rSNDFIFO	drivers/max3421e.h	/^#define rSNDFIFO /;"	d
+rSUDFIFO	drivers/max3421e.h	/^#define rSUDFIFO /;"	d
+rUSBCTL	drivers/max3421e.h	/^#define rUSBCTL /;"	d
+rUSBIEN	drivers/max3421e.h	/^#define rUSBIEN /;"	d
+rUSBIRQ	drivers/max3421e.h	/^#define rUSBIRQ /;"	d
 radians	drivers/helper.c	/^float radians(const float x)$/;"	f	typeref:typename:float
 re_obj	tools/msp430-ram-usage	/^re_obj = re.compile(r':[ \\t]+([0-9a-f]+)[ \\t]+([0-9a-f]+)[ \\t]+(\\w+)[ \\t]+.* (.*)$')$/;"	v
+regRd	drivers/max3421.c	/^uint8_t regRd(const uint8_t reg)$/;"	f	typeref:typename:uint8_t
+regWr	drivers/max3421.c	/^void regWr(const uint8_t reg, const uint8_t val)$/;"	f	typeref:typename:void
 size	tools/msp430-ram-usage	/^size = objs['__stack'][0] - objs['__data_start'][0]$/;"	v
 spi_end	drivers/spi.c	/^void spi_end(void)$/;"	f	typeref:typename:void
 spi_fast_mode	drivers/spi.c	/^void spi_fast_mode(void)$/;"	f	typeref:typename:void
@@ -191,6 +337,13 @@ timer_a0_init	drivers/timer_a0.c	/^void timer_a0_init(void)$/;"	f	typeref:typena
 timer_a0_last_event	drivers/timer_a0.h	/^volatile enum timer_a0_event timer_a0_last_event;$/;"	v	typeref:typename:volatile enum timer_a0_event
 timer_a0_ovf	drivers/timer_a0.h	/^volatile uint16_t timer_a0_ovf;$/;"	v	typeref:typename:volatile uint16_t
 timer_a0_ovf_irq	proj.c	/^static void timer_a0_ovf_irq(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+tokIN	drivers/max3421e.h	/^#define tokIN /;"	d
+tokINHS	drivers/max3421e.h	/^#define tokINHS /;"	d
+tokISOIN	drivers/max3421e.h	/^#define tokISOIN /;"	d
+tokISOOUT	drivers/max3421e.h	/^#define tokISOOUT /;"	d
+tokOUT	drivers/max3421e.h	/^#define tokOUT /;"	d
+tokOUTHS	drivers/max3421e.h	/^#define tokOUTHS /;"	d
+tokSETUP	drivers/max3421e.h	/^#define tokSETUP /;"	d
 true	proj.h	/^#define true /;"	d
 uart0_init	drivers/uart0.c	/^void uart0_init(void)$/;"	f	typeref:typename:void
 uart0_last_event	drivers/uart0.h	/^volatile enum uart0_tevent uart0_last_event;$/;"	v	typeref:typename:volatile enum uart0_tevent

@@ -39,6 +39,8 @@ void parse_user_input(void)
     char *in = (char *) uart0_rx_buf;
 
     uint16_t inum;
+    uint8_t reg[32];
+    uint8_t i;
 
     if (d == '?') {
         display_menu();
@@ -93,9 +95,25 @@ void parse_user_input(void)
         }
     } else if (d == 'l') {
         if (strstr(in, "1 on")) {
-            max3421_write(21, 0x4); //status led1 on
+            regWr(rIOPINS2, bmGPOUT6); //status led1 on
         } else if (strstr(in, "2 on")) {
-            max3421_write(21, 0x8); //status led2 on
+            regWr(rIOPINS2, bmGPOUT7); //status led2 on
+        }
+    } else if (d == 'i') {
+        //reg = regRd(rIOPINS1);
+        //snprintf(str_temp, STR_LEN, "IOPINS1 0x%x\r\n", reg);
+        //uart0_tx_str(str_temp, strlen(str_temp));
+
+        memset(reg, 0xff, 32);
+        bytesRd(13<<3, 8, reg);
+        for (i=0;i<8;i++) {
+            snprintf(str_temp, STR_LEN, "R%u 0x%x\r\n", i+13, reg[i]);
+            uart0_tx_str(str_temp, strlen(str_temp));
+        }
+        bytesRd(21<<3, 11, reg);
+        for (i=0;i<11;i++) {
+            snprintf(str_temp, STR_LEN, "R%u 0x%x\r\n", i+21, reg[i]);
+            uart0_tx_str(str_temp, strlen(str_temp));
         }
     } else if (strstr(in, "stat")) {
             snprintf(str_temp, STR_LEN, "  fault 0x%x, UCSCTL7 0x%x\r\n", SFRIFG1&OFIFG, UCSCTL7 );
