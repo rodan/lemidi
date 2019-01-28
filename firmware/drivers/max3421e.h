@@ -27,6 +27,11 @@ e-mail   :  support@circuitsathome.com
 
 #define _max3421e_h_
 
+#define SE0     0
+#define SE1     1
+#define FSHOST  2
+#define LSHOST  3
+
 /* MAX3421E register/bit names and bitmasks */
 
 /* MAX3421E command byte format: rrrrr0wa where 'r' is register number  */

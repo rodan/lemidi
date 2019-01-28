@@ -11,11 +11,16 @@
 #define MAX3421_READ  0x0
 
 uint8_t MAX3421_init(void);
+uint8_t MAX3421_getVbusState(void);
 
 // internals
 void regWr(const uint8_t reg, const uint8_t val);
 uint8_t regRd(const uint8_t reg);
-uint8_t *bytesRd(uint8_t reg, uint8_t nbytes, uint8_t* data_p);
+uint8_t *bytesRd(const uint8_t reg, const  uint8_t nbytes, uint8_t* data_p);
+void gpioWr(const uint8_t data);
+uint8_t gpioRd(void);
+uint8_t gpioRdOutput(void);
+void busprobe(void);
 
 #endif
 

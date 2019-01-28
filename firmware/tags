@@ -20,6 +20,7 @@ COMMIT	version.h	/^#define COMMIT /;"	d
 DEBUG	Makefile	/^DEBUG := $(shell grep "^\\#define CONFIG_DEBUG" config.h)$/;"	m
 EXIT_FAILURE	proj.h	/^#define EXIT_FAILURE /;"	d
 EXIT_SUCCESS	proj.h	/^#define EXIT_SUCCESS /;"	d
+FSHOST	drivers/max3421e.h	/^#define FSHOST /;"	d
 GPX_BUSACT	drivers/max3421e.h	/^#define GPX_BUSACT /;"	d
 GPX_OPERATE	drivers/max3421e.h	/^#define GPX_OPERATE /;"	d
 GPX_SOF	drivers/max3421e.h	/^#define GPX_SOF /;"	d
@@ -29,12 +30,14 @@ LDFLAGS	Makefile	/^LDFLAGS		= -lm$/;"	m
 LED_OFF	proj.h	/^    #define LED_OFF /;"	d
 LED_ON	proj.h	/^    #define LED_ON /;"	d
 LED_SWITCH	proj.h	/^    #define LED_SWITCH /;"	d
+LSHOST	drivers/max3421e.h	/^#define LSHOST /;"	d
 MAX3421E_RST_OFF	proj.h	/^#define MAX3421E_RST_OFF /;"	d
 MAX3421E_RST_ON	proj.h	/^#define MAX3421E_RST_ON /;"	d
 MAX3421_CS_DESELECT	proj.h	/^#define MAX3421_CS_DESELECT /;"	d
 MAX3421_CS_SELECT	proj.h	/^#define MAX3421_CS_SELECT /;"	d
 MAX3421_READ	drivers/max3421.h	/^#define MAX3421_READ /;"	d
 MAX3421_WRITE	drivers/max3421.h	/^#define MAX3421_WRITE /;"	d
+MAX3421_getVbusState	drivers/max3421.c	/^uint8_t MAX3421_getVbusState(void)$/;"	f	typeref:typename:uint8_t
 MAX3421_init	drivers/max3421.c	/^uint8_t MAX3421_init(void)$/;"	f	typeref:typename:uint8_t
 MCP42XXX_CS_OUT	drivers/mcp42xxx.h	/^static const uint16_t MCP42XXX_CS_OUT[6] = { 0x223, 0x223 };$/;"	v	typeref:typename:const uint16_t[6]
 MCP42XXX_CS_PORT	drivers/mcp42xxx.h	/^static const uint8_t MCP42XXX_CS_PORT[6] = { BIT7, BIT6 };$/;"	v	typeref:typename:const uint8_t[6]
@@ -49,6 +52,8 @@ PI_FLOAT	drivers/helper.h	/^#define PI_FLOAT /;"	d
 PREC	drivers/helper.h	/^#define PREC /;"	d
 PROJ	Makefile	/^PROJ = proj$/;"	m
 Port1_ISR	proj.c	/^void Port1_ISR(void)$/;"	f	typeref:typename:void
+SE0	drivers/max3421e.h	/^#define SE0 /;"	d
+SE1	drivers/max3421e.h	/^#define SE1 /;"	d
 SPI_CLK	drivers/spi.c	/^#define SPI_CLK /;"	d	file:
 SPI_DIR	drivers/spi.c	/^#define SPI_DIR /;"	d	file:
 SPI_OUT	drivers/spi.c	/^#define SPI_OUT /;"	d	file:
@@ -227,7 +232,8 @@ bmSUSDNIE	drivers/max3421e.h	/^#define bmSUSDNIE /;"	d
 bmSUSDNIRQ	drivers/max3421e.h	/^#define bmSUSDNIRQ /;"	d
 bmVBUSIE	drivers/max3421e.h	/^#define bmVBUSIE /;"	d
 bmVBUSIRQ	drivers/max3421e.h	/^#define bmVBUSIRQ /;"	d
-bytesRd	drivers/max3421.c	/^uint8_t *bytesRd(uint8_t reg, uint8_t nbytes, uint8_t* data_p)$/;"	f	typeref:typename:uint8_t *
+busprobe	drivers/max3421.c	/^void busprobe(void)$/;"	f	typeref:typename:void
+bytesRd	drivers/max3421.c	/^uint8_t *bytesRd(const uint8_t reg, const uint8_t nbytes, uint8_t * data_p)$/;"	f	typeref:typename:uint8_t *
 check_events	proj.c	/^void check_events(void)$/;"	f	typeref:typename:void
 clean	Makefile	/^clean: $(SUBDIRS)$/;"	t
 config.h	Makefile	/^config.h:$/;"	t
@@ -242,6 +248,9 @@ doc	Makefile	/^doc:$/;"	t
 false	proj.h	/^#define false /;"	d
 fn	drivers/sys_messagebus.h	/^    void (*fn) (enum sys_message);$/;"	m	struct:sys_messagebus	typeref:typename:void (*)(enum sys_message)
 free	tools/msp430-ram-usage	/^free = 0$/;"	v
+gpioRd	drivers/max3421.c	/^uint8_t gpioRd(void)$/;"	f	typeref:typename:uint8_t
+gpioRdOutput	drivers/max3421.c	/^uint8_t gpioRdOutput(void)$/;"	f	typeref:typename:uint8_t
+gpioWr	drivers/max3421.c	/^void gpioWr(const uint8_t data)$/;"	f	typeref:typename:void
 hrBABBLE	drivers/max3421e.h	/^#define hrBABBLE /;"	d
 hrBADBC	drivers/max3421e.h	/^#define hrBADBC /;"	d
 hrBADREQ	drivers/max3421e.h	/^#define hrBADREQ /;"	d
@@ -352,3 +361,4 @@ uart0_rx_buf	drivers/uart0.h	/^volatile char uart0_rx_buf[UART0_RXBUF_SZ];$/;"	v
 uart0_rx_enable	drivers/uart0.h	/^volatile uint8_t uart0_rx_enable;$/;"	v	typeref:typename:volatile uint8_t
 uart0_tevent	drivers/uart0.h	/^enum uart0_tevent {$/;"	g
 uart0_tx_str	drivers/uart0.c	/^uint16_t uart0_tx_str(char *str, const uint16_t size)$/;"	f	typeref:typename:uint16_t
+vbusState	drivers/max3421.c	/^static uint8_t vbusState;$/;"	v	typeref:typename:uint8_t	file:
