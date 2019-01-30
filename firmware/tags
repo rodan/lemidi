@@ -51,7 +51,7 @@ PIBY2_FLOAT	drivers/helper.h	/^#define PIBY2_FLOAT /;"	d
 PI_FLOAT	drivers/helper.h	/^#define PI_FLOAT /;"	d
 PREC	drivers/helper.h	/^#define PREC /;"	d
 PROJ	Makefile	/^PROJ = proj$/;"	m
-Port1_ISR	proj.c	/^void Port1_ISR(void)$/;"	f	typeref:typename:void
+Port1_ISR	drivers/max3421.c	/^void Port1_ISR(void)$/;"	f	typeref:typename:void
 SE0	drivers/max3421e.h	/^#define SE0 /;"	d
 SE1	drivers/max3421e.h	/^#define SE1 /;"	d
 SPI_CLK	drivers/spi.c	/^#define SPI_CLK /;"	d	file:
@@ -142,8 +142,8 @@ bmBUSEVENTIE	drivers/max3421e.h	/^#define bmBUSEVENTIE /;"	d
 bmBUSEVENTIRQ	drivers/max3421e.h	/^#define bmBUSEVENTIRQ /;"	d
 bmBUSRST	drivers/max3421e.h	/^#define bmBUSRST /;"	d
 bmCHIPRES	drivers/max3421e.h	/^#define bmCHIPRES /;"	d
-bmCONDETIE	drivers/max3421e.h	/^#define bmCONDETIE /;"	d
-bmCONDETIRQ	drivers/max3421e.h	/^#define bmCONDETIRQ /;"	d
+bmCONNIE	drivers/max3421e.h	/^#define bmCONNIE /;"	d
+bmCONNIRQ	drivers/max3421e.h	/^#define bmCONNIRQ /;"	d
 bmDELAYISO	drivers/max3421e.h	/^#define bmDELAYISO /;"	d
 bmDMPULLDN	drivers/max3421e.h	/^#define bmDMPULLDN /;"	d
 bmDPPULLDN	drivers/max3421e.h	/^#define bmDPPULLDN /;"	d
@@ -251,6 +251,9 @@ free	tools/msp430-ram-usage	/^free = 0$/;"	v
 gpioRd	drivers/max3421.c	/^uint8_t gpioRd(void)$/;"	f	typeref:typename:uint8_t
 gpioRdOutput	drivers/max3421.c	/^uint8_t gpioRdOutput(void)$/;"	f	typeref:typename:uint8_t
 gpioWr	drivers/max3421.c	/^void gpioWr(const uint8_t data)$/;"	f	typeref:typename:void
+gpx_cnt	drivers/max3421.h	/^volatile uint32_t gpx_cnt, gpx_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
+gpx_cnt_hl	drivers/max3421.h	/^volatile uint32_t gpx_cnt, gpx_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
+gpx_irq_handler	drivers/max3421.c	/^static void gpx_irq_handler(enum sys_message msg)$/;"	f	typeref:typename:void	file:
 hrBABBLE	drivers/max3421e.h	/^#define hrBABBLE /;"	d
 hrBADBC	drivers/max3421e.h	/^#define hrBADBC /;"	d
 hrBADREQ	drivers/max3421e.h	/^#define hrBADREQ /;"	d
@@ -268,6 +271,9 @@ hrTOGERR	drivers/max3421e.h	/^#define hrTOGERR /;"	d
 hrUNDEF	drivers/max3421e.h	/^#define hrUNDEF /;"	d
 hrWRONGPID	drivers/max3421e.h	/^#define hrWRONGPID /;"	d
 install	Makefile	/^install: $(PROJ).elf$/;"	t
+int_cnt	drivers/max3421.h	/^volatile uint32_t int_cnt, int_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
+int_cnt_hl	drivers/max3421.h	/^volatile uint32_t int_cnt, int_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
+int_irq_handler	drivers/max3421.c	/^static void int_irq_handler(enum sys_message msg)$/;"	f	typeref:typename:void	file:
 j0	proj.h	/^    uint8_t j0[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
 j1	proj.h	/^    uint8_t j1[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
 listens	drivers/sys_messagebus.h	/^    enum sys_message listens;$/;"	m	struct:sys_messagebus	typeref:enum:sys_message
@@ -288,10 +294,8 @@ objs	tools/msp430-ram-usage	/^objs = {}$/;"	v
 parse_UI	proj.c	/^static void parse_UI(enum sys_message msg)$/;"	f	typeref:typename:void	file:
 parse_user_input	qa.c	/^void parse_user_input(void)$/;"	f	typeref:typename:void
 parser	tools/msp430-ram-usage	/^parser = OptionParser()$/;"	v
-port1_gpx_irq	proj.c	/^static void port1_gpx_irq(enum sys_message msg)$/;"	f	typeref:typename:void	file:
-port1_ifg_gpx_last_event	proj.c	/^volatile uint8_t port1_ifg_gpx_last_event;$/;"	v	typeref:typename:volatile uint8_t
-port1_ifg_int_last_event	proj.c	/^volatile uint8_t port1_ifg_int_last_event;$/;"	v	typeref:typename:volatile uint8_t
-port1_int_irq	proj.c	/^static void port1_int_irq(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+port1_ifg_gpx_last_event	proj.h	/^volatile uint8_t port1_ifg_gpx_last_event;$/;"	v	typeref:typename:volatile uint8_t
+port1_ifg_int_last_event	proj.h	/^volatile uint8_t port1_ifg_int_last_event;$/;"	v	typeref:typename:volatile uint8_t
 rCPUCTL	drivers/max3421e.h	/^#define rCPUCTL /;"	d
 rGPINIEN	drivers/max3421e.h	/^#define rGPINIEN /;"	d
 rGPINIRQ	drivers/max3421e.h	/^#define rGPINIRQ /;"	d

@@ -8,13 +8,75 @@
 #include <inttypes.h>
 #include "max3421.h"
 #include "spi.h"
+#include "drivers/sys_messagebus.h"
 #include "proj.h"
 
 static uint8_t vbusState;
 
+static void gpx_irq_handler(enum sys_message msg)
+{
+    uint8_t iv;
+    uint8_t iostate;
+    
+    gpx_cnt_hl++;
+
+    // signal led1 (red)
+    iostate = regRd(rIOPINS2) | bmGPOUT6;
+    regWr(rIOPINS2, iostate);
+    iv = regRd(rGPINIRQ);
+
+    if (iv & bmGPINIRQ7) {
+        // stop VBUS since MAX4789's FLAG has been asserted
+        // FIXME
+        // clear interrupt
+        regWr(rGPINIRQ, bmGPINIRQ7);
+    } else {
+        // fake activation?
+        iostate = regRd(rIOPINS2) & ~bmGPOUT6;
+        regWr(rIOPINS2, iostate);
+    }
+}
+
+static void int_irq_handler(enum sys_message msg)
+{
+    uint8_t iv, ret_iv = 0x0;
+    uint8_t iostate;
+
+    int_cnt_hl++;
+
+    // signal led2 (green)
+    iostate = regRd(rIOPINS2) | bmGPOUT7;
+    regWr(rIOPINS2, iostate);
+
+    iv = regRd(rHIRQ);
+
+    if (iv & bmCONNIRQ) {
+        busprobe();
+
+        // turn green led off
+        iostate = regRd(rIOPINS2) & ~bmGPOUT7;
+        regWr(rIOPINS2, iostate);
+
+        ret_iv |= bmCONNIRQ;
+    }
+    if (iv & bmFRAMEIRQ) {
+        // 1ms SOF PID irq
+        ret_iv |= bmFRAMEIRQ;
+    }
+
+    // clear serviced irqs
+    regWr(rHIRQ, ret_iv);
+}
+
+
 uint8_t MAX3421_init(void)
 {
     uint16_t i = 0;
+
+    int_cnt = 0;
+    int_cnt_hl = 0;
+    gpx_cnt = 0;
+    gpx_cnt_hl = 0;
 
     // red led on
     regWr(rIOPINS2, bmGPOUT6);
@@ -22,31 +84,62 @@ uint8_t MAX3421_init(void)
     // remove RST signal
     MAX3421E_RST_OFF;
 
+    // clear old irqs, reset iopins
+    regWr(rIOPINS1, 0x0);
+    regWr(rUSBIRQ, (bmVBUSIRQ | bmNOVBUSIRQ | bmOSCOKIRQ));
+    // detect presence and absence of VBUS
+    regWr(rUSBIEN, bmVBUSIE);
+
+    // set full duplex SPI, level-active INT interrupt
+    //regWr(rPINCTL, (bmFDUPSPI | bmINTLEVEL));
+
+    // set full duplex SPI, edge-active INT interrupt
+    regWr(rPINCTL, bmFDUPSPI);
+
+
     // MAX4789 is connected to GPOUT0 to controls the VBUS
     // enable VBUS 
     regWr(rIOPINS1, bmGPOUT0);
 
-    // set full duplex SPI, level-active INT interrupt
-    regWr(rPINCTL, (bmFDUPSPI | bmINTLEVEL));
+    // detect if VBUS is up
+    while (++i) {
+        if ((regRd(rUSBIRQ) & bmVBUSIRQ)) {
+            break;
+        }
+    }
+    if (!i) {
+        // VBUS voltage did not reach 5v after 2^16 ticks
+        return EXIT_FAILURE;
+    }
 
     // reset the chip, verify OSCOKIRQ
     regWr(rUSBCTL, bmCHIPRES);
     regWr(rUSBCTL, 0x00);
     while (++i) {
         if ((regRd(rUSBIRQ) & bmOSCOKIRQ)) {
+            regWr(rUSBIRQ, bmOSCOKIRQ);
             break;
         }
     }
     if (!i) {
-        // oscilator did not settle after 65535 ticks
+        // oscilator did not settle after 2^16 ticks
         return EXIT_FAILURE;
     }
+
+    // enable useful interrupts
+    regWr(rUSBIRQ, (bmVBUSIRQ | bmNOVBUSIRQ | bmOSCOKIRQ));
+    regWr(rUSBIEN, (bmVBUSIE | bmNOVBUSIE));
+
+    // MAX4789 has the FLAG pin tied to GPINIE7
+    regWr(rGPINIRQ, 0xff);
+    regWr(rGPINIEN, bmGPINIEN7);
+
     // set host mode
     // set pulldowns for peripheral plugin and speed detection
     regWr(rMODE, bmDPPULLDN | bmDMPULLDN | bmHOST);
 
     // peripheral and frame generator interrupt enable
-    regWr(rHIEN, bmCONDETIE | bmFRAMEIE);
+    regWr(rHIEN, bmCONNIE | bmFRAMEIE);
 
     // check if a peripheral is connected
     regWr(rHCTL, bmSAMPLEBUS);
@@ -55,9 +148,12 @@ uint8_t MAX3421_init(void)
     busprobe();
 
     // clear connection detect interrupt
-    regWr(rHIRQ, bmCONDETIRQ);
+    regWr(rHIRQ, bmCONNIRQ);
     // enable INT pin
     regWr(rCPUCTL, bmIE);
+
+    sys_messagebus_register(&gpx_irq_handler, SYS_MSG_P1IFG_GPX);
+    sys_messagebus_register(&int_irq_handler, SYS_MSG_P1IFG_INT);
 
     // status leds off
     regWr(rIOPINS2, 0);
@@ -169,16 +265,31 @@ void busprobe(void)
             vbusState = FSHOST;
         }
         break;
-    case (bmSE1):              
+    case (bmSE1):
         // illegal state
         vbusState = SE1;
         break;
     case (bmSE0):
         // disconnected state
-        regWr(rMODE, bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ);
+        regWr(rMODE, (bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ));
         vbusState = SE0;
         break;
     }
 }
 
+__attribute__ ((interrupt(PORT1_VECTOR)))
+void Port1_ISR(void)
+{
+    if (P1IFG & TRIG0) {
+        gpx_cnt++;
+        port1_ifg_gpx_last_event = 1;
+        P1IFG &= ~TRIG0;
+        LPM2_EXIT;
+    } else if (P1IFG & TRIG1) {
+        int_cnt++;
+        port1_ifg_int_last_event = 1;
+        P1IFG &= ~TRIG1;
+        LPM2_EXIT;
+    }
+}
 

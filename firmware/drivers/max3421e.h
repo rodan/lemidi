@@ -145,7 +145,7 @@ e-mail   :  support@circuitsathome.com
 #define bmRCVDAVIRQ     0x04
 #define bmSNDBAVIRQ     0x08
 #define bmSUSDNIRQ      0x10
-#define bmCONDETIRQ     0x20
+#define bmCONNIRQ       0x20
 #define bmFRAMEIRQ      0x40
 #define bmHXFRDNIRQ     0x80
 
@@ -157,7 +157,7 @@ e-mail   :  support@circuitsathome.com
 #define bmRCVDAVIE      0x04
 #define bmSNDBAVIE      0x08
 #define bmSUSDNIE       0x10
-#define bmCONDETIE      0x20
+#define bmCONNIE        0x20
 #define bmFRAMEIE       0x40
 #define bmHXFRDNIE      0x80
 
@@ -225,8 +225,8 @@ e-mail   :  support@circuitsathome.com
 #define hrTIMEOUT   0x0E
 #define hrBABBLE    0x0F
 
-#define MODE_FS_HOST    (bmDPPULLDN|bmDMPULLDN|bmHOST|bmSOFKAENAB)
-#define MODE_LS_HOST    (bmDPPULLDN|bmDMPULLDN|bmHOST|bmLOWSPEED|bmSOFKAENAB)
+#define MODE_FS_HOST    (bmDPPULLDN|bmDMPULLDN|bmHOST|bmSOFKAENAB|bmSEPIRQ)
+#define MODE_LS_HOST    (bmDPPULLDN|bmDMPULLDN|bmHOST|bmLOWSPEED|bmSOFKAENAB|bmSEPIRQ)
 
 
 #endif //_max3421e_h_

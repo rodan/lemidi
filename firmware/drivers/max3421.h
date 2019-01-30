@@ -13,6 +13,10 @@
 uint8_t MAX3421_init(void);
 uint8_t MAX3421_getVbusState(void);
 
+// interrupt counters
+volatile uint32_t int_cnt, int_cnt_hl;
+volatile uint32_t gpx_cnt, gpx_cnt_hl;
+
 // internals
 void regWr(const uint8_t reg, const uint8_t val);
 uint8_t regRd(const uint8_t reg);

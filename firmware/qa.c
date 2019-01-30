@@ -94,15 +94,24 @@ void parse_user_input(void)
             }
         }
     } else if (d == 'l') {
+        /*
         if (strstr(in, "1 on")) {
             regWr(rIOPINS2, bmGPOUT6); //status led1 on
         } else if (strstr(in, "2 on")) {
             regWr(rIOPINS2, bmGPOUT7); //status led2 on
         }
+        */
+        regWr(rIOPINS2, 0);
     } else if (d == 'i') {
         //reg = regRd(rIOPINS1);
         //snprintf(str_temp, STR_LEN, "IOPINS1 0x%x\r\n", reg);
         //uart0_tx_str(str_temp, strlen(str_temp));
+
+        snprintf(str_temp, STR_LEN, "R6 0x%x\r\n", regRd(rRCVBC));
+        uart0_tx_str(str_temp, strlen(str_temp));
+
+        snprintf(str_temp, STR_LEN, "R7 0x%x\r\n", regRd(rSNDBC));
+        uart0_tx_str(str_temp, strlen(str_temp));
 
         memset(reg, 0xff, 32);
         bytesRd(13<<3, 8, reg);
@@ -115,7 +124,13 @@ void parse_user_input(void)
             snprintf(str_temp, STR_LEN, "R%u 0x%x\r\n", i+21, reg[i]);
             uart0_tx_str(str_temp, strlen(str_temp));
         }
-    } else if (strstr(in, "stat")) {
+        snprintf(str_temp, STR_LEN, "vbusState 0x%x\r\n", MAX3421_getVbusState());
+        uart0_tx_str(str_temp, strlen(str_temp));
+        snprintf(str_temp, STR_LEN, "int cnt %lu handled %lu\r\n", int_cnt, int_cnt_hl);
+        uart0_tx_str(str_temp, strlen(str_temp));
+        snprintf(str_temp, STR_LEN, "gpx cnt %lu handled %lu\r\n", gpx_cnt, gpx_cnt_hl);
+        uart0_tx_str(str_temp, strlen(str_temp));
+        } else if (strstr(in, "stat")) {
             snprintf(str_temp, STR_LEN, "  fault 0x%x, UCSCTL7 0x%x\r\n", SFRIFG1&OFIFG, UCSCTL7 );
             uart0_tx_str(str_temp, strlen(str_temp));
             snprintf(str_temp, STR_LEN, "  UCSCTL4 0x%x, UCSCTL6 0x%x\r\n", UCSCTL4, UCSCTL6 );

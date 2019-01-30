@@ -63,6 +63,10 @@ struct controller_t {
 
 struct controller_t ctrl;
 
+volatile uint8_t port1_ifg_gpx_last_event;
+volatile uint8_t port1_ifg_int_last_event;
+
+
 void main_init(void);
 void check_events(void);
 

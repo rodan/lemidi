@@ -18,29 +18,11 @@
 #include "qa.h"
 
 
-// usb related interrupts
-volatile uint8_t port1_ifg_gpx_last_event;
-volatile uint8_t port1_ifg_int_last_event;
-
 static void parse_UI(enum sys_message msg)
 {
     parse_user_input();
     uart0_p = 0;
     uart0_rx_enable = 1;
-}
-
-static void port1_gpx_irq(enum sys_message msg)
-{
-    //mcp42_set_pot( 0, 0xaa, 0x33 );
-    //max3421_write(21, 0x4); //status led1 on
-    //max3421_write(21, 0x8); //status led2 on
-
-    //LED_SWITCH;
-}
-
-static void port1_int_irq(enum sys_message msg)
-{
-    //LED_SWITCH;
 }
 
 static void timer_a0_ovf_irq(enum sys_message msg)
@@ -66,10 +48,11 @@ int main(void)
     //spi_fast_mode();
     display_menu();
 
+    port1_ifg_int_last_event = 0;
+    port1_ifg_gpx_last_event = 0;
+
     sys_messagebus_register(&timer_a0_ovf_irq, SYS_MSG_TIMER0_IFG);
     sys_messagebus_register(&parse_UI, SYS_MSG_UART0_RX);
-    sys_messagebus_register(&port1_gpx_irq, SYS_MSG_P1IFG_GPX);
-    sys_messagebus_register(&port1_int_irq, SYS_MSG_P1IFG_INT);
 
     MAX3421_init();
 
@@ -99,12 +82,14 @@ void main_init(void)
 
     // ports - consult pinout.ods
     P1SEL = 0;
-    P1OUT = 0x3;
+    //P1OUT = 0x3;
+    P1OUT = 0x0;
     P1DIR = 0xfc;
-    P1REN = 0x3;
+    //P1REN = 0x3;
+    P1REN = 0x0;
 
-    // IRQ triggers on rising edge
-    P1IES &= ~(TRIG0 + TRIG1);
+    // IRQ triggers on a high to low transition
+    P1IES |= TRIG0 | TRIG1;
     // Reset IRQ flags
     P1IFG &= ~(TRIG0 + TRIG1);
     // Enable interrupts
@@ -139,44 +124,6 @@ void main_init(void)
     P6OUT = 0;
     P6DIR = 0xff;
     P6REN = 0x0;
-
-/*
-    P1SEL = 0;
-    P1OUT = 0x0;
-    P1DIR = 0x0;
-    P1REN = 0x0;
-
-    // IRQ triggers on rising edge
-    //P1IES &= ~(TRIG0 + TRIG1);
-    // Reset IRQ flags
-    //P1IFG &= ~(TRIG0 + TRIG1);
-    // Enable interrupts
-    //P1IE |= TRIG0 + TRIG1;
-
-    P2SEL = 0;
-    P2OUT = 0;
-    P2DIR = 0;
-    P2REN = 0;
-
-    P3SEL = 0;
-    P3OUT = 0;
-    P3DIR = 0;
-    P3REN = 0;
-
-    P4SEL = 0;
-    P4OUT = 0;
-    P4DIR = 0;
-    P4REN = 0;
-
-    P5SEL = 0;
-    P5OUT = 0;
-    P5DIR = 0;
-
-    P6SEL = 0;
-    P6OUT = 0;
-    P6DIR = 0;
-    P6REN = 0;
-*/
 
     //PJOUT = 0x00;
     //PJDIR = 0xFF;
@@ -231,19 +178,19 @@ void check_events(void)
     }
     // drivers/uart0
     if (uart0_last_event & UART0_EV_RX) {
-        msg |= BITA;
+        msg |= SYS_MSG_UART0_RX;
         uart0_last_event = 0;
     }
 
     // USB GPX event
     if (port1_ifg_gpx_last_event) {
-        msg |= BITD;
+        msg |= SYS_MSG_P1IFG_GPX;
         port1_ifg_gpx_last_event = 0;
     }
 
     // USB INT event
     if (port1_ifg_int_last_event) {
-        msg |= BITE;
+        msg |= SYS_MSG_P1IFG_INT;
         port1_ifg_int_last_event = 0;
     }
 
@@ -253,20 +200,6 @@ void check_events(void)
             p->fn(msg);
         }
         p = p->next;
-    }
-}
-
-__attribute__ ((interrupt(PORT1_VECTOR)))
-void Port1_ISR(void)
-{
-    if (P1IFG & TRIG0) {
-        port1_ifg_gpx_last_event = 1;
-        P1IFG &= ~TRIG0;
-        LPM3_EXIT;
-    } else if (P1IFG & TRIG1) {
-        port1_ifg_int_last_event = 1;
-        P1IFG &= ~TRIG1;
-        LPM3_EXIT;
     }
 }
 
