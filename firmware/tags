@@ -9,6 +9,8 @@ $(PROJ).cflags	Makefile	/^$(PROJ).cflags: force$/;"	t
 $(PROJ).dep	Makefile	/^$(PROJ).dep: $(SRCS)$/;"	t
 $(PROJ).elf	Makefile	/^$(PROJ).elf: $(OBJS)$/;"	t
 %.o	Makefile	/^%.o: %.c$/;"	t
+ADDR_ERROR_INVALID_ADDRESS	drivers/UHS_UsbCore.h	/^#define                    ADDR_ERROR_INVALID_ADDRESS /;"	d
+ADDR_ERROR_INVALID_INDEX	drivers/UHS_UsbCore.h	/^#define                      ADDR_ERROR_INVALID_INDEX /;"	d
 AR	Makefile	/^AR		= msp430-elf-ar$/;"	m
 AS	Makefile	/^AS		= msp430-elf-as$/;"	m
 BASH	Makefile	/^BASH := $(shell which bash || which bash)$/;"	m
@@ -18,13 +20,17 @@ CC_CMACH	Makefile	/^CC_CMACH	= -mmcu=msp430f5510$/;"	m
 CC_DMACH	Makefile	/^CC_DMACH	= -D__MSP430F5510__$/;"	m
 COMMIT	version.h	/^#define COMMIT /;"	d
 DEBUG	Makefile	/^DEBUG := $(shell grep "^\\#define CONFIG_DEBUG" config.h)$/;"	m
+ENDPOINT_INFO	drivers/UHS_UsbCore.h	/^struct ENDPOINT_INFO {$/;"	s
+ENUMERATION_INFO	drivers/UHS_UsbCore.h	/^struct ENUMERATION_INFO {$/;"	s
 EXIT_FAILURE	proj.h	/^#define EXIT_FAILURE /;"	d
 EXIT_SUCCESS	proj.h	/^#define EXIT_SUCCESS /;"	d
 FSHOST	drivers/max3421e.h	/^#define FSHOST /;"	d
-GPX_BUSACT	drivers/max3421e.h	/^#define GPX_BUSACT /;"	d
-GPX_OPERATE	drivers/max3421e.h	/^#define GPX_OPERATE /;"	d
-GPX_SOF	drivers/max3421e.h	/^#define GPX_SOF /;"	d
-GPX_VBDET	drivers/max3421e.h	/^#define GPX_VBDET /;"	d
+GPX_BUSACT	drivers/max3421e.h	/^#define      GPX_BUSACT /;"	d
+GPX_OPERATE	drivers/max3421e.h	/^#define     GPX_OPERATE /;"	d
+GPX_SOF	drivers/max3421e.h	/^#define         GPX_SOF /;"	d
+GPX_VBDET	drivers/max3421e.h	/^#define       GPX_VBDET /;"	d
+ICLRALLBITS	drivers/max3421e.h	/^#define     ICLRALLBITS /;"	d
+INTERFACE_INFO	drivers/UHS_UsbCore.h	/^struct INTERFACE_INFO {$/;"	s
 LD	Makefile	/^LD		= msp430-elf-ld$/;"	m
 LDFLAGS	Makefile	/^LDFLAGS		= -lm$/;"	m
 LED_OFF	proj.h	/^    #define LED_OFF /;"	d
@@ -33,6 +39,13 @@ LED_SWITCH	proj.h	/^    #define LED_SWITCH /;"	d
 LSHOST	drivers/max3421e.h	/^#define LSHOST /;"	d
 MAX3421E_RST_OFF	proj.h	/^#define MAX3421E_RST_OFF /;"	d
 MAX3421E_RST_ON	proj.h	/^#define MAX3421E_RST_ON /;"	d
+MAX3421E_tokIN	drivers/max3421e.h	/^#define          MAX3421E_tokIN /;"	d
+MAX3421E_tokINHS	drivers/max3421e.h	/^#define        MAX3421E_tokINHS /;"	d
+MAX3421E_tokISOIN	drivers/max3421e.h	/^#define       MAX3421E_tokISOIN /;"	d
+MAX3421E_tokISOOUT	drivers/max3421e.h	/^#define      MAX3421E_tokISOOUT /;"	d
+MAX3421E_tokOUT	drivers/max3421e.h	/^#define         MAX3421E_tokOUT /;"	d
+MAX3421E_tokOUTHS	drivers/max3421e.h	/^#define       MAX3421E_tokOUTHS /;"	d
+MAX3421E_tokSETUP	drivers/max3421e.h	/^#define       MAX3421E_tokSETUP /;"	d
 MAX3421_CS_DESELECT	proj.h	/^#define MAX3421_CS_DESELECT /;"	d
 MAX3421_CS_SELECT	proj.h	/^#define MAX3421_CS_SELECT /;"	d
 MAX3421_READ	drivers/max3421.h	/^#define MAX3421_READ /;"	d
@@ -43,17 +56,24 @@ MCP42XXX_CS_OUT	drivers/mcp42xxx.h	/^static const uint16_t MCP42XXX_CS_OUT[6] = 
 MCP42XXX_CS_PORT	drivers/mcp42xxx.h	/^static const uint8_t MCP42XXX_CS_PORT[6] = { BIT7, BIT6 };$/;"	v	typeref:typename:const uint8_t[6]
 MCP42XXX_SHUTDOWN	drivers/mcp42xxx.h	/^#define MCP42XXX_SHUTDOWN /;"	d
 MCP42XXX_WRITE_DATA	drivers/mcp42xxx.h	/^#define MCP42XXX_WRITE_DATA /;"	d
-MODE_FS_HOST	drivers/max3421e.h	/^#define MODE_FS_HOST /;"	d
-MODE_LS_HOST	drivers/max3421e.h	/^#define MODE_LS_HOST /;"	d
+MODE_FS_HOST	drivers/max3421e.h	/^#define    MODE_FS_HOST /;"	d
+MODE_LS_HOST	drivers/max3421e.h	/^#define    MODE_LS_HOST /;"	d
 OBJS	Makefile	/^OBJS := $(patsubst %.c,%.o,$(SRCS))$/;"	m
 PI	drivers/helper.h	/^#define PI /;"	d
 PIBY2_FLOAT	drivers/helper.h	/^#define PIBY2_FLOAT /;"	d
 PI_FLOAT	drivers/helper.h	/^#define PI_FLOAT /;"	d
 PREC	drivers/helper.h	/^#define PREC /;"	d
 PROJ	Makefile	/^PROJ = proj$/;"	m
+PSETUP_PKT	drivers/UHS_UsbCore.h	/^} __attribute__((packed)) SETUP_PKT, *PSETUP_PKT;$/;"	t	typeref:struct:__anon9a57ae6b0108 *
+PUSLEWIDTH10_6	drivers/max3421e.h	/^#define  PUSLEWIDTH10_6 /;"	d
+PUSLEWIDTH1_3	drivers/max3421e.h	/^#define   PUSLEWIDTH1_3 /;"	d
+PUSLEWIDTH2_6	drivers/max3421e.h	/^#define   PUSLEWIDTH2_6 /;"	d
+PUSLEWIDTH5_3	drivers/max3421e.h	/^#define   PUSLEWIDTH5_3 /;"	d
 Port1_ISR	drivers/max3421.c	/^void Port1_ISR(void)$/;"	f	typeref:typename:void
+ReqType_u	drivers/UHS_UsbCore.h	/^        } ReqType_u;$/;"	m	struct:__anon9a57ae6b0108	typeref:union:__anon9a57ae6b0108::__anon9a57ae6b020a
 SE0	drivers/max3421e.h	/^#define SE0 /;"	d
 SE1	drivers/max3421e.h	/^#define SE1 /;"	d
+SETUP_PKT	drivers/UHS_UsbCore.h	/^} __attribute__((packed)) SETUP_PKT, *PSETUP_PKT;$/;"	t	typeref:struct:__anon9a57ae6b0108
 SPI_CLK	drivers/spi.c	/^#define SPI_CLK /;"	d	file:
 SPI_DIR	drivers/spi.c	/^#define SPI_DIR /;"	d	file:
 SPI_OUT	drivers/spi.c	/^#define SPI_OUT /;"	d	file:
@@ -61,9 +81,10 @@ SPI_REN	drivers/spi.c	/^#define SPI_REN /;"	d	file:
 SPI_SEL	drivers/spi.c	/^#define SPI_SEL /;"	d	file:
 SPI_SIMO	drivers/spi.c	/^#define SPI_SIMO /;"	d	file:
 SPI_SOMI	drivers/spi.c	/^#define SPI_SOMI /;"	d	file:
-SRCS	Makefile	/^SRCS := $(wildcard *.c)$/;"	m
+SRCS	Makefile	/^SRCS := $(wildcard *.c *.cpp)$/;"	m
 STR_LEN	proj.h	/^#define STR_LEN /;"	d
 SUBDIRS	Makefile	/^SUBDIRS = drivers$/;"	m
+SYS_MSG_NULL	drivers/sys_messagebus.h	/^    SYS_MSG_NULL = 0,$/;"	e	enum:sys_message
 SYS_MSG_P1IFG_GPX	drivers/sys_messagebus.h	/^    SYS_MSG_P1IFG_GPX = BITD,   \/\/ port1 interrupt$/;"	e	enum:sys_message
 SYS_MSG_P1IFG_INT	drivers/sys_messagebus.h	/^    SYS_MSG_P1IFG_INT = BITE,   \/\/ port1 interrupt$/;"	e	enum:sys_message
 SYS_MSG_RTC_SECOND	drivers/sys_messagebus.h	/^    SYS_MSG_RTC_SECOND = BITF,  \/\/ second event from the hardware RTC$/;"	e	enum:sys_message
@@ -85,11 +106,115 @@ TIMER_A0_EVENT_IFG	drivers/timer_a0.h	/^    TIMER_A0_EVENT_IFG = BIT5,$/;"	e	enu
 TIMER_A0_EVENT_NONE	drivers/timer_a0.h	/^    TIMER_A0_EVENT_NONE = 0,$/;"	e	enum:timer_a0_event
 TRIG0	proj.h	/^#define TRIG0 /;"	d
 TRIG1	proj.h	/^#define TRIG1 /;"	d
+UART0_EV_NULL	drivers/uart0.h	/^    UART0_EV_NULL = 0,$/;"	e	enum:uart0_tevent
 UART0_EV_RX	drivers/uart0.h	/^    UART0_EV_RX = BIT0,$/;"	e	enum:uart0_tevent
 UART0_EV_TX	drivers/uart0.h	/^    UART0_EV_TX = BIT1$/;"	e	enum:uart0_tevent
 UART0_RXBUF_SZ	drivers/uart0.h	/^#define UART0_RXBUF_SZ /;"	d
+UHS_BULK_SUBCLASS_ATAPI	drivers/UHS_UsbCore.h	/^#define                       UHS_BULK_SUBCLASS_ATAPI /;"	d
+UHS_BULK_SUBCLASS_IEEE1667	drivers/UHS_UsbCore.h	/^#define                    UHS_BULK_SUBCLASS_IEEE1667 /;"	d
+UHS_BULK_SUBCLASS_LSDFS	drivers/UHS_UsbCore.h	/^#define                       UHS_BULK_SUBCLASS_LSDFS /;"	d
+UHS_BULK_SUBCLASS_OBSOLETE1	drivers/UHS_UsbCore.h	/^#define                   UHS_BULK_SUBCLASS_OBSOLETE1 /;"	d
+UHS_BULK_SUBCLASS_OBSOLETE2	drivers/UHS_UsbCore.h	/^#define                   UHS_BULK_SUBCLASS_OBSOLETE2 /;"	d
+UHS_BULK_SUBCLASS_RBC	drivers/UHS_UsbCore.h	/^#define                         UHS_BULK_SUBCLASS_RBC /;"	d
+UHS_BULK_SUBCLASS_SCSI	drivers/UHS_UsbCore.h	/^#define                        UHS_BULK_SUBCLASS_SCSI /;"	d
+UHS_BULK_SUBCLASS_SCSI_NOT_REPORTED	drivers/UHS_UsbCore.h	/^#define           UHS_BULK_SUBCLASS_SCSI_NOT_REPORTED /;"	d
+UHS_BULK_SUBCLASS_UFI	drivers/UHS_UsbCore.h	/^#define                         UHS_BULK_SUBCLASS_UFI /;"	d
+UHS_HID_BOOT_SUBCLASS	drivers/UHS_UsbCore.h	/^#define                         UHS_HID_BOOT_SUBCLASS /;"	d
+UHS_HID_INDEX	drivers/UHS_UsbCore.h	/^#define                                 UHS_HID_INDEX /;"	d
+UHS_HID_PROTOCOL_HIDBOOT_KEYBOARD	drivers/UHS_UsbCore.h	/^#define             UHS_HID_PROTOCOL_HIDBOOT_KEYBOARD /;"	d
+UHS_HID_PROTOCOL_HIDBOOT_MOUSE	drivers/UHS_UsbCore.h	/^#define                UHS_HID_PROTOCOL_HIDBOOT_MOUSE /;"	d
+UHS_HOST_DEBOUNCE_DELAY_MS	drivers/UHS_UsbCore.h	/^#define                    UHS_HOST_DEBOUNCE_DELAY_MS /;"	d
+UHS_HOST_ERROR_ADDRESS_POOL_FULL	drivers/UHS_UsbCore.h	/^#define              UHS_HOST_ERROR_ADDRESS_POOL_FULL /;"	d
+UHS_HOST_ERROR_BABBLE	drivers/UHS_UsbCore.h	/^#define                         UHS_HOST_ERROR_BABBLE /;"	d
+UHS_HOST_ERROR_BADBC	drivers/UHS_UsbCore.h	/^#define                          UHS_HOST_ERROR_BADBC /;"	d
+UHS_HOST_ERROR_BADREQ	drivers/UHS_UsbCore.h	/^#define                         UHS_HOST_ERROR_BADREQ /;"	d
+UHS_HOST_ERROR_BADRQ	drivers/UHS_UsbCore.h	/^#define                          UHS_HOST_ERROR_BADRQ /;"	d
+UHS_HOST_ERROR_BAD_ARGUMENT	drivers/UHS_UsbCore.h	/^#define                   UHS_HOST_ERROR_BAD_ARGUMENT /;"	d
+UHS_HOST_ERROR_BAD_MAX_PACKET_SIZE	drivers/UHS_UsbCore.h	/^#define            UHS_HOST_ERROR_BAD_MAX_PACKET_SIZE /;"	d
+UHS_HOST_ERROR_BUSY	drivers/UHS_UsbCore.h	/^#define                           UHS_HOST_ERROR_BUSY /;"	d
+UHS_HOST_ERROR_CANT_REGISTER_DEVICE_CLASS	drivers/UHS_UsbCore.h	/^#define     UHS_HOST_ERROR_CANT_REGISTER_DEVICE_CLASS /;"	d
+UHS_HOST_ERROR_CRC	drivers/UHS_UsbCore.h	/^#define                            UHS_HOST_ERROR_CRC /;"	d
+UHS_HOST_ERROR_DEVICE_DRIVER_BUSY	drivers/UHS_UsbCore.h	/^#define             UHS_HOST_ERROR_DEVICE_DRIVER_BUSY /;"	d
+UHS_HOST_ERROR_DEVICE_INIT_INCOMPLETE	drivers/UHS_UsbCore.h	/^#define         UHS_HOST_ERROR_DEVICE_INIT_INCOMPLETE /;"	d
+UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED	drivers/UHS_UsbCore.h	/^#define           UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED /;"	d
+UHS_HOST_ERROR_DMA	drivers/UHS_UsbCore.h	/^#define                            UHS_HOST_ERROR_DMA /;"	d
+UHS_HOST_ERROR_END_OF_STREAM	drivers/UHS_UsbCore.h	/^#define                  UHS_HOST_ERROR_END_OF_STREAM /;"	d
+UHS_HOST_ERROR_FailGetConfDescr	drivers/UHS_UsbCore.h	/^#define               UHS_HOST_ERROR_FailGetConfDescr /;"	d
+UHS_HOST_ERROR_FailGetDevDescr	drivers/UHS_UsbCore.h	/^#define                UHS_HOST_ERROR_FailGetDevDescr /;"	d
+UHS_HOST_ERROR_FailSetDevTblEntry	drivers/UHS_UsbCore.h	/^#define             UHS_HOST_ERROR_FailSetDevTblEntry /;"	d
+UHS_HOST_ERROR_HUB_ADDRESS_OVERFLOW	drivers/UHS_UsbCore.h	/^#define           UHS_HOST_ERROR_HUB_ADDRESS_OVERFLOW /;"	d
+UHS_HOST_ERROR_JERR	drivers/UHS_UsbCore.h	/^#define                           UHS_HOST_ERROR_JERR /;"	d
+UHS_HOST_ERROR_KERR	drivers/UHS_UsbCore.h	/^#define                           UHS_HOST_ERROR_KERR /;"	d
+UHS_HOST_ERROR_MEM_LAT	drivers/UHS_UsbCore.h	/^#define                        UHS_HOST_ERROR_MEM_LAT /;"	d
+UHS_HOST_ERROR_NAK	drivers/UHS_UsbCore.h	/^#define                            UHS_HOST_ERROR_NAK /;"	d
+UHS_HOST_ERROR_NOMEM	drivers/UHS_UsbCore.h	/^#define                          UHS_HOST_ERROR_NOMEM /;"	d
+UHS_HOST_ERROR_NONE	drivers/UHS_UsbCore.h	/^#define                           UHS_HOST_ERROR_NONE /;"	d
+UHS_HOST_ERROR_NOT_IMPLEMENTED	drivers/UHS_UsbCore.h	/^#define                UHS_HOST_ERROR_NOT_IMPLEMENTED /;"	d
+UHS_HOST_ERROR_NO_ADDRESS_IN_POOL	drivers/UHS_UsbCore.h	/^#define             UHS_HOST_ERROR_NO_ADDRESS_IN_POOL /;"	d
+UHS_HOST_ERROR_NO_ENDPOINT_IN_TABLE	drivers/UHS_UsbCore.h	/^#define           UHS_HOST_ERROR_NO_ENDPOINT_IN_TABLE /;"	d
+UHS_HOST_ERROR_NULL_EPINFO	drivers/UHS_UsbCore.h	/^#define                    UHS_HOST_ERROR_NULL_EPINFO /;"	d
+UHS_HOST_ERROR_NYET	drivers/UHS_UsbCore.h	/^#define                           UHS_HOST_ERROR_NYET /;"	d
+UHS_HOST_ERROR_PIDERR	drivers/UHS_UsbCore.h	/^#define                         UHS_HOST_ERROR_PIDERR /;"	d
+UHS_HOST_ERROR_STALL	drivers/UHS_UsbCore.h	/^#define                          UHS_HOST_ERROR_STALL /;"	d
+UHS_HOST_ERROR_TIMEOUT	drivers/UHS_UsbCore.h	/^#define                        UHS_HOST_ERROR_TIMEOUT /;"	d
+UHS_HOST_ERROR_TOGERR	drivers/UHS_UsbCore.h	/^#define                         UHS_HOST_ERROR_TOGERR /;"	d
+UHS_HOST_ERROR_TRANSFER_TIMEOUT	drivers/UHS_UsbCore.h	/^#define               UHS_HOST_ERROR_TRANSFER_TIMEOUT /;"	d
+UHS_HOST_ERROR_UNPLUGGED	drivers/UHS_UsbCore.h	/^#define                      UHS_HOST_ERROR_UNPLUGGED /;"	d
+UHS_HOST_ERROR_WRONGPID	drivers/UHS_UsbCore.h	/^#define                       UHS_HOST_ERROR_WRONGPID /;"	d
+UHS_HOST_MAX_INTERFACE_DRIVERS	drivers/UHS_UsbCore.h	/^#define                UHS_HOST_MAX_INTERFACE_DRIVERS /;"	d
+UHS_HOST_TRANSFER_MAX_MS	drivers/UHS_UsbCore.h	/^#define                      UHS_HOST_TRANSFER_MAX_MS /;"	d
+UHS_HOST_TRANSFER_RETRY_MAXIMUM	drivers/UHS_UsbCore.h	/^#define               UHS_HOST_TRANSFER_RETRY_MAXIMUM /;"	d
+UHS_HUB_RESET_DELAY_MS	drivers/UHS_UsbCore.h	/^#define                        UHS_HUB_RESET_DELAY_MS /;"	d
+UHS_STOR_PROTO_BBB	drivers/UHS_UsbCore.h	/^#define                            UHS_STOR_PROTO_BBB /;"	d
+UHS_STOR_PROTO_CBI	drivers/UHS_UsbCore.h	/^#define                            UHS_STOR_PROTO_CBI /;"	d
+UHS_STOR_PROTO_CBI_NO_INT	drivers/UHS_UsbCore.h	/^#define                     UHS_STOR_PROTO_CBI_NO_INT /;"	d
+UHS_STOR_PROTO_OBSOLETE	drivers/UHS_UsbCore.h	/^#define                       UHS_STOR_PROTO_OBSOLETE /;"	d
+UHS_STOR_PROTO_UAS	drivers/UHS_UsbCore.h	/^#define                            UHS_STOR_PROTO_UAS /;"	d
+UHS_USB_CLASS_APP_SPECIFIC	drivers/UHS_UsbCore.h	/^#define                    UHS_USB_CLASS_APP_SPECIFIC /;"	d
+UHS_USB_CLASS_AUDIO	drivers/UHS_UsbCore.h	/^#define                           UHS_USB_CLASS_AUDIO /;"	d
+UHS_USB_CLASS_CDC_DATA	drivers/UHS_UsbCore.h	/^#define                        UHS_USB_CLASS_CDC_DATA /;"	d
+UHS_USB_CLASS_COM_AND_CDC_CTRL	drivers/UHS_UsbCore.h	/^#define                UHS_USB_CLASS_COM_AND_CDC_CTRL /;"	d
+UHS_USB_CLASS_CONTENT_SECURITY	drivers/UHS_UsbCore.h	/^#define                UHS_USB_CLASS_CONTENT_SECURITY /;"	d
+UHS_USB_CLASS_DIAGNOSTIC_DEVICE	drivers/UHS_UsbCore.h	/^#define               UHS_USB_CLASS_DIAGNOSTIC_DEVICE /;"	d
+UHS_USB_CLASS_HID	drivers/UHS_UsbCore.h	/^#define                             UHS_USB_CLASS_HID /;"	d
+UHS_USB_CLASS_HUB	drivers/UHS_UsbCore.h	/^#define                             UHS_USB_CLASS_HUB /;"	d
+UHS_USB_CLASS_IMAGE	drivers/UHS_UsbCore.h	/^#define                           UHS_USB_CLASS_IMAGE /;"	d
+UHS_USB_CLASS_MASS_STORAGE	drivers/UHS_UsbCore.h	/^#define                    UHS_USB_CLASS_MASS_STORAGE /;"	d
+UHS_USB_CLASS_MISC	drivers/UHS_UsbCore.h	/^#define                            UHS_USB_CLASS_MISC /;"	d
+UHS_USB_CLASS_PERSONAL_HEALTH	drivers/UHS_UsbCore.h	/^#define                 UHS_USB_CLASS_PERSONAL_HEALTH /;"	d
+UHS_USB_CLASS_PHYSICAL	drivers/UHS_UsbCore.h	/^#define                        UHS_USB_CLASS_PHYSICAL /;"	d
+UHS_USB_CLASS_PRINTER	drivers/UHS_UsbCore.h	/^#define                         UHS_USB_CLASS_PRINTER /;"	d
+UHS_USB_CLASS_SMART_CARD	drivers/UHS_UsbCore.h	/^#define                      UHS_USB_CLASS_SMART_CARD /;"	d
+UHS_USB_CLASS_USE_CLASS_INFO	drivers/UHS_UsbCore.h	/^#define                  UHS_USB_CLASS_USE_CLASS_INFO /;"	d
+UHS_USB_CLASS_VENDOR_SPECIFIC	drivers/UHS_UsbCore.h	/^#define                 UHS_USB_CLASS_VENDOR_SPECIFIC /;"	d
+UHS_USB_CLASS_VIDEO	drivers/UHS_UsbCore.h	/^#define                           UHS_USB_CLASS_VIDEO /;"	d
+UHS_USB_CLASS_WIRELESS_CTRL	drivers/UHS_UsbCore.h	/^#define                   UHS_USB_CLASS_WIRELESS_CTRL /;"	d
+UHS_USB_HOST_STATE_CHECK	drivers/UHS_UsbCore.h	/^#define                      UHS_USB_HOST_STATE_CHECK /;"	d
+UHS_USB_HOST_STATE_CONFIGURING	drivers/UHS_UsbCore.h	/^#define                UHS_USB_HOST_STATE_CONFIGURING /;"	d
+UHS_USB_HOST_STATE_CONFIGURING_DONE	drivers/UHS_UsbCore.h	/^#define           UHS_USB_HOST_STATE_CONFIGURING_DONE /;"	d
+UHS_USB_HOST_STATE_DEBOUNCE	drivers/UHS_UsbCore.h	/^#define                   UHS_USB_HOST_STATE_DEBOUNCE /;"	d
+UHS_USB_HOST_STATE_DEBOUNCE_NOT_COMPLETE	drivers/UHS_UsbCore.h	/^#define      UHS_USB_HOST_STATE_DEBOUNCE_NOT_COMPLETE /;"	d
+UHS_USB_HOST_STATE_DETACHED	drivers/UHS_UsbCore.h	/^#define                   UHS_USB_HOST_STATE_DETACHED /;"	d
+UHS_USB_HOST_STATE_ERROR	drivers/UHS_UsbCore.h	/^#define                      UHS_USB_HOST_STATE_ERROR /;"	d
+UHS_USB_HOST_STATE_IDLE	drivers/UHS_UsbCore.h	/^#define                       UHS_USB_HOST_STATE_IDLE /;"	d
+UHS_USB_HOST_STATE_ILLEGAL	drivers/UHS_UsbCore.h	/^#define                    UHS_USB_HOST_STATE_ILLEGAL /;"	d
+UHS_USB_HOST_STATE_INITIALIZE	drivers/UHS_UsbCore.h	/^#define                 UHS_USB_HOST_STATE_INITIALIZE /;"	d
+UHS_USB_HOST_STATE_MASK	drivers/UHS_UsbCore.h	/^#define                       UHS_USB_HOST_STATE_MASK /;"	d
+UHS_USB_HOST_STATE_RESET_DEVICE	drivers/UHS_UsbCore.h	/^#define               UHS_USB_HOST_STATE_RESET_DEVICE /;"	d
+UHS_USB_HOST_STATE_RESET_NOT_COMPLETE	drivers/UHS_UsbCore.h	/^#define         UHS_USB_HOST_STATE_RESET_NOT_COMPLETE /;"	d
+UHS_USB_HOST_STATE_RUNNING	drivers/UHS_UsbCore.h	/^#define                    UHS_USB_HOST_STATE_RUNNING /;"	d
+UHS_USB_HOST_STATE_WAIT_BUS_READY	drivers/UHS_UsbCore.h	/^#define             UHS_USB_HOST_STATE_WAIT_BUS_READY /;"	d
+UHS_USB_HOST_STATE_WAIT_SOF	drivers/UHS_UsbCore.h	/^#define                   UHS_USB_HOST_STATE_WAIT_SOF /;"	d
+UHS_USB_SUBCLASS_AUDIOCONTROL	drivers/UHS_UsbCore.h	/^#define                 UHS_USB_SUBCLASS_AUDIOCONTROL /;"	d
+UHS_USB_SUBCLASS_AUDIOSTREAMING	drivers/UHS_UsbCore.h	/^#define               UHS_USB_SUBCLASS_AUDIOSTREAMING /;"	d
+UHS_USB_SUBCLASS_MIDISTREAMING	drivers/UHS_UsbCore.h	/^#define                UHS_USB_SUBCLASS_MIDISTREAMING /;"	d
+UHS_bmREQ_CL_GET_INTF	drivers/UHS_UsbCore.h	/^#define                         UHS_bmREQ_CL_GET_INTF /;"	d
+UHS_bmREQ_GET_DESCR	drivers/UHS_UsbCore.h	/^#define                           UHS_bmREQ_GET_DESCR /;"	d
+UHS_bmREQ_SET	drivers/UHS_UsbCore.h	/^#define                                 UHS_bmREQ_SET /;"	d
+USBCORE_H	drivers/UHS_UsbCore.h	/^#define USBCORE_H$/;"	d
 USCI_A0_ISR	drivers/uart0.c	/^void USCI_A0_ISR(void)$/;"	f	typeref:typename:void
 USE_XT2	config.h	/^#define USE_XT2$/;"	d
+VBUS_changed	drivers/max3421.c	/^void VBUS_changed(void)$/;"	f	typeref:typename:void
 _10ms	drivers/timer_a0.h	/^#define _10ms /;"	d
 _10s	drivers/timer_a0.h	/^#define _10s /;"	d
 _10sp	drivers/timer_a0.h	/^#define _10sp /;"	d
@@ -108,6 +233,7 @@ _6s	drivers/timer_a0.h	/^#define _6s /;"	d
 _6sp	drivers/timer_a0.h	/^#define _6sp /;"	d
 _75s	drivers/timer_a0.h	/^#define _75s /;"	d
 _CONFIG_H_	config.h	/^#define _CONFIG_H_$/;"	d
+_UHS_host_h_	drivers/UHS_host.h	/^#define _UHS_host_h_$/;"	d
 __HELPER_H__	drivers/helper.h	/^#define __HELPER_H__$/;"	d
 __MAX3421_H__	drivers/max3421.h	/^#define __MAX3421_H__$/;"	d
 __MCP42XXX_H__	drivers/mcp42xxx.h	/^#define __MCP42XXX_H__$/;"	d
@@ -118,11 +244,17 @@ __SYS_MESSAGEBUS_H__	drivers/sys_messagebus.h	/^#define __SYS_MESSAGEBUS_H__$/;"
 __TIMER_A0_H__	drivers/timer_a0.h	/^#define __TIMER_A0_H__$/;"	d
 __UART0_H__	drivers/uart0.h	/^#define __UART0_H__$/;"	d
 __VERSION_H__	version.h	/^#define __VERSION_H__$/;"	d
+__anon9a57ae6b0108	drivers/UHS_UsbCore.h	/^typedef struct {$/;"	s
+__anon9a57ae6b020a	drivers/UHS_UsbCore.h	/^         union {$/;"	u	struct:__anon9a57ae6b0108
+__anon9a57ae6b0308	drivers/UHS_UsbCore.h	/^                struct {$/;"	s	union:__anon9a57ae6b0108::__anon9a57ae6b020a
+__anon9a57ae6b040a	drivers/UHS_UsbCore.h	/^        union {$/;"	u	struct:__anon9a57ae6b0108
+__anon9a57ae6b0508	drivers/UHS_UsbCore.h	/^                struct {$/;"	s	union:__anon9a57ae6b0108::__anon9a57ae6b040a
 _atan2f	drivers/helper.c	/^float _atan2f(const float y, const float x)$/;"	f	typeref:typename:float
 _cos	drivers/helper.c	/^float _cos(const float x)$/;"	f	typeref:typename:float
 _max3421e_h_	drivers/max3421e.h	/^#define _max3421e_h_$/;"	d
 _sin	drivers/helper.c	/^float _sin(const float x)$/;"	f	typeref:typename:float
 _sqrt	drivers/helper.c	/^float _sqrt(const float number)$/;"	f	typeref:typename:float
+address	drivers/UHS_UsbCore.h	/^        uint8_t address;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
 address	tools/msp430-ram-usage	/^address = objs['__stack'][0]$/;"	v
 all	Makefile	/^all: depend config.h tags $(PROJ).elf$/;"	t
 b	proj.h	/^    uint8_t b[4];$/;"	m	struct:controller_t	typeref:typename:uint8_t[4]
@@ -138,113 +270,131 @@ b2_switch	proj.h	/^#define b2_switch /;"	d
 b3_off	proj.h	/^#define b3_off /;"	d
 b3_on	proj.h	/^#define b3_on /;"	d
 b3_switch	proj.h	/^#define b3_switch /;"	d
-bmBUSEVENTIE	drivers/max3421e.h	/^#define bmBUSEVENTIE /;"	d
-bmBUSEVENTIRQ	drivers/max3421e.h	/^#define bmBUSEVENTIRQ /;"	d
-bmBUSRST	drivers/max3421e.h	/^#define bmBUSRST /;"	d
-bmCHIPRES	drivers/max3421e.h	/^#define bmCHIPRES /;"	d
-bmCONNIE	drivers/max3421e.h	/^#define bmCONNIE /;"	d
-bmCONNIRQ	drivers/max3421e.h	/^#define bmCONNIRQ /;"	d
-bmDELAYISO	drivers/max3421e.h	/^#define bmDELAYISO /;"	d
-bmDMPULLDN	drivers/max3421e.h	/^#define bmDMPULLDN /;"	d
-bmDPPULLDN	drivers/max3421e.h	/^#define bmDPPULLDN /;"	d
-bmFDUPSPI	drivers/max3421e.h	/^#define bmFDUPSPI /;"	d
-bmFRAMEIE	drivers/max3421e.h	/^#define bmFRAMEIE /;"	d
-bmFRAMEIRQ	drivers/max3421e.h	/^#define bmFRAMEIRQ /;"	d
-bmFRMRST	drivers/max3421e.h	/^#define bmFRMRST /;"	d
-bmGPIN0	drivers/max3421e.h	/^#define bmGPIN0 /;"	d
-bmGPIN1	drivers/max3421e.h	/^#define bmGPIN1 /;"	d
-bmGPIN2	drivers/max3421e.h	/^#define bmGPIN2 /;"	d
-bmGPIN3	drivers/max3421e.h	/^#define bmGPIN3 /;"	d
-bmGPIN4	drivers/max3421e.h	/^#define bmGPIN4 /;"	d
-bmGPIN5	drivers/max3421e.h	/^#define bmGPIN5 /;"	d
-bmGPIN6	drivers/max3421e.h	/^#define bmGPIN6 /;"	d
-bmGPIN7	drivers/max3421e.h	/^#define bmGPIN7 /;"	d
-bmGPINIEN0	drivers/max3421e.h	/^#define bmGPINIEN0 /;"	d
-bmGPINIEN1	drivers/max3421e.h	/^#define bmGPINIEN1 /;"	d
-bmGPINIEN2	drivers/max3421e.h	/^#define bmGPINIEN2 /;"	d
-bmGPINIEN3	drivers/max3421e.h	/^#define bmGPINIEN3 /;"	d
-bmGPINIEN4	drivers/max3421e.h	/^#define bmGPINIEN4 /;"	d
-bmGPINIEN5	drivers/max3421e.h	/^#define bmGPINIEN5 /;"	d
-bmGPINIEN6	drivers/max3421e.h	/^#define bmGPINIEN6 /;"	d
-bmGPINIEN7	drivers/max3421e.h	/^#define bmGPINIEN7 /;"	d
-bmGPINIRQ0	drivers/max3421e.h	/^#define bmGPINIRQ0 /;"	d
-bmGPINIRQ1	drivers/max3421e.h	/^#define bmGPINIRQ1 /;"	d
-bmGPINIRQ2	drivers/max3421e.h	/^#define bmGPINIRQ2 /;"	d
-bmGPINIRQ3	drivers/max3421e.h	/^#define bmGPINIRQ3 /;"	d
-bmGPINIRQ4	drivers/max3421e.h	/^#define bmGPINIRQ4 /;"	d
-bmGPINIRQ5	drivers/max3421e.h	/^#define bmGPINIRQ5 /;"	d
-bmGPINIRQ6	drivers/max3421e.h	/^#define bmGPINIRQ6 /;"	d
-bmGPINIRQ7	drivers/max3421e.h	/^#define bmGPINIRQ7 /;"	d
-bmGPINPOL0	drivers/max3421e.h	/^#define bmGPINPOL0 /;"	d
-bmGPINPOL1	drivers/max3421e.h	/^#define bmGPINPOL1 /;"	d
-bmGPINPOL2	drivers/max3421e.h	/^#define bmGPINPOL2 /;"	d
-bmGPINPOL3	drivers/max3421e.h	/^#define bmGPINPOL3 /;"	d
-bmGPINPOL4	drivers/max3421e.h	/^#define bmGPINPOL4 /;"	d
-bmGPINPOL5	drivers/max3421e.h	/^#define bmGPINPOL5 /;"	d
-bmGPINPOL6	drivers/max3421e.h	/^#define bmGPINPOL6 /;"	d
-bmGPINPOL7	drivers/max3421e.h	/^#define bmGPINPOL7 /;"	d
-bmGPOUT0	drivers/max3421e.h	/^#define bmGPOUT0 /;"	d
-bmGPOUT1	drivers/max3421e.h	/^#define bmGPOUT1 /;"	d
-bmGPOUT2	drivers/max3421e.h	/^#define bmGPOUT2 /;"	d
-bmGPOUT3	drivers/max3421e.h	/^#define bmGPOUT3 /;"	d
-bmGPOUT4	drivers/max3421e.h	/^#define bmGPOUT4 /;"	d
-bmGPOUT5	drivers/max3421e.h	/^#define bmGPOUT5 /;"	d
-bmGPOUT6	drivers/max3421e.h	/^#define bmGPOUT6 /;"	d
-bmGPOUT7	drivers/max3421e.h	/^#define bmGPOUT7 /;"	d
-bmGPXA	drivers/max3421e.h	/^#define bmGPXA /;"	d
-bmGPXB	drivers/max3421e.h	/^#define bmGPXB /;"	d
-bmHOST	drivers/max3421e.h	/^#define bmHOST /;"	d
-bmHUBPRE	drivers/max3421e.h	/^#define bmHUBPRE /;"	d
-bmHXFRDNIE	drivers/max3421e.h	/^#define bmHXFRDNIE /;"	d
-bmHXFRDNIRQ	drivers/max3421e.h	/^#define bmHXFRDNIRQ /;"	d
-bmIE	drivers/max3421e.h	/^#define bmIE /;"	d
-bmINTLEVEL	drivers/max3421e.h	/^#define bmINTLEVEL /;"	d
-bmJSTATUS	drivers/max3421e.h	/^#define bmJSTATUS /;"	d
-bmKSTATUS	drivers/max3421e.h	/^#define bmKSTATUS /;"	d
-bmLOWSPEED	drivers/max3421e.h	/^#define bmLOWSPEED /;"	d
-bmNOVBUSIE	drivers/max3421e.h	/^#define bmNOVBUSIE /;"	d
-bmNOVBUSIRQ	drivers/max3421e.h	/^#define bmNOVBUSIRQ /;"	d
-bmOSCOKIE	drivers/max3421e.h	/^#define bmOSCOKIE /;"	d
-bmOSCOKIRQ	drivers/max3421e.h	/^#define bmOSCOKIRQ /;"	d
-bmPOSINT	drivers/max3421e.h	/^#define bmPOSINT /;"	d
-bmPULSEWID0	drivers/max3421e.h	/^#define bmPULSEWID0 /;"	d
-bmPUSLEWID1	drivers/max3421e.h	/^#define bmPUSLEWID1 /;"	d
-bmPWRDOWN	drivers/max3421e.h	/^#define bmPWRDOWN /;"	d
-bmRCVDAVIE	drivers/max3421e.h	/^#define bmRCVDAVIE /;"	d
-bmRCVDAVIRQ	drivers/max3421e.h	/^#define bmRCVDAVIRQ /;"	d
-bmRCVTOG0	drivers/max3421e.h	/^#define bmRCVTOG0 /;"	d
-bmRCVTOG1	drivers/max3421e.h	/^#define bmRCVTOG1 /;"	d
-bmRCVTOGRD	drivers/max3421e.h	/^#define bmRCVTOGRD /;"	d
-bmRWUIE	drivers/max3421e.h	/^#define bmRWUIE /;"	d
-bmRWUIRQ	drivers/max3421e.h	/^#define bmRWUIRQ /;"	d
-bmSAMPLEBUS	drivers/max3421e.h	/^#define bmSAMPLEBUS /;"	d
-bmSE0	drivers/max3421e.h	/^#define bmSE0 /;"	d
-bmSE1	drivers/max3421e.h	/^#define bmSE1 /;"	d
-bmSEPIRQ	drivers/max3421e.h	/^#define bmSEPIRQ /;"	d
-bmSIGRSM	drivers/max3421e.h	/^#define bmSIGRSM /;"	d
-bmSNDBAVIE	drivers/max3421e.h	/^#define bmSNDBAVIE /;"	d
-bmSNDBAVIRQ	drivers/max3421e.h	/^#define bmSNDBAVIRQ /;"	d
-bmSNDTOG0	drivers/max3421e.h	/^#define bmSNDTOG0 /;"	d
-bmSNDTOG1	drivers/max3421e.h	/^#define bmSNDTOG1 /;"	d
-bmSNDTOGRD	drivers/max3421e.h	/^#define bmSNDTOGRD /;"	d
-bmSOFKAENAB	drivers/max3421e.h	/^#define bmSOFKAENAB /;"	d
-bmSUSDNIE	drivers/max3421e.h	/^#define bmSUSDNIE /;"	d
-bmSUSDNIRQ	drivers/max3421e.h	/^#define bmSUSDNIRQ /;"	d
-bmVBUSIE	drivers/max3421e.h	/^#define bmVBUSIE /;"	d
-bmVBUSIRQ	drivers/max3421e.h	/^#define bmVBUSIRQ /;"	d
+bAlternateSetting	drivers/UHS_UsbCore.h	/^        uint8_t bAlternateSetting;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
+bEndpointAddress	drivers/UHS_UsbCore.h	/^        uint8_t bEndpointAddress;       \/\/ Endpoint address. Bit 7 indicates direction (0=OUT,/;"	m	struct:ENDPOINT_INFO	typeref:typename:uint8_t
+bInterfaceNumber	drivers/UHS_UsbCore.h	/^        uint8_t bInterfaceNumber;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
+bInterval	drivers/UHS_UsbCore.h	/^        uint8_t bInterval;              \/\/ Polling interval in frames.$/;"	m	struct:ENDPOINT_INFO	typeref:typename:uint8_t
+bMaxPacketSize0	drivers/UHS_UsbCore.h	/^        uint8_t bMaxPacketSize0;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
+bRequest	drivers/UHS_UsbCore.h	/^        uint8_t bRequest;$/;"	m	struct:__anon9a57ae6b0108	typeref:typename:uint8_t
+bcdDevice	drivers/UHS_UsbCore.h	/^        uint16_t bcdDevice;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint16_t
+bmAttributes	drivers/UHS_UsbCore.h	/^        uint8_t bmAttributes;           \/\/ Endpoint transfer type.$/;"	m	struct:ENDPOINT_INFO	typeref:typename:uint8_t
+bmBUSEVENTIE	drivers/max3421e.h	/^#define    bmBUSEVENTIE /;"	d
+bmBUSEVENTIRQ	drivers/max3421e.h	/^#define   bmBUSEVENTIRQ /;"	d
+bmBUSRST	drivers/max3421e.h	/^#define        bmBUSRST /;"	d
+bmCHIPRES	drivers/max3421e.h	/^#define       bmCHIPRES /;"	d
+bmCONNIE	drivers/max3421e.h	/^#define        bmCONNIE /;"	d
+bmCONNIRQ	drivers/max3421e.h	/^#define       bmCONNIRQ /;"	d
+bmDELAYISO	drivers/max3421e.h	/^#define      bmDELAYISO /;"	d
+bmDMPULLDN	drivers/max3421e.h	/^#define      bmDMPULLDN /;"	d
+bmDPPULLDN	drivers/max3421e.h	/^#define      bmDPPULLDN /;"	d
+bmFDUPSPI	drivers/max3421e.h	/^#define       bmFDUPSPI /;"	d
+bmFRAMEIE	drivers/max3421e.h	/^#define       bmFRAMEIE /;"	d
+bmFRAMEIRQ	drivers/max3421e.h	/^#define      bmFRAMEIRQ /;"	d
+bmFRMRST	drivers/max3421e.h	/^#define        bmFRMRST /;"	d
+bmGPIN0	drivers/max3421e.h	/^#define         bmGPIN0 /;"	d
+bmGPIN1	drivers/max3421e.h	/^#define         bmGPIN1 /;"	d
+bmGPIN2	drivers/max3421e.h	/^#define         bmGPIN2 /;"	d
+bmGPIN3	drivers/max3421e.h	/^#define         bmGPIN3 /;"	d
+bmGPIN4	drivers/max3421e.h	/^#define         bmGPIN4 /;"	d
+bmGPIN5	drivers/max3421e.h	/^#define         bmGPIN5 /;"	d
+bmGPIN6	drivers/max3421e.h	/^#define         bmGPIN6 /;"	d
+bmGPIN7	drivers/max3421e.h	/^#define         bmGPIN7 /;"	d
+bmGPINIEN0	drivers/max3421e.h	/^#define      bmGPINIEN0 /;"	d
+bmGPINIEN1	drivers/max3421e.h	/^#define      bmGPINIEN1 /;"	d
+bmGPINIEN2	drivers/max3421e.h	/^#define      bmGPINIEN2 /;"	d
+bmGPINIEN3	drivers/max3421e.h	/^#define      bmGPINIEN3 /;"	d
+bmGPINIEN4	drivers/max3421e.h	/^#define      bmGPINIEN4 /;"	d
+bmGPINIEN5	drivers/max3421e.h	/^#define      bmGPINIEN5 /;"	d
+bmGPINIEN6	drivers/max3421e.h	/^#define      bmGPINIEN6 /;"	d
+bmGPINIEN7	drivers/max3421e.h	/^#define      bmGPINIEN7 /;"	d
+bmGPINIRQ0	drivers/max3421e.h	/^#define      bmGPINIRQ0 /;"	d
+bmGPINIRQ1	drivers/max3421e.h	/^#define      bmGPINIRQ1 /;"	d
+bmGPINIRQ2	drivers/max3421e.h	/^#define      bmGPINIRQ2 /;"	d
+bmGPINIRQ3	drivers/max3421e.h	/^#define      bmGPINIRQ3 /;"	d
+bmGPINIRQ4	drivers/max3421e.h	/^#define      bmGPINIRQ4 /;"	d
+bmGPINIRQ5	drivers/max3421e.h	/^#define      bmGPINIRQ5 /;"	d
+bmGPINIRQ6	drivers/max3421e.h	/^#define      bmGPINIRQ6 /;"	d
+bmGPINIRQ7	drivers/max3421e.h	/^#define      bmGPINIRQ7 /;"	d
+bmGPINPOL0	drivers/max3421e.h	/^#define      bmGPINPOL0 /;"	d
+bmGPINPOL1	drivers/max3421e.h	/^#define      bmGPINPOL1 /;"	d
+bmGPINPOL2	drivers/max3421e.h	/^#define      bmGPINPOL2 /;"	d
+bmGPINPOL3	drivers/max3421e.h	/^#define      bmGPINPOL3 /;"	d
+bmGPINPOL4	drivers/max3421e.h	/^#define      bmGPINPOL4 /;"	d
+bmGPINPOL5	drivers/max3421e.h	/^#define      bmGPINPOL5 /;"	d
+bmGPINPOL6	drivers/max3421e.h	/^#define      bmGPINPOL6 /;"	d
+bmGPINPOL7	drivers/max3421e.h	/^#define      bmGPINPOL7 /;"	d
+bmGPOUT0	drivers/max3421e.h	/^#define        bmGPOUT0 /;"	d
+bmGPOUT1	drivers/max3421e.h	/^#define        bmGPOUT1 /;"	d
+bmGPOUT2	drivers/max3421e.h	/^#define        bmGPOUT2 /;"	d
+bmGPOUT3	drivers/max3421e.h	/^#define        bmGPOUT3 /;"	d
+bmGPOUT4	drivers/max3421e.h	/^#define        bmGPOUT4 /;"	d
+bmGPOUT5	drivers/max3421e.h	/^#define        bmGPOUT5 /;"	d
+bmGPOUT6	drivers/max3421e.h	/^#define        bmGPOUT6 /;"	d
+bmGPOUT7	drivers/max3421e.h	/^#define        bmGPOUT7 /;"	d
+bmGPXA	drivers/max3421e.h	/^#define          bmGPXA /;"	d
+bmGPXB	drivers/max3421e.h	/^#define          bmGPXB /;"	d
+bmHOST	drivers/max3421e.h	/^#define          bmHOST /;"	d
+bmHUBPRE	drivers/max3421e.h	/^#define        bmHUBPRE /;"	d
+bmHXFRDNIE	drivers/max3421e.h	/^#define      bmHXFRDNIE /;"	d
+bmHXFRDNIRQ	drivers/max3421e.h	/^#define     bmHXFRDNIRQ /;"	d
+bmIE	drivers/max3421e.h	/^#define            bmIE /;"	d
+bmINTLEVEL	drivers/max3421e.h	/^#define      bmINTLEVEL /;"	d
+bmJSTATUS	drivers/max3421e.h	/^#define       bmJSTATUS /;"	d
+bmKSTATUS	drivers/max3421e.h	/^#define       bmKSTATUS /;"	d
+bmLOWSPEED	drivers/max3421e.h	/^#define      bmLOWSPEED /;"	d
+bmNOVBUSIE	drivers/max3421e.h	/^#define      bmNOVBUSIE /;"	d
+bmNOVBUSIRQ	drivers/max3421e.h	/^#define     bmNOVBUSIRQ /;"	d
+bmOSCOKIE	drivers/max3421e.h	/^#define       bmOSCOKIE /;"	d
+bmOSCOKIRQ	drivers/max3421e.h	/^#define      bmOSCOKIRQ /;"	d
+bmPOSINT	drivers/max3421e.h	/^#define        bmPOSINT /;"	d
+bmPULSEWID0	drivers/max3421e.h	/^#define     bmPULSEWID0 /;"	d
+bmPUSLEWID1	drivers/max3421e.h	/^#define     bmPUSLEWID1 /;"	d
+bmPWRDOWN	drivers/max3421e.h	/^#define       bmPWRDOWN /;"	d
+bmRCVDAVIE	drivers/max3421e.h	/^#define      bmRCVDAVIE /;"	d
+bmRCVDAVIRQ	drivers/max3421e.h	/^#define     bmRCVDAVIRQ /;"	d
+bmRCVTOG0	drivers/max3421e.h	/^#define       bmRCVTOG0 /;"	d
+bmRCVTOG1	drivers/max3421e.h	/^#define       bmRCVTOG1 /;"	d
+bmRCVTOGRD	drivers/max3421e.h	/^#define      bmRCVTOGRD /;"	d
+bmRWUIE	drivers/max3421e.h	/^#define         bmRWUIE /;"	d
+bmRWUIRQ	drivers/max3421e.h	/^#define        bmRWUIRQ /;"	d
+bmRequestType	drivers/UHS_UsbCore.h	/^                uint8_t bmRequestType;$/;"	m	union:__anon9a57ae6b0108::__anon9a57ae6b020a	typeref:typename:uint8_t
+bmSAMPLEBUS	drivers/max3421e.h	/^#define     bmSAMPLEBUS /;"	d
+bmSE0	drivers/max3421e.h	/^#define           bmSE0 /;"	d
+bmSE1	drivers/max3421e.h	/^#define           bmSE1 /;"	d
+bmSEPIRQ	drivers/max3421e.h	/^#define        bmSEPIRQ /;"	d
+bmSIGRSM	drivers/max3421e.h	/^#define        bmSIGRSM /;"	d
+bmSNDBAVIE	drivers/max3421e.h	/^#define      bmSNDBAVIE /;"	d
+bmSNDBAVIRQ	drivers/max3421e.h	/^#define     bmSNDBAVIRQ /;"	d
+bmSNDTOG0	drivers/max3421e.h	/^#define       bmSNDTOG0 /;"	d
+bmSNDTOG1	drivers/max3421e.h	/^#define       bmSNDTOG1 /;"	d
+bmSNDTOGRD	drivers/max3421e.h	/^#define      bmSNDTOGRD /;"	d
+bmSOFKAENAB	drivers/max3421e.h	/^#define     bmSOFKAENAB /;"	d
+bmSUSDNIE	drivers/max3421e.h	/^#define       bmSUSDNIE /;"	d
+bmSUSDNIRQ	drivers/max3421e.h	/^#define      bmSUSDNIRQ /;"	d
+bmVBUSIE	drivers/max3421e.h	/^#define        bmVBUSIE /;"	d
+bmVBUSIRQ	drivers/max3421e.h	/^#define       bmVBUSIRQ /;"	d
+bus_state	drivers/max3421.c	/^volatile uint8_t bus_state;$/;"	v	typeref:typename:volatile uint8_t
+busevent	drivers/max3421e.h	/^#define        busevent /;"	d
 busprobe	drivers/max3421.c	/^void busprobe(void)$/;"	f	typeref:typename:void
 bytesRd	drivers/max3421.c	/^uint8_t *bytesRd(const uint8_t reg, const uint8_t nbytes, uint8_t * data_p)$/;"	f	typeref:typename:uint8_t *
+bytesWr	drivers/max3421.c	/^uint8_t *bytesWr(const uint8_t reg, const uint8_t nbytes, uint8_t * data_p)$/;"	f	typeref:typename:uint8_t *
 check_events	proj.c	/^void check_events(void)$/;"	f	typeref:typename:void
 clean	Makefile	/^clean: $(SUBDIRS)$/;"	t
+condet	drivers/max3421e.h	/^#define          condet /;"	d
 config.h	Makefile	/^config.h:$/;"	t
 controller_t	proj.h	/^struct controller_t {$/;"	s
+counted	drivers/max3421e.h	/^#define         counted /;"	d
 ctrl	proj.h	/^struct controller_t ctrl;$/;"	v	typeref:struct:controller_t
+currentconfig	drivers/UHS_UsbCore.h	/^        uint8_t currentconfig;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
 depend	Makefile	/^depend: $(PROJ).dep$/;"	t
 desc	tools/msp430-ram-usage	/^                desc = '%s | %s' % (mmap[address+x], desc)$/;"	v
 desc	tools/msp430-ram-usage	/^                desc = '%s%s (%d)' % ($/;"	v
 desc	tools/msp430-ram-usage	/^                desc = '%s%s' % ($/;"	v
+direction	drivers/UHS_UsbCore.h	/^                        uint8_t direction : 1;  \/\/ Direction of data transfer$/;"	m	struct:__anon9a57ae6b0108::__anon9a57ae6b020a::__anon9a57ae6b0308	typeref:typename:uint8_t:1
 display_menu	qa.c	/^void display_menu(void)$/;"	f	typeref:typename:void
 doc	Makefile	/^doc:$/;"	t
+doingreset	drivers/max3421e.h	/^#define      doingreset /;"	d
+epInfo	drivers/UHS_UsbCore.h	/^        struct ENDPOINT_INFO epInfo[16];$/;"	m	struct:INTERFACE_INFO	typeref:struct:ENDPOINT_INFO[16]
 false	proj.h	/^#define false /;"	d
 fn	drivers/sys_messagebus.h	/^    void (*fn) (enum sys_message);$/;"	m	struct:sys_messagebus	typeref:typename:void (*)(enum sys_message)
 free	tools/msp430-ram-usage	/^free = 0$/;"	v
@@ -254,28 +404,15 @@ gpioWr	drivers/max3421.c	/^void gpioWr(const uint8_t data)$/;"	f	typeref:typenam
 gpx_cnt	drivers/max3421.h	/^volatile uint32_t gpx_cnt, gpx_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
 gpx_cnt_hl	drivers/max3421.h	/^volatile uint32_t gpx_cnt, gpx_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
 gpx_irq_handler	drivers/max3421.c	/^static void gpx_irq_handler(enum sys_message msg)$/;"	f	typeref:typename:void	file:
-hrBABBLE	drivers/max3421e.h	/^#define hrBABBLE /;"	d
-hrBADBC	drivers/max3421e.h	/^#define hrBADBC /;"	d
-hrBADREQ	drivers/max3421e.h	/^#define hrBADREQ /;"	d
-hrBUSY	drivers/max3421e.h	/^#define hrBUSY /;"	d
-hrCRCERR	drivers/max3421e.h	/^#define hrCRCERR /;"	d
-hrJERR	drivers/max3421e.h	/^#define hrJERR /;"	d
-hrKERR	drivers/max3421e.h	/^#define hrKERR /;"	d
-hrNAK	drivers/max3421e.h	/^#define hrNAK /;"	d
-hrPIDERR	drivers/max3421e.h	/^#define hrPIDERR /;"	d
-hrPKTERR	drivers/max3421e.h	/^#define hrPKTERR /;"	d
-hrSTALL	drivers/max3421e.h	/^#define hrSTALL /;"	d
-hrSUCCESS	drivers/max3421e.h	/^#define hrSUCCESS /;"	d
-hrTIMEOUT	drivers/max3421e.h	/^#define hrTIMEOUT /;"	d
-hrTOGERR	drivers/max3421e.h	/^#define hrTOGERR /;"	d
-hrUNDEF	drivers/max3421e.h	/^#define hrUNDEF /;"	d
-hrWRONGPID	drivers/max3421e.h	/^#define hrWRONGPID /;"	d
 install	Makefile	/^install: $(PROJ).elf$/;"	t
 int_cnt	drivers/max3421.h	/^volatile uint32_t int_cnt, int_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
 int_cnt_hl	drivers/max3421.h	/^volatile uint32_t int_cnt, int_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
 int_irq_handler	drivers/max3421.c	/^static void int_irq_handler(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+interface	drivers/UHS_UsbCore.h	/^        struct INTERFACE_INFO interface;$/;"	m	struct:ENUMERATION_INFO	typeref:struct:INTERFACE_INFO
 j0	proj.h	/^    uint8_t j0[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
 j1	proj.h	/^    uint8_t j1[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
+klass	drivers/UHS_UsbCore.h	/^        uint8_t klass;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
+klass	drivers/UHS_UsbCore.h	/^        uint8_t klass;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
 listens	drivers/sys_messagebus.h	/^    enum sys_message listens;$/;"	m	struct:sys_messagebus	typeref:enum:sys_message
 m	tools/msp430-ram-usage	/^    m = re_obj.search(line)$/;"	v
 main	proj.c	/^int main(void)$/;"	f	typeref:typename:int
@@ -284,46 +421,57 @@ mcp42_set_pot	drivers/mcp42xxx.c	/^void mcp42_set_pot(const uint8_t mcp42_id, co
 mcp42_set_pot_ch	drivers/mcp42xxx.c	/^void mcp42_set_pot_ch(const uint8_t mcp42_id, const uint8_t pot_id,$/;"	f	typeref:typename:void
 mcp42_shutdown_pot	drivers/mcp42xxx.c	/^void mcp42_shutdown_pot(const uint8_t mcp42_id, const uint8_t pot_id)$/;"	f	typeref:typename:void
 messagebus	drivers/sys_messagebus.h	/^struct sys_messagebus *messagebus;$/;"	v	typeref:struct:sys_messagebus *
+mkSETUP_PKT16	drivers/UHS_UsbCore.h	/^#define mkSETUP_PKT16(/;"	d
+mkSETUP_PKT8	drivers/UHS_UsbCore.h	/^#define mkSETUP_PKT8(/;"	d
 mmap	tools/msp430-ram-usage	/^mmap = {}$/;"	v
 modinit.c	Makefile	/^modinit.c:$/;"	t
 modinit.o	Makefile	/^modinit.o: modinit.c$/;"	t
 name	tools/msp430-ram-usage	/^        name = ' -'*20$/;"	v
 name	tools/msp430-ram-usage	/^        name = mmap[address]$/;"	v
 next	drivers/sys_messagebus.h	/^    struct sys_messagebus *next;$/;"	m	struct:sys_messagebus	typeref:struct:sys_messagebus *
+numep	drivers/UHS_UsbCore.h	/^        uint8_t numep;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
 objs	tools/msp430-ram-usage	/^objs = {}$/;"	v
+parent	drivers/UHS_UsbCore.h	/^        uint8_t parent;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
 parse_UI	proj.c	/^static void parse_UI(enum sys_message msg)$/;"	f	typeref:typename:void	file:
 parse_user_input	qa.c	/^void parse_user_input(void)$/;"	f	typeref:typename:void
 parser	tools/msp430-ram-usage	/^parser = OptionParser()$/;"	v
+pid	drivers/UHS_UsbCore.h	/^        uint16_t pid;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint16_t
+port	drivers/UHS_UsbCore.h	/^        uint8_t port;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
 port1_ifg_gpx_last_event	proj.h	/^volatile uint8_t port1_ifg_gpx_last_event;$/;"	v	typeref:typename:volatile uint8_t
 port1_ifg_int_last_event	proj.h	/^volatile uint8_t port1_ifg_int_last_event;$/;"	v	typeref:typename:volatile uint8_t
-rCPUCTL	drivers/max3421e.h	/^#define rCPUCTL /;"	d
-rGPINIEN	drivers/max3421e.h	/^#define rGPINIEN /;"	d
-rGPINIRQ	drivers/max3421e.h	/^#define rGPINIRQ /;"	d
-rGPINPOL	drivers/max3421e.h	/^#define rGPINPOL /;"	d
-rHCTL	drivers/max3421e.h	/^#define rHCTL /;"	d
-rHIEN	drivers/max3421e.h	/^#define rHIEN /;"	d
-rHIRQ	drivers/max3421e.h	/^#define rHIRQ /;"	d
-rHRSL	drivers/max3421e.h	/^#define rHRSL /;"	d
-rHXFR	drivers/max3421e.h	/^#define rHXFR /;"	d
-rIOPINS1	drivers/max3421e.h	/^#define rIOPINS1 /;"	d
-rIOPINS2	drivers/max3421e.h	/^#define rIOPINS2 /;"	d
-rMODE	drivers/max3421e.h	/^#define rMODE /;"	d
-rPERADDR	drivers/max3421e.h	/^#define rPERADDR /;"	d
-rPINCTL	drivers/max3421e.h	/^#define rPINCTL /;"	d
-rRCVBC	drivers/max3421e.h	/^#define rRCVBC /;"	d
-rRCVFIFO	drivers/max3421e.h	/^#define rRCVFIFO /;"	d
-rREVISION	drivers/max3421e.h	/^#define rREVISION /;"	d
-rSNDBC	drivers/max3421e.h	/^#define rSNDBC /;"	d
-rSNDFIFO	drivers/max3421e.h	/^#define rSNDFIFO /;"	d
-rSUDFIFO	drivers/max3421e.h	/^#define rSUDFIFO /;"	d
-rUSBCTL	drivers/max3421e.h	/^#define rUSBCTL /;"	d
-rUSBIEN	drivers/max3421e.h	/^#define rUSBIEN /;"	d
-rUSBIRQ	drivers/max3421e.h	/^#define rUSBIRQ /;"	d
+protocol	drivers/UHS_UsbCore.h	/^        uint8_t protocol;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
+protocol	drivers/UHS_UsbCore.h	/^        uint8_t protocol;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
+rCPUCTL	drivers/max3421e.h	/^#define         rCPUCTL /;"	d
+rGPINIEN	drivers/max3421e.h	/^#define        rGPINIEN /;"	d
+rGPINIRQ	drivers/max3421e.h	/^#define        rGPINIRQ /;"	d
+rGPINPOL	drivers/max3421e.h	/^#define        rGPINPOL /;"	d
+rHCTL	drivers/max3421e.h	/^#define           rHCTL /;"	d
+rHIEN	drivers/max3421e.h	/^#define           rHIEN /;"	d
+rHIRQ	drivers/max3421e.h	/^#define           rHIRQ /;"	d
+rHRSL	drivers/max3421e.h	/^#define           rHRSL /;"	d
+rHXFR	drivers/max3421e.h	/^#define           rHXFR /;"	d
+rIOPINS1	drivers/max3421e.h	/^#define        rIOPINS1 /;"	d
+rIOPINS2	drivers/max3421e.h	/^#define        rIOPINS2 /;"	d
+rMODE	drivers/max3421e.h	/^#define           rMODE /;"	d
+rPERADDR	drivers/max3421e.h	/^#define        rPERADDR /;"	d
+rPINCTL	drivers/max3421e.h	/^#define         rPINCTL /;"	d
+rRCVBC	drivers/max3421e.h	/^#define          rRCVBC /;"	d
+rRCVFIFO	drivers/max3421e.h	/^#define        rRCVFIFO /;"	d
+rREVISION	drivers/max3421e.h	/^#define       rREVISION /;"	d
+rSNDBC	drivers/max3421e.h	/^#define          rSNDBC /;"	d
+rSNDFIFO	drivers/max3421e.h	/^#define        rSNDFIFO /;"	d
+rSUDFIFO	drivers/max3421e.h	/^#define        rSUDFIFO /;"	d
+rUSBCTL	drivers/max3421e.h	/^#define         rUSBCTL /;"	d
+rUSBIEN	drivers/max3421e.h	/^#define         rUSBIEN /;"	d
+rUSBIRQ	drivers/max3421e.h	/^#define         rUSBIRQ /;"	d
 radians	drivers/helper.c	/^float radians(const float x)$/;"	f	typeref:typename:float
 re_obj	tools/msp430-ram-usage	/^re_obj = re.compile(r':[ \\t]+([0-9a-f]+)[ \\t]+([0-9a-f]+)[ \\t]+(\\w+)[ \\t]+.* (.*)$')$/;"	v
+recipient	drivers/UHS_UsbCore.h	/^                        uint8_t recipient : 5;  \/\/ Recipient of the request$/;"	m	struct:__anon9a57ae6b0108::__anon9a57ae6b020a::__anon9a57ae6b0308	typeref:typename:uint8_t:5
 regRd	drivers/max3421.c	/^uint8_t regRd(const uint8_t reg)$/;"	f	typeref:typename:uint8_t
 regWr	drivers/max3421.c	/^void regWr(const uint8_t reg, const uint8_t val)$/;"	f	typeref:typename:void
 size	tools/msp430-ram-usage	/^size = objs['__stack'][0] - objs['__data_start'][0]$/;"	v
+sof_countdown	drivers/max3421.c	/^volatile uint16_t sof_countdown;$/;"	v	typeref:typename:volatile uint16_t
+sofevent	drivers/max3421e.h	/^#define        sofevent /;"	d
 spi_end	drivers/spi.c	/^void spi_end(void)$/;"	f	typeref:typename:void
 spi_fast_mode	drivers/spi.c	/^void spi_fast_mode(void)$/;"	f	typeref:typename:void
 spi_init	drivers/spi.c	/^void spi_init(void)$/;"	f	typeref:typename:void
@@ -335,6 +483,8 @@ str_temp	proj.h	/^char str_temp[STR_LEN];$/;"	v	typeref:typename:char[]
 str_to_uint16	drivers/helper.c	/^uint8_t str_to_uint16(char *str, uint16_t * out, const uint8_t seek,$/;"	f	typeref:typename:uint8_t
 str_to_uint32	drivers/helper.c	/^uint8_t str_to_uint32(char *str, uint32_t * out, const uint8_t seek,$/;"	f	typeref:typename:uint8_t
 strip_zero	tools/update_rtca_now.sh	/^strip_zero()$/;"	f
+subklass	drivers/UHS_UsbCore.h	/^        uint8_t subklass;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
+subklass	drivers/UHS_UsbCore.h	/^        uint8_t subklass;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
 syms	tools/msp430-ram-usage	/^syms = os.popen('msp430-readelf -a -W "%s"' % args[0])$/;"	v
 sys_message	drivers/sys_messagebus.h	/^enum sys_message {$/;"	g
 sys_messagebus	drivers/sys_messagebus.h	/^struct sys_messagebus {$/;"	s
@@ -350,14 +500,8 @@ timer_a0_init	drivers/timer_a0.c	/^void timer_a0_init(void)$/;"	f	typeref:typena
 timer_a0_last_event	drivers/timer_a0.h	/^volatile enum timer_a0_event timer_a0_last_event;$/;"	v	typeref:typename:volatile enum timer_a0_event
 timer_a0_ovf	drivers/timer_a0.h	/^volatile uint16_t timer_a0_ovf;$/;"	v	typeref:typename:volatile uint16_t
 timer_a0_ovf_irq	proj.c	/^static void timer_a0_ovf_irq(enum sys_message msg)$/;"	f	typeref:typename:void	file:
-tokIN	drivers/max3421e.h	/^#define tokIN /;"	d
-tokINHS	drivers/max3421e.h	/^#define tokINHS /;"	d
-tokISOIN	drivers/max3421e.h	/^#define tokISOIN /;"	d
-tokISOOUT	drivers/max3421e.h	/^#define tokISOOUT /;"	d
-tokOUT	drivers/max3421e.h	/^#define tokOUT /;"	d
-tokOUTHS	drivers/max3421e.h	/^#define tokOUTHS /;"	d
-tokSETUP	drivers/max3421e.h	/^#define tokSETUP /;"	d
 true	proj.h	/^#define true /;"	d
+type	drivers/UHS_UsbCore.h	/^                        uint8_t type : 2;       \/\/ Type of request$/;"	m	struct:__anon9a57ae6b0108::__anon9a57ae6b020a::__anon9a57ae6b0308	typeref:typename:uint8_t:2
 uart0_init	drivers/uart0.c	/^void uart0_init(void)$/;"	f	typeref:typename:void
 uart0_last_event	drivers/uart0.h	/^volatile enum uart0_tevent uart0_last_event;$/;"	v	typeref:typename:volatile enum uart0_tevent
 uart0_p	drivers/uart0.h	/^volatile uint8_t uart0_p;$/;"	v	typeref:typename:volatile uint8_t
@@ -365,4 +509,14 @@ uart0_rx_buf	drivers/uart0.h	/^volatile char uart0_rx_buf[UART0_RXBUF_SZ];$/;"	v
 uart0_rx_enable	drivers/uart0.h	/^volatile uint8_t uart0_rx_enable;$/;"	v	typeref:typename:volatile uint8_t
 uart0_tevent	drivers/uart0.h	/^enum uart0_tevent {$/;"	g
 uart0_tx_str	drivers/uart0.c	/^uint16_t uart0_tx_str(char *str, const uint16_t size)$/;"	f	typeref:typename:uint16_t
-vbusState	drivers/max3421.c	/^static uint8_t vbusState;$/;"	v	typeref:typename:uint8_t	file:
+usb_host_speed	drivers/max3421.c	/^volatile uint8_t usb_host_speed;$/;"	v	typeref:typename:volatile uint8_t
+usb_task_state	drivers/max3421.c	/^volatile uint8_t usb_task_state;$/;"	v	typeref:typename:volatile uint8_t
+vbusState	drivers/max3421.c	/^volatile uint8_t vbusState;$/;"	v	typeref:typename:volatile uint8_t
+vid	drivers/UHS_UsbCore.h	/^        uint16_t vid;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint16_t
+wIndex	drivers/UHS_UsbCore.h	/^        uint16_t wIndex;$/;"	m	struct:__anon9a57ae6b0108	typeref:typename:uint16_t
+wLength	drivers/UHS_UsbCore.h	/^        uint16_t wLength;$/;"	m	struct:__anon9a57ae6b0108	typeref:typename:uint16_t
+wMaxPacketSize	drivers/UHS_UsbCore.h	/^        uint16_t wMaxPacketSize;        \/\/ Maximum packet size.$/;"	m	struct:ENDPOINT_INFO	typeref:typename:uint16_t
+wVal_u	drivers/UHS_UsbCore.h	/^        } wVal_u;$/;"	m	struct:__anon9a57ae6b0108	typeref:union:__anon9a57ae6b0108::__anon9a57ae6b040a
+wValue	drivers/UHS_UsbCore.h	/^                uint16_t wValue;$/;"	m	union:__anon9a57ae6b0108::__anon9a57ae6b040a	typeref:typename:uint16_t
+wValueHi	drivers/UHS_UsbCore.h	/^                        uint8_t wValueHi;$/;"	m	struct:__anon9a57ae6b0108::__anon9a57ae6b040a::__anon9a57ae6b0508	typeref:typename:uint8_t
+wValueLo	drivers/UHS_UsbCore.h	/^                        uint8_t wValueLo;$/;"	m	struct:__anon9a57ae6b0108::__anon9a57ae6b040a::__anon9a57ae6b0508	typeref:typename:uint8_t

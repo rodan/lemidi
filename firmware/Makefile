@@ -47,7 +47,7 @@ all: depend config.h tags $(PROJ).elf
 
 #
 # Build list of sources and objects to build
-SRCS := $(wildcard *.c)
+SRCS := $(wildcard *.c *.cpp)
 $(foreach subdir,$(SUBDIRS), \
 	$(eval SRCS := $(SRCS) $(wildcard $(subdir)/*.c)) \
 )

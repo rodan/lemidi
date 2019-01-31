@@ -19,6 +19,7 @@ volatile uint32_t gpx_cnt, gpx_cnt_hl;
 
 // internals
 void regWr(const uint8_t reg, const uint8_t val);
+uint8_t *bytesWr(const uint8_t reg, const uint8_t nbytes, uint8_t* data_p);
 uint8_t regRd(const uint8_t reg);
 uint8_t *bytesRd(const uint8_t reg, const  uint8_t nbytes, uint8_t* data_p);
 void gpioWr(const uint8_t data);

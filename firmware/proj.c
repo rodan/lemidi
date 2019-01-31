@@ -169,17 +169,17 @@ void main_init(void)
 void check_events(void)
 {
     struct sys_messagebus *p = messagebus;
-    enum sys_message msg = 0;
+    enum sys_message msg = SYS_MSG_NULL;
 
     // drivers/timer0a
     if (timer_a0_last_event) {
         msg |= timer_a0_last_event;
-        timer_a0_last_event = 0;
+        timer_a0_last_event = TIMER_A0_EVENT_NONE;
     }
     // drivers/uart0
     if (uart0_last_event & UART0_EV_RX) {
         msg |= SYS_MSG_UART0_RX;
-        uart0_last_event = 0;
+        uart0_last_event = UART0_EV_NULL;
     }
 
     // USB GPX event

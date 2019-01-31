@@ -10,14 +10,23 @@
 #include "spi.h"
 #include "drivers/sys_messagebus.h"
 #include "proj.h"
+#include "UHS_host.h"
 
-static uint8_t vbusState;
+volatile uint8_t vbusState;
+volatile uint16_t sof_countdown;
+volatile uint8_t bus_state;
+
+//volatile uint8_t usb_error;
+volatile uint8_t usb_task_state;
+//volatile uint8_t usb_task_polling_disabled;
+volatile uint8_t usb_host_speed;
+//volatile uint8_t hub_present;
 
 static void gpx_irq_handler(enum sys_message msg)
 {
     uint8_t iv;
     uint8_t iostate;
-    
+
     gpx_cnt_hl++;
 
     // signal led1 (red)
@@ -44,7 +53,7 @@ static void int_irq_handler(enum sys_message msg)
 
     int_cnt_hl++;
 
-    // signal led2 (green)
+    // assert led2 (green)
     iostate = regRd(rIOPINS2) | bmGPOUT7;
     regWr(rIOPINS2, iostate);
 
@@ -63,11 +72,9 @@ static void int_irq_handler(enum sys_message msg)
         // 1ms SOF PID irq
         ret_iv |= bmFRAMEIRQ;
     }
-
     // clear serviced irqs
     regWr(rHIRQ, ret_iv);
 }
-
 
 uint8_t MAX3421_init(void)
 {
@@ -77,6 +84,8 @@ uint8_t MAX3421_init(void)
     int_cnt_hl = 0;
     gpx_cnt = 0;
     gpx_cnt_hl = 0;
+    bus_state = 0;
+    sof_countdown = 0;
 
     // red led on
     regWr(rIOPINS2, bmGPOUT6);
@@ -94,8 +103,7 @@ uint8_t MAX3421_init(void)
     //regWr(rPINCTL, (bmFDUPSPI | bmINTLEVEL));
 
     // set full duplex SPI, edge-active INT interrupt
-    regWr(rPINCTL, bmFDUPSPI);
-
+    regWr(rPINCTL, bmFDUPSPI | GPX_VBDET);
 
     // MAX4789 is connected to GPOUT0 to controls the VBUS
     // enable VBUS 
@@ -111,7 +119,6 @@ uint8_t MAX3421_init(void)
         // VBUS voltage did not reach 5v after 2^16 ticks
         return EXIT_FAILURE;
     }
-
     // reset the chip, verify OSCOKIRQ
     regWr(rUSBCTL, bmCHIPRES);
     regWr(rUSBCTL, 0x00);
@@ -125,7 +132,6 @@ uint8_t MAX3421_init(void)
         // oscilator did not settle after 2^16 ticks
         return EXIT_FAILURE;
     }
-
     // enable useful interrupts
     regWr(rUSBIRQ, (bmVBUSIRQ | bmNOVBUSIRQ | bmOSCOKIRQ));
     regWr(rUSBIEN, (bmVBUSIE | bmNOVBUSIE));
@@ -143,8 +149,8 @@ uint8_t MAX3421_init(void)
 
     // check if a peripheral is connected
     regWr(rHCTL, bmSAMPLEBUS);
-    while(!(regRd(rHCTL) & bmSAMPLEBUS)); //wait for sample operation to finish
-    
+    while (!(regRd(rHCTL) & bmSAMPLEBUS)) ;     //wait for sample operation to finish
+
     busprobe();
 
     // clear connection detect interrupt
@@ -177,6 +183,17 @@ void regWr(const uint8_t reg, const uint8_t val)
     MAX3421_CS_SELECT;
     spi_send_frame(data, 2);
     MAX3421_CS_DESELECT;
+}
+
+uint8_t *bytesWr(const uint8_t reg, const uint8_t nbytes, uint8_t * data_p)
+{
+    uint8_t data;
+    data = reg | MAX3421_WRITE;
+    MAX3421_CS_SELECT;
+    spi_send_frame(&data, 1);
+    spi_send_frame(data_p, nbytes);
+    MAX3421_CS_DESELECT;
+    return data_p + nbytes;
 }
 
 uint8_t regRd(const uint8_t reg)
@@ -243,6 +260,7 @@ uint8_t gpioRdOutput(void)
 void busprobe(void)
 {
     uint8_t bus_sample;
+    uint8_t tmpdata;
     bus_sample = regRd(rHRSL);
     bus_sample &= (bmJSTATUS | bmKSTATUS);
     switch (bus_sample) {
@@ -255,6 +273,9 @@ void busprobe(void)
             regWr(rMODE, MODE_LS_HOST);
             vbusState = LSHOST;
         }
+        tmpdata = regRd(rMODE) | bmSOFKAENAB;
+        regWr(rHIRQ, bmFRAMEIRQ);
+        regWr(rMODE, tmpdata);
         break;
     case (bmKSTATUS):
         if ((regRd(rMODE) & bmLOWSPEED) == 0) {
@@ -264,9 +285,14 @@ void busprobe(void)
             regWr(rMODE, MODE_FS_HOST);
             vbusState = FSHOST;
         }
+        // start SOF generation
+        tmpdata = regRd(rMODE) | bmSOFKAENAB;
+        regWr(rHIRQ, bmFRAMEIRQ);
+        regWr(rMODE, tmpdata);
         break;
     case (bmSE1):
         // illegal state
+        regWr(rMODE, (bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ));
         vbusState = SE1;
         break;
     case (bmSE0):
@@ -276,6 +302,51 @@ void busprobe(void)
         break;
     }
 }
+
+void VBUS_changed(void)
+{
+    /* modify USB task state because Vbus changed or unknown */
+    uint8_t speed = 1;
+    //printf("\r\n\r\n\r\n\r\nSTATE %2.2x -> ", usb_task_state);
+    switch (vbusState) {
+    case LSHOST:               // Low speed
+        speed = 0;
+        // Intentional fall-through
+    case FSHOST:               // Full speed
+        // Start device initialization if we are not initializing
+        // Resets to the device cause an IRQ
+        // usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE;
+        //if((usb_task_state & UHS_USB_HOST_STATE_MASK) != UHS_USB_HOST_STATE_DETACHED) {
+        //ReleaseChildren(); // FIXME
+        if (!(bus_state & doingreset)) {
+            if (usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE) {
+                usb_task_state = UHS_USB_HOST_STATE_WAIT_BUS_READY;
+            } else if (usb_task_state != UHS_USB_HOST_STATE_WAIT_BUS_READY) {
+                usb_task_state = UHS_USB_HOST_STATE_DEBOUNCE;
+            }
+        }
+        sof_countdown = 0;
+        break;
+    case SE1:                  //illegal state
+        sof_countdown = 0;
+        bus_state &= ~doingreset;
+        //ReleaseChildren(); FIXME
+        usb_task_state = UHS_USB_HOST_STATE_ILLEGAL;
+        break;
+    case SE0:                  //disconnected
+    default:
+        sof_countdown = 0;
+        bus_state &= ~doingreset;
+        //ReleaseChildren(); FIXME
+        usb_task_state = UHS_USB_HOST_STATE_IDLE;
+        break;
+    }
+    usb_host_speed = speed;
+    //printf("0x%2.2x\r\n\r\n\r\n\r\n", usb_task_state);
+    return;
+}
+
+
 
 __attribute__ ((interrupt(PORT1_VECTOR)))
 void Port1_ISR(void)
@@ -292,4 +363,3 @@ void Port1_ISR(void)
         LPM2_EXIT;
     }
 }
-
