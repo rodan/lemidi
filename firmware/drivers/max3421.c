@@ -190,7 +190,7 @@ void MAX3421_sm(void)
 */
 }
 
-static void gpx_irq_handler(enum sys_message msg)
+static void gpx_irq_handler(const uint16_t msg)
 {
     uint8_t iv, ret_iv = 0x0;
     uint8_t iostate;
@@ -221,7 +221,7 @@ static void gpx_irq_handler(enum sys_message msg)
     regWr(rGPINIRQ, ret_iv);
 }
 
-static void int_irq_handler(enum sys_message msg)
+static void int_irq_handler(const uint16_t msg)
 {
     uint8_t iv, ret_iv = 0x0;
     uint8_t iostate;

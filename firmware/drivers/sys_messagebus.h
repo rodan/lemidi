@@ -9,32 +9,31 @@
 */
 /* WARNING: the enum values are optimized to work with some drivers.
 	If you need to add a new entry, append it to the end! */
-enum sys_message {
-    SYS_MSG_NULL = 0,
+
+#define           SYS_MSG_NULL 0
     // TIMER0
-    SYS_MSG_TIMER0_CRR0 = BIT0,
-    SYS_MSG_TIMER0_CRR1 = BIT1, // timer_a0_delay_noblk_ccr1
-    SYS_MSG_TIMER0_CRR2 = BIT2, // timer_a0_delay_noblk_ccr2
-    SYS_MSG_TIMER0_CRR3 = BIT3, // timer_a0_delay_noblk_ccr3
-    SYS_MSG_TIMER0_CRR4 = BIT4,
-    SYS_MSG_TIMER0_IFG = BIT5,  // timer_a0 overflow
+#define    SYS_MSG_TIMER0_CRR0 0x1
+#define    SYS_MSG_TIMER0_CRR1 0x2   // timer_a0_delay_noblk_ccr1
+#define    SYS_MSG_TIMER0_CRR2 0x4   // timer_a0_delay_noblk_ccr2
+#define    SYS_MSG_TIMER0_CRR3 0x8   // timer_a0_delay_noblk_ccr3
+#define    SYS_MSG_TIMER0_CRR4 0x10
+#define     SYS_MSG_TIMER0_IFG 0x20  // timer_a0 overflow
     // UARTs
-    SYS_MSG_UART0_RX = BITA,
+#define       SYS_MSG_UART0_RX 0x40
     // interrupts
-    SYS_MSG_P1IFG_GPX = BITD,   // port1 interrupt
-    SYS_MSG_P1IFG_INT = BITE,   // port1 interrupt
+#define      SYS_MSG_P1IFG_GPX 0x80  // port1 interrupt
+#define      SYS_MSG_P1IFG_INT 0x100 // port1 interrupt
     // RTC
-    SYS_MSG_RTC_SECOND = BITF,  // second event from the hardware RTC
-};
+#define     SYS_MSG_RTC_SECOND 0x200 // second event from the hardware RTC
 
 /*!
 	\brief Linked list of nodes listening to the message bus.
 */
 struct sys_messagebus {
     /*! callback for receiving messages from the system bus */
-    void (*fn) (enum sys_message);
+    void (*fn) (const uint16_t sys_message);
     /*! bitfield of message types that the node wishes to receive */
-    enum sys_message listens;
+    uint16_t listens;
     /*! pointer to the next node in the list */
     struct sys_messagebus *next;
 };
@@ -49,9 +48,9 @@ struct sys_messagebus *messagebus;
 */
 void sys_messagebus_register(
                                 // callback to receive messages from the message bus
-                                void (*callback) (enum sys_message),
+                                void (*callback) (const uint16_t sys_message),
                                 // only receive messages of this type
-                                enum sys_message listens);
+                                const uint16_t listens);
 
 /*!
 	\brief Unregisters a node from the message bus.
@@ -59,7 +58,7 @@ void sys_messagebus_register(
 */
 void sys_messagebus_unregister(
                                   // the same callback used on sys_messagebus_register()
-                                  void (*callback) (enum sys_message)
+                                  void (*callback) (const uint16_t sys_message)
     );
 
 #endif

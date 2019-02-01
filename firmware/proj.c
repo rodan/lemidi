@@ -18,14 +18,14 @@
 #include "qa.h"
 
 
-static void parse_UI(enum sys_message msg)
+static void parse_UI(const uint16_t msg)
 {
     parse_user_input();
     uart0_p = 0;
     uart0_rx_enable = 1;
 }
 
-static void timer_a0_ovf_irq(enum sys_message msg)
+static void timer_a0_ovf_irq(const uint16_t msg)
 {
     //LED_SWITCH;
     /*
@@ -170,8 +170,7 @@ void main_init(void)
 void check_events(void)
 {
     struct sys_messagebus *p = messagebus;
-    enum sys_message msg = SYS_MSG_NULL;
-    //uint8_t imsg = 0;
+    uint16_t msg = SYS_MSG_NULL;
 
     // drivers/timer0a
     if (timer_a0_last_event) {

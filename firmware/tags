@@ -91,29 +91,29 @@ SRCS	Makefile	/^SRCS := $(wildcard *.c)$/;"	m
 SRCSPP	Makefile	/^SRCSPP := $(wildcard *.cpp)$/;"	m
 STR_LEN	proj.h	/^#define STR_LEN /;"	d
 SUBDIRS	Makefile	/^SUBDIRS = drivers$/;"	m
-SYS_MSG_NULL	drivers/sys_messagebus.h	/^    SYS_MSG_NULL = 0,$/;"	e	enum:sys_message
-SYS_MSG_P1IFG_GPX	drivers/sys_messagebus.h	/^    SYS_MSG_P1IFG_GPX = BITD,   \/\/ port1 interrupt$/;"	e	enum:sys_message
-SYS_MSG_P1IFG_INT	drivers/sys_messagebus.h	/^    SYS_MSG_P1IFG_INT = BITE,   \/\/ port1 interrupt$/;"	e	enum:sys_message
-SYS_MSG_RTC_SECOND	drivers/sys_messagebus.h	/^    SYS_MSG_RTC_SECOND = BITF,  \/\/ second event from the hardware RTC$/;"	e	enum:sys_message
-SYS_MSG_TIMER0_CRR0	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR0 = BIT0,$/;"	e	enum:sys_message
-SYS_MSG_TIMER0_CRR1	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR1 = BIT1, \/\/ timer_a0_delay_noblk_ccr1$/;"	e	enum:sys_message
-SYS_MSG_TIMER0_CRR2	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR2 = BIT2, \/\/ timer_a0_delay_noblk_ccr2$/;"	e	enum:sys_message
-SYS_MSG_TIMER0_CRR3	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR3 = BIT3, \/\/ timer_a0_delay_noblk_ccr3$/;"	e	enum:sys_message
-SYS_MSG_TIMER0_CRR4	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_CRR4 = BIT4,$/;"	e	enum:sys_message
-SYS_MSG_TIMER0_IFG	drivers/sys_messagebus.h	/^    SYS_MSG_TIMER0_IFG = BIT5,  \/\/ timer_a0 overflow$/;"	e	enum:sys_message
-SYS_MSG_UART0_RX	drivers/sys_messagebus.h	/^    SYS_MSG_UART0_RX = BITA,$/;"	e	enum:sys_message
+SYS_MSG_NULL	drivers/sys_messagebus.h	/^#define           SYS_MSG_NULL /;"	d
+SYS_MSG_P1IFG_GPX	drivers/sys_messagebus.h	/^#define      SYS_MSG_P1IFG_GPX /;"	d
+SYS_MSG_P1IFG_INT	drivers/sys_messagebus.h	/^#define      SYS_MSG_P1IFG_INT /;"	d
+SYS_MSG_RTC_SECOND	drivers/sys_messagebus.h	/^#define     SYS_MSG_RTC_SECOND /;"	d
+SYS_MSG_TIMER0_CRR0	drivers/sys_messagebus.h	/^#define    SYS_MSG_TIMER0_CRR0 /;"	d
+SYS_MSG_TIMER0_CRR1	drivers/sys_messagebus.h	/^#define    SYS_MSG_TIMER0_CRR1 /;"	d
+SYS_MSG_TIMER0_CRR2	drivers/sys_messagebus.h	/^#define    SYS_MSG_TIMER0_CRR2 /;"	d
+SYS_MSG_TIMER0_CRR3	drivers/sys_messagebus.h	/^#define    SYS_MSG_TIMER0_CRR3 /;"	d
+SYS_MSG_TIMER0_CRR4	drivers/sys_messagebus.h	/^#define    SYS_MSG_TIMER0_CRR4 /;"	d
+SYS_MSG_TIMER0_IFG	drivers/sys_messagebus.h	/^#define     SYS_MSG_TIMER0_IFG /;"	d
+SYS_MSG_UART0_RX	drivers/sys_messagebus.h	/^#define       SYS_MSG_UART0_RX /;"	d
 TARGET	Makefile	/^TARGET	:= DEBUG$/;"	m
 TARGET	Makefile	/^TARGET	:= RELEASE$/;"	m
-TIMER_A0_EVENT_CCR0	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR0 = BIT0,$/;"	e	enum:timer_a0_event
-TIMER_A0_EVENT_CCR1	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR1 = BIT1,$/;"	e	enum:timer_a0_event
-TIMER_A0_EVENT_CCR2	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR2 = BIT2,$/;"	e	enum:timer_a0_event
-TIMER_A0_EVENT_CCR3	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR3 = BIT3,$/;"	e	enum:timer_a0_event
-TIMER_A0_EVENT_CCR4	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR4 = BIT4,$/;"	e	enum:timer_a0_event
-TIMER_A0_EVENT_IFG	drivers/timer_a0.h	/^    TIMER_A0_EVENT_IFG = BIT5,$/;"	e	enum:timer_a0_event
-TIMER_A0_EVENT_NONE	drivers/timer_a0.h	/^    TIMER_A0_EVENT_NONE = 0,$/;"	e	enum:timer_a0_event
-UART0_EV_NULL	drivers/uart0.h	/^    UART0_EV_NULL = 0,$/;"	e	enum:uart0_tevent
-UART0_EV_RX	drivers/uart0.h	/^    UART0_EV_RX = BIT0,$/;"	e	enum:uart0_tevent
-UART0_EV_TX	drivers/uart0.h	/^    UART0_EV_TX = BIT1$/;"	e	enum:uart0_tevent
+TIMER_A0_EVENT_CCR0	drivers/timer_a0.h	/^#define    TIMER_A0_EVENT_CCR0 /;"	d
+TIMER_A0_EVENT_CCR1	drivers/timer_a0.h	/^#define    TIMER_A0_EVENT_CCR1 /;"	d
+TIMER_A0_EVENT_CCR2	drivers/timer_a0.h	/^#define    TIMER_A0_EVENT_CCR2 /;"	d
+TIMER_A0_EVENT_CCR3	drivers/timer_a0.h	/^#define    TIMER_A0_EVENT_CCR3 /;"	d
+TIMER_A0_EVENT_CCR4	drivers/timer_a0.h	/^#define    TIMER_A0_EVENT_CCR4 /;"	d
+TIMER_A0_EVENT_IFG	drivers/timer_a0.h	/^#define     TIMER_A0_EVENT_IFG /;"	d
+TIMER_A0_EVENT_NONE	drivers/timer_a0.h	/^#define    TIMER_A0_EVENT_NONE /;"	d
+UART0_EV_NULL	drivers/uart0.h	/^#define  UART0_EV_NULL /;"	d
+UART0_EV_RX	drivers/uart0.h	/^#define    UART0_EV_RX /;"	d
+UART0_EV_TX	drivers/uart0.h	/^#define    UART0_EV_TX /;"	d
 UART0_RXBUF_SZ	drivers/uart0.h	/^#define UART0_RXBUF_SZ /;"	d
 UHS_BULK_SUBCLASS_ATAPI	drivers/UHS_UsbCore.h	/^#define                       UHS_BULK_SUBCLASS_ATAPI /;"	d
 UHS_BULK_SUBCLASS_IEEE1667	drivers/UHS_UsbCore.h	/^#define                    UHS_BULK_SUBCLASS_IEEE1667 /;"	d
@@ -403,24 +403,24 @@ doc	Makefile	/^doc:$/;"	t
 doingreset	drivers/max3421e.h	/^#define      doingreset /;"	d
 epInfo	drivers/UHS_UsbCore.h	/^        struct ENDPOINT_INFO epInfo[16];$/;"	m	struct:INTERFACE_INFO	typeref:struct:ENDPOINT_INFO[16]
 false	proj.h	/^#define false /;"	d
-fn	drivers/sys_messagebus.h	/^    void (*fn) (enum sys_message);$/;"	m	struct:sys_messagebus	typeref:typename:void (*)(enum sys_message)
+fn	drivers/sys_messagebus.h	/^    void (*fn) (const uint16_t sys_message);$/;"	m	struct:sys_messagebus	typeref:typename:void (*)(const uint16_t sys_message)
 free	tools/msp430-ram-usage	/^free = 0$/;"	v
 gpioRd	drivers/max3421.c	/^uint8_t gpioRd(void)$/;"	f	typeref:typename:uint8_t
 gpioRdOutput	drivers/max3421.c	/^uint8_t gpioRdOutput(void)$/;"	f	typeref:typename:uint8_t
 gpioWr	drivers/max3421.c	/^void gpioWr(const uint8_t data)$/;"	f	typeref:typename:void
 gpx_cnt	drivers/max3421.h	/^volatile uint32_t gpx_cnt, gpx_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
 gpx_cnt_hl	drivers/max3421.h	/^volatile uint32_t gpx_cnt, gpx_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
-gpx_irq_handler	drivers/max3421.c	/^static void gpx_irq_handler(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+gpx_irq_handler	drivers/max3421.c	/^static void gpx_irq_handler(const uint16_t msg)$/;"	f	typeref:typename:void	file:
 install	Makefile	/^install: $(PROJ).elf$/;"	t
 int_cnt	drivers/max3421.h	/^volatile uint32_t int_cnt, int_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
 int_cnt_hl	drivers/max3421.h	/^volatile uint32_t int_cnt, int_cnt_hl;$/;"	v	typeref:typename:volatile uint32_t
-int_irq_handler	drivers/max3421.c	/^static void int_irq_handler(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+int_irq_handler	drivers/max3421.c	/^static void int_irq_handler(const uint16_t msg)$/;"	f	typeref:typename:void	file:
 interface	drivers/UHS_UsbCore.h	/^        struct INTERFACE_INFO interface;$/;"	m	struct:ENUMERATION_INFO	typeref:struct:INTERFACE_INFO
 j0	proj.h	/^    uint8_t j0[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
 j1	proj.h	/^    uint8_t j1[2];$/;"	m	struct:controller_t	typeref:typename:uint8_t[2]
 klass	drivers/UHS_UsbCore.h	/^        uint8_t klass;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
 klass	drivers/UHS_UsbCore.h	/^        uint8_t klass;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
-listens	drivers/sys_messagebus.h	/^    enum sys_message listens;$/;"	m	struct:sys_messagebus	typeref:enum:sys_message
+listens	drivers/sys_messagebus.h	/^    uint16_t listens;$/;"	m	struct:sys_messagebus	typeref:typename:uint16_t
 m	tools/msp430-ram-usage	/^    m = re_obj.search(line)$/;"	v
 main	proj.c	/^int main(void)$/;"	f	typeref:typename:int
 main_init	proj.c	/^void main_init(void)$/;"	f	typeref:typename:void
@@ -439,7 +439,7 @@ next	drivers/sys_messagebus.h	/^    struct sys_messagebus *next;$/;"	m	struct:sy
 numep	drivers/UHS_UsbCore.h	/^        uint8_t numep;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
 objs	tools/msp430-ram-usage	/^objs = {}$/;"	v
 parent	drivers/UHS_UsbCore.h	/^        uint8_t parent;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
-parse_UI	proj.c	/^static void parse_UI(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+parse_UI	proj.c	/^static void parse_UI(const uint16_t msg)$/;"	f	typeref:typename:void	file:
 parse_user_input	qa.c	/^void parse_user_input(void)$/;"	f	typeref:typename:void
 parser	tools/msp430-ram-usage	/^parser = OptionParser()$/;"	v
 pid	drivers/UHS_UsbCore.h	/^        uint16_t pid;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint16_t
@@ -493,28 +493,25 @@ strip_zero	tools/update_rtca_now.sh	/^strip_zero()$/;"	f
 subklass	drivers/UHS_UsbCore.h	/^        uint8_t subklass;$/;"	m	struct:ENUMERATION_INFO	typeref:typename:uint8_t
 subklass	drivers/UHS_UsbCore.h	/^        uint8_t subklass;$/;"	m	struct:INTERFACE_INFO	typeref:typename:uint8_t
 syms	tools/msp430-ram-usage	/^syms = os.popen('msp430-readelf -a -W "%s"' % args[0])$/;"	v
-sys_message	drivers/sys_messagebus.h	/^enum sys_message {$/;"	g
 sys_messagebus	drivers/sys_messagebus.h	/^struct sys_messagebus {$/;"	s
-sys_messagebus_register	drivers/sys_messagebus.c	/^void sys_messagebus_register(void (*callback) (enum sys_message),$/;"	f	typeref:typename:void
-sys_messagebus_unregister	drivers/sys_messagebus.c	/^void sys_messagebus_unregister(void (*callback) (enum sys_message))$/;"	f	typeref:typename:void
+sys_messagebus_register	drivers/sys_messagebus.c	/^void sys_messagebus_register(void (*callback) (const uint16_t sys_message),$/;"	f	typeref:typename:void
+sys_messagebus_unregister	drivers/sys_messagebus.c	/^void sys_messagebus_unregister(void (*callback) (const uint16_t sys_message))$/;"	f	typeref:typename:void
 tags	Makefile	/^tags: $(SRCS)$/;"	t
 timer0_A1_ISR	drivers/timer_a0.c	/^void timer0_A1_ISR(void)$/;"	f	typeref:typename:void
 timer_a0_delay_noblk_ccr1	drivers/timer_a0.c	/^void timer_a0_delay_noblk_ccr1(uint16_t ticks)$/;"	f	typeref:typename:void
 timer_a0_delay_noblk_ccr2	drivers/timer_a0.c	/^void timer_a0_delay_noblk_ccr2(uint16_t ticks)$/;"	f	typeref:typename:void
 timer_a0_delay_noblk_ccr3	drivers/timer_a0.c	/^void timer_a0_delay_noblk_ccr3(uint16_t ticks)$/;"	f	typeref:typename:void
-timer_a0_event	drivers/timer_a0.h	/^enum timer_a0_event {$/;"	g
 timer_a0_init	drivers/timer_a0.c	/^void timer_a0_init(void)$/;"	f	typeref:typename:void
-timer_a0_last_event	drivers/timer_a0.h	/^volatile enum timer_a0_event timer_a0_last_event;$/;"	v	typeref:typename:volatile enum timer_a0_event
+timer_a0_last_event	drivers/timer_a0.h	/^volatile uint8_t timer_a0_last_event;$/;"	v	typeref:typename:volatile uint8_t
 timer_a0_ovf	drivers/timer_a0.h	/^volatile uint16_t timer_a0_ovf;$/;"	v	typeref:typename:volatile uint16_t
-timer_a0_ovf_irq	proj.c	/^static void timer_a0_ovf_irq(enum sys_message msg)$/;"	f	typeref:typename:void	file:
+timer_a0_ovf_irq	proj.c	/^static void timer_a0_ovf_irq(const uint16_t msg)$/;"	f	typeref:typename:void	file:
 true	proj.h	/^#define true /;"	d
 type	drivers/UHS_UsbCore.h	/^                        uint8_t type : 2;       \/\/ Type of request$/;"	m	struct:__anon9a57ae6b0108::__anon9a57ae6b020a::__anon9a57ae6b0308	typeref:typename:uint8_t:2
 uart0_init	drivers/uart0.c	/^void uart0_init(void)$/;"	f	typeref:typename:void
-uart0_last_event	drivers/uart0.h	/^volatile enum uart0_tevent uart0_last_event;$/;"	v	typeref:typename:volatile enum uart0_tevent
+uart0_last_event	drivers/uart0.h	/^volatile uint8_t uart0_last_event;$/;"	v	typeref:typename:volatile uint8_t
 uart0_p	drivers/uart0.h	/^volatile uint8_t uart0_p;$/;"	v	typeref:typename:volatile uint8_t
 uart0_rx_buf	drivers/uart0.h	/^volatile char uart0_rx_buf[UART0_RXBUF_SZ];$/;"	v	typeref:typename:volatile char[]
 uart0_rx_enable	drivers/uart0.h	/^volatile uint8_t uart0_rx_enable;$/;"	v	typeref:typename:volatile uint8_t
-uart0_tevent	drivers/uart0.h	/^enum uart0_tevent {$/;"	g
 uart0_tx_str	drivers/uart0.c	/^uint16_t uart0_tx_str(char *str, const uint16_t size)$/;"	f	typeref:typename:uint16_t
 usb_error	drivers/max3421.c	/^volatile uint8_t usb_error;$/;"	v	typeref:typename:volatile uint8_t
 usb_host_speed	drivers/max3421.c	/^volatile uint8_t usb_host_speed;$/;"	v	typeref:typename:volatile uint8_t

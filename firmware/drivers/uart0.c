@@ -31,7 +31,7 @@ void USCI_A0_ISR(void)
 {
     uint16_t iv = UCA0IV;
     register char rx;
-    enum uart0_tevent ev = 0;
+    uint8_t ev = 0;
 
     // iv is 2 for RXIFG, 4 for TXIFG
     switch (iv) {

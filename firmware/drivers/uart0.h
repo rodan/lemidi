@@ -3,13 +3,11 @@
 
 #include "proj.h"
 
-enum uart0_tevent {
-    UART0_EV_NULL = 0,
-    UART0_EV_RX = BIT0,
-    UART0_EV_TX = BIT1
-};
+#define  UART0_EV_NULL 0
+#define    UART0_EV_RX 0x1
+#define    UART0_EV_TX 0x2
 
-#define UART0_RXBUF_SZ     128
+#define UART0_RXBUF_SZ 128
 
 volatile char uart0_rx_buf[UART0_RXBUF_SZ];
 volatile uint8_t uart0_p;
@@ -19,6 +17,6 @@ volatile uint8_t uart0_rx_enable;
 void uart0_init();
 uint16_t uart0_tx_str(char *str, const uint16_t size);
 
-volatile enum uart0_tevent uart0_last_event;
+volatile uint8_t uart0_last_event;
 
 #endif
