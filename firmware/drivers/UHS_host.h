@@ -37,5 +37,6 @@ e-mail   :  support@circuitsathome.com
 //#include "UHS_usbhost.h"
 //#include "UHS_printhex.h"
 //#include "UHS_message.h"
+//#include "helper.h"
 
 #endif // _UHS_host_h_

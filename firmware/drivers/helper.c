@@ -1,6 +1,24 @@
 
 #include <math.h>
+#include "uart0.h"
 #include "helper.h"
+
+/*
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+
+void _printf(const char *format, ...)
+{
+    va_list args;
+    char str_temp[128];
+
+    va_start (args, format);
+    snprintf(str_temp, STR_LEN, format, args );
+    va_end (args);
+    uart0_tx_str(str_temp, strlen(str_temp));
+}
+*/
 
 // |error| < 0.005
 float _atan2f(const float y, const float x)

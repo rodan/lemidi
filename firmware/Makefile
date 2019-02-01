@@ -28,6 +28,7 @@ INCLUDES	+= -I./ -Igcc/ -Idrivers/
 ### Build tools
 # 
 CC		= msp430-elf-gcc
+CXX		= msp430-elf-g++
 LD		= msp430-elf-ld
 AS		= msp430-elf-as
 AR		= msp430-elf-ar
@@ -47,11 +48,15 @@ all: depend config.h tags $(PROJ).elf
 
 #
 # Build list of sources and objects to build
-SRCS := $(wildcard *.c *.cpp)
+SRCS := $(wildcard *.c)
 $(foreach subdir,$(SUBDIRS), \
 	$(eval SRCS := $(SRCS) $(wildcard $(subdir)/*.c)) \
 )
-OBJS := $(patsubst %.c,%.o,$(SRCS))
+SRCSPP := $(wildcard *.cpp)
+$(foreach subdir,$(SUBDIRS), \
+	$(eval SRCS := $(SRCS) $(wildcard $(subdir)/*.cpp)) \
+)
+OBJS := $(patsubst %.c,%.o,$(SRCS)) $(patsubst %.cpp,%.o,$(SRCSPP))
 
 #
 # Dependencies rules
@@ -98,6 +103,10 @@ modinit.o: modinit.c
 %.o: %.c
 	@echo "CC $<"
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+%.o: %.cpp
+	@echo "CC $<"
+	@$(CXX) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 modinit.c:
 	@echo "Please do a 'make config' first!" && false

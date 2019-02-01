@@ -58,13 +58,14 @@ int main(void)
 
     // main loop
     while (1) {
-        _BIS_SR(LPM3_bits + GIE);
-        __no_operation();
-        //wake_up();
+        __bis_SR_register(LPM3_bits + GIE);
+        //__no_operation();
 #ifdef USE_WATCHDOG
         // reset watchdog counter
         WDTCTL = (WDTCTL & 0xff) | WDTPW | WDTCNTCL;
 #endif
+        check_events();
+        check_events();
         check_events();
     }
 }
@@ -89,11 +90,11 @@ void main_init(void)
     P1REN = 0x0;
 
     // IRQ triggers on a high to low transition
-    P1IES |= TRIG0 | TRIG1;
+    P1IES |= INT_TRIG | GPX_TRIG;
     // Reset IRQ flags
-    P1IFG &= ~(TRIG0 + TRIG1);
+    P1IFG &= ~(INT_TRIG + GPX_TRIG);
     // Enable interrupts
-    P1IE |= TRIG0 + TRIG1;
+    P1IE |= INT_TRIG | GPX_TRIG;
 
     P2SEL = 0;
     P2OUT = 0;
@@ -170,6 +171,7 @@ void check_events(void)
 {
     struct sys_messagebus *p = messagebus;
     enum sys_message msg = SYS_MSG_NULL;
+    //uint8_t imsg = 0;
 
     // drivers/timer0a
     if (timer_a0_last_event) {

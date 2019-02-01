@@ -107,11 +107,10 @@ void parse_user_input(void)
         //snprintf(str_temp, STR_LEN, "IOPINS1 0x%x\r\n", reg);
         //uart0_tx_str(str_temp, strlen(str_temp));
 
-        snprintf(str_temp, STR_LEN, "R6 0x%x\r\n", regRd(rRCVBC));
-        uart0_tx_str(str_temp, strlen(str_temp));
-
-        snprintf(str_temp, STR_LEN, "R7 0x%x\r\n", regRd(rSNDBC));
-        uart0_tx_str(str_temp, strlen(str_temp));
+        //snprintf(str_temp, STR_LEN, "R6 0x%x\r\n", regRd(rRCVBC));
+        //uart0_tx_str(str_temp, strlen(str_temp));
+        //snprintf(str_temp, STR_LEN, "R7 0x%x\r\n", regRd(rSNDBC));
+        //uart0_tx_str(str_temp, strlen(str_temp));
 
         memset(reg, 0xff, 32);
         bytesRd(13<<3, 8, reg);

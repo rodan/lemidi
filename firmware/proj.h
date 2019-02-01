@@ -45,8 +45,8 @@
 
 
 // MAX3421E interrupts
-#define TRIG0               BIT0
-#define TRIG1               BIT1
+#define GPX_TRIG           BIT0
+#define INT_TRIG           BIT1
 
 #define MAX3421E_RST_ON     P6OUT &= ~BIT1
 #define MAX3421E_RST_OFF    P6OUT |= BIT1

@@ -24,7 +24,7 @@ e-mail   :  support@circuitsathome.com
 
 /* MAX3421E register/bit names and bitmasks */
 
-// bus states (actions)
+// bus_event
 #define        busevent 0x01
 #define        sofevent 0x02
 #define         counted 0x04
@@ -91,7 +91,8 @@ e-mail   :  support@circuitsathome.com
 // GPX pin selections
 #define     GPX_OPERATE 0x00            //
 #define       GPX_VBDET 0x01            //
-#define      GPX_BUSACT 0x02            //
+#define      GPX_BUSACT 0x02            // if SEPIRQ == 0
+#define       GPX_INIRQ 0x02            // also needs SEPIRQ == 1
 #define         GPX_SOF 0x03            //
 
 #define       rREVISION 0x90            //18<<3
@@ -165,6 +166,7 @@ e-mail   :  support@circuitsathome.com
 #define     bmSNDBAVIRQ 0x08            // Send Buffer Available Interrupt Request
 #define      bmSUSDNIRQ 0x10            // Suspend operation Done Interrupt Request
 #define       bmCONNIRQ 0x20            // Peripheral Connect/Disconnect Interrupt Request
+#define     bmCONDETIRQ 0x20            // Peripheral Connect/Disconnect Interrupt Request
 #define      bmFRAMEIRQ 0x40            // Frame Generator Interrupt Request
 #define     bmHXFRDNIRQ 0x80            // Host Transfer Done Interrupt Request
 
@@ -179,6 +181,7 @@ e-mail   :  support@circuitsathome.com
 #define      bmSNDBAVIE bmSNDBAVIRQ     // Send Buffer Available Interrupt Request Enable
 #define       bmSUSDNIE bmSUSDNIRQ      // Suspend operation Done Interrupt Request Enable
 #define        bmCONNIE bmCONNIRQ       // Peripheral Connect/Disconnect Interrupt Request Enable
+#define       bmCODETIE bmCONNIRQ       // Peripheral Connect/Disconnect Interrupt Request Enable
 #define       bmFRAMEIE bmFRAMEIRQ      // Frame Generator Interrupt Request Enable
 #define      bmHXFRDNIE bmHXFRDNIRQ     // Host Transfer Done Interrupt Request Enable
 

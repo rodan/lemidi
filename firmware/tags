@@ -9,6 +9,7 @@ $(PROJ).cflags	Makefile	/^$(PROJ).cflags: force$/;"	t
 $(PROJ).dep	Makefile	/^$(PROJ).dep: $(SRCS)$/;"	t
 $(PROJ).elf	Makefile	/^$(PROJ).elf: $(OBJS)$/;"	t
 %.o	Makefile	/^%.o: %.c$/;"	t
+%.o	Makefile	/^%.o: %.cpp$/;"	t
 ADDR_ERROR_INVALID_ADDRESS	drivers/UHS_UsbCore.h	/^#define                    ADDR_ERROR_INVALID_ADDRESS /;"	d
 ADDR_ERROR_INVALID_INDEX	drivers/UHS_UsbCore.h	/^#define                      ADDR_ERROR_INVALID_INDEX /;"	d
 AR	Makefile	/^AR		= msp430-elf-ar$/;"	m
@@ -19,6 +20,8 @@ CC	Makefile	/^CC		= msp430-elf-gcc$/;"	m
 CC_CMACH	Makefile	/^CC_CMACH	= -mmcu=msp430f5510$/;"	m
 CC_DMACH	Makefile	/^CC_DMACH	= -D__MSP430F5510__$/;"	m
 COMMIT	version.h	/^#define COMMIT /;"	d
+CONFIG_PRINTF	config.h	/^#define CONFIG_PRINTF$/;"	d
+CXX	Makefile	/^CXX		= msp430-elf-g++$/;"	m
 DEBUG	Makefile	/^DEBUG := $(shell grep "^\\#define CONFIG_DEBUG" config.h)$/;"	m
 ENDPOINT_INFO	drivers/UHS_UsbCore.h	/^struct ENDPOINT_INFO {$/;"	s
 ENUMERATION_INFO	drivers/UHS_UsbCore.h	/^struct ENUMERATION_INFO {$/;"	s
@@ -26,12 +29,14 @@ EXIT_FAILURE	proj.h	/^#define EXIT_FAILURE /;"	d
 EXIT_SUCCESS	proj.h	/^#define EXIT_SUCCESS /;"	d
 FSHOST	drivers/max3421e.h	/^#define FSHOST /;"	d
 GPX_BUSACT	drivers/max3421e.h	/^#define      GPX_BUSACT /;"	d
+GPX_INIRQ	drivers/max3421e.h	/^#define       GPX_INIRQ /;"	d
 GPX_OPERATE	drivers/max3421e.h	/^#define     GPX_OPERATE /;"	d
 GPX_SOF	drivers/max3421e.h	/^#define         GPX_SOF /;"	d
+GPX_TRIG	proj.h	/^#define GPX_TRIG /;"	d
 GPX_VBDET	drivers/max3421e.h	/^#define       GPX_VBDET /;"	d
 ICLRALLBITS	drivers/max3421e.h	/^#define     ICLRALLBITS /;"	d
 INTERFACE_INFO	drivers/UHS_UsbCore.h	/^struct INTERFACE_INFO {$/;"	s
-LD	Makefile	/^LD		= msp430-elf-ld$/;"	m
+INT_TRIG	proj.h	/^#define INT_TRIG /;"	d
 LDFLAGS	Makefile	/^LDFLAGS		= -lm$/;"	m
 LED_OFF	proj.h	/^    #define LED_OFF /;"	d
 LED_ON	proj.h	/^    #define LED_ON /;"	d
@@ -52,19 +57,20 @@ MAX3421_READ	drivers/max3421.h	/^#define MAX3421_READ /;"	d
 MAX3421_WRITE	drivers/max3421.h	/^#define MAX3421_WRITE /;"	d
 MAX3421_getVbusState	drivers/max3421.c	/^uint8_t MAX3421_getVbusState(void)$/;"	f	typeref:typename:uint8_t
 MAX3421_init	drivers/max3421.c	/^uint8_t MAX3421_init(void)$/;"	f	typeref:typename:uint8_t
+MAX3421_sm	drivers/max3421.c	/^void MAX3421_sm(void)$/;"	f	typeref:typename:void
 MCP42XXX_CS_OUT	drivers/mcp42xxx.h	/^static const uint16_t MCP42XXX_CS_OUT[6] = { 0x223, 0x223 };$/;"	v	typeref:typename:const uint16_t[6]
 MCP42XXX_CS_PORT	drivers/mcp42xxx.h	/^static const uint8_t MCP42XXX_CS_PORT[6] = { BIT7, BIT6 };$/;"	v	typeref:typename:const uint8_t[6]
 MCP42XXX_SHUTDOWN	drivers/mcp42xxx.h	/^#define MCP42XXX_SHUTDOWN /;"	d
 MCP42XXX_WRITE_DATA	drivers/mcp42xxx.h	/^#define MCP42XXX_WRITE_DATA /;"	d
 MODE_FS_HOST	drivers/max3421e.h	/^#define    MODE_FS_HOST /;"	d
 MODE_LS_HOST	drivers/max3421e.h	/^#define    MODE_LS_HOST /;"	d
-OBJS	Makefile	/^OBJS := $(patsubst %.c,%.o,$(SRCS))$/;"	m
+OBJS	Makefile	/^OBJS := $(patsubst %.c,%.o,$(SRCS)) $(patsubst %.cpp,%.o,$(SRCSPP))$/;"	m
 PI	drivers/helper.h	/^#define PI /;"	d
 PIBY2_FLOAT	drivers/helper.h	/^#define PIBY2_FLOAT /;"	d
 PI_FLOAT	drivers/helper.h	/^#define PI_FLOAT /;"	d
 PREC	drivers/helper.h	/^#define PREC /;"	d
 PROJ	Makefile	/^PROJ = proj$/;"	m
-PSETUP_PKT	drivers/UHS_UsbCore.h	/^} __attribute__((packed)) SETUP_PKT, *PSETUP_PKT;$/;"	t	typeref:struct:__anon9a57ae6b0108 *
+PSETUP_PKT	drivers/UHS_UsbCore.h	/^} __attribute__((packed)) SETUP_PKT, PSETUP_PKT;$/;"	t	typeref:struct:__anon9a57ae6b0108
 PUSLEWIDTH10_6	drivers/max3421e.h	/^#define  PUSLEWIDTH10_6 /;"	d
 PUSLEWIDTH1_3	drivers/max3421e.h	/^#define   PUSLEWIDTH1_3 /;"	d
 PUSLEWIDTH2_6	drivers/max3421e.h	/^#define   PUSLEWIDTH2_6 /;"	d
@@ -73,7 +79,7 @@ Port1_ISR	drivers/max3421.c	/^void Port1_ISR(void)$/;"	f	typeref:typename:void
 ReqType_u	drivers/UHS_UsbCore.h	/^        } ReqType_u;$/;"	m	struct:__anon9a57ae6b0108	typeref:union:__anon9a57ae6b0108::__anon9a57ae6b020a
 SE0	drivers/max3421e.h	/^#define SE0 /;"	d
 SE1	drivers/max3421e.h	/^#define SE1 /;"	d
-SETUP_PKT	drivers/UHS_UsbCore.h	/^} __attribute__((packed)) SETUP_PKT, *PSETUP_PKT;$/;"	t	typeref:struct:__anon9a57ae6b0108
+SETUP_PKT	drivers/UHS_UsbCore.h	/^} __attribute__((packed)) SETUP_PKT, PSETUP_PKT;$/;"	t	typeref:struct:__anon9a57ae6b0108
 SPI_CLK	drivers/spi.c	/^#define SPI_CLK /;"	d	file:
 SPI_DIR	drivers/spi.c	/^#define SPI_DIR /;"	d	file:
 SPI_OUT	drivers/spi.c	/^#define SPI_OUT /;"	d	file:
@@ -81,7 +87,8 @@ SPI_REN	drivers/spi.c	/^#define SPI_REN /;"	d	file:
 SPI_SEL	drivers/spi.c	/^#define SPI_SEL /;"	d	file:
 SPI_SIMO	drivers/spi.c	/^#define SPI_SIMO /;"	d	file:
 SPI_SOMI	drivers/spi.c	/^#define SPI_SOMI /;"	d	file:
-SRCS	Makefile	/^SRCS := $(wildcard *.c *.cpp)$/;"	m
+SRCS	Makefile	/^SRCS := $(wildcard *.c)$/;"	m
+SRCSPP	Makefile	/^SRCSPP := $(wildcard *.cpp)$/;"	m
 STR_LEN	proj.h	/^#define STR_LEN /;"	d
 SUBDIRS	Makefile	/^SUBDIRS = drivers$/;"	m
 SYS_MSG_NULL	drivers/sys_messagebus.h	/^    SYS_MSG_NULL = 0,$/;"	e	enum:sys_message
@@ -104,8 +111,6 @@ TIMER_A0_EVENT_CCR3	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR3 = BIT3,$/;"	e	e
 TIMER_A0_EVENT_CCR4	drivers/timer_a0.h	/^    TIMER_A0_EVENT_CCR4 = BIT4,$/;"	e	enum:timer_a0_event
 TIMER_A0_EVENT_IFG	drivers/timer_a0.h	/^    TIMER_A0_EVENT_IFG = BIT5,$/;"	e	enum:timer_a0_event
 TIMER_A0_EVENT_NONE	drivers/timer_a0.h	/^    TIMER_A0_EVENT_NONE = 0,$/;"	e	enum:timer_a0_event
-TRIG0	proj.h	/^#define TRIG0 /;"	d
-TRIG1	proj.h	/^#define TRIG1 /;"	d
 UART0_EV_NULL	drivers/uart0.h	/^    UART0_EV_NULL = 0,$/;"	e	enum:uart0_tevent
 UART0_EV_RX	drivers/uart0.h	/^    UART0_EV_RX = BIT0,$/;"	e	enum:uart0_tevent
 UART0_EV_TX	drivers/uart0.h	/^    UART0_EV_TX = BIT1$/;"	e	enum:uart0_tevent
@@ -282,6 +287,8 @@ bmBUSEVENTIE	drivers/max3421e.h	/^#define    bmBUSEVENTIE /;"	d
 bmBUSEVENTIRQ	drivers/max3421e.h	/^#define   bmBUSEVENTIRQ /;"	d
 bmBUSRST	drivers/max3421e.h	/^#define        bmBUSRST /;"	d
 bmCHIPRES	drivers/max3421e.h	/^#define       bmCHIPRES /;"	d
+bmCODETIE	drivers/max3421e.h	/^#define       bmCODETIE /;"	d
+bmCONDETIRQ	drivers/max3421e.h	/^#define     bmCONDETIRQ /;"	d
 bmCONNIE	drivers/max3421e.h	/^#define        bmCONNIE /;"	d
 bmCONNIRQ	drivers/max3421e.h	/^#define       bmCONNIRQ /;"	d
 bmDELAYISO	drivers/max3421e.h	/^#define      bmDELAYISO /;"	d
@@ -373,7 +380,7 @@ bmSUSDNIE	drivers/max3421e.h	/^#define       bmSUSDNIE /;"	d
 bmSUSDNIRQ	drivers/max3421e.h	/^#define      bmSUSDNIRQ /;"	d
 bmVBUSIE	drivers/max3421e.h	/^#define        bmVBUSIE /;"	d
 bmVBUSIRQ	drivers/max3421e.h	/^#define       bmVBUSIRQ /;"	d
-bus_state	drivers/max3421.c	/^volatile uint8_t bus_state;$/;"	v	typeref:typename:volatile uint8_t
+bus_event	drivers/max3421.c	/^volatile uint8_t bus_event;$/;"	v	typeref:typename:volatile uint8_t
 busevent	drivers/max3421e.h	/^#define        busevent /;"	d
 busprobe	drivers/max3421.c	/^void busprobe(void)$/;"	f	typeref:typename:void
 bytesRd	drivers/max3421.c	/^uint8_t *bytesRd(const uint8_t reg, const uint8_t nbytes, uint8_t * data_p)$/;"	f	typeref:typename:uint8_t *
@@ -509,6 +516,7 @@ uart0_rx_buf	drivers/uart0.h	/^volatile char uart0_rx_buf[UART0_RXBUF_SZ];$/;"	v
 uart0_rx_enable	drivers/uart0.h	/^volatile uint8_t uart0_rx_enable;$/;"	v	typeref:typename:volatile uint8_t
 uart0_tevent	drivers/uart0.h	/^enum uart0_tevent {$/;"	g
 uart0_tx_str	drivers/uart0.c	/^uint16_t uart0_tx_str(char *str, const uint16_t size)$/;"	f	typeref:typename:uint16_t
+usb_error	drivers/max3421.c	/^volatile uint8_t usb_error;$/;"	v	typeref:typename:volatile uint8_t
 usb_host_speed	drivers/max3421.c	/^volatile uint8_t usb_host_speed;$/;"	v	typeref:typename:volatile uint8_t
 usb_task_state	drivers/max3421.c	/^volatile uint8_t usb_task_state;$/;"	v	typeref:typename:volatile uint8_t
 vbusState	drivers/max3421.c	/^volatile uint8_t vbusState;$/;"	v	typeref:typename:volatile uint8_t

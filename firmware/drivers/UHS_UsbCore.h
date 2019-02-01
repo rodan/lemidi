@@ -308,7 +308,7 @@ typedef struct {
         //   6      Depends on bRequest
         uint16_t wLength;
         // 8 bytes total
-} __attribute__((packed)) SETUP_PKT, *PSETUP_PKT;
+} __attribute__((packed)) SETUP_PKT, PSETUP_PKT;
 
 
 // little endian :-)                                                                             8                                8                          8                         8                          16                      16

@@ -12,38 +12,213 @@
 #include "proj.h"
 #include "UHS_host.h"
 
+#ifdef CONFIG_PRINTF
+#include <string.h>
+#include "drivers/uart0.h"
+#endif
+
 volatile uint8_t vbusState;
 volatile uint16_t sof_countdown;
-volatile uint8_t bus_state;
+volatile uint8_t bus_event;
 
-//volatile uint8_t usb_error;
+volatile uint8_t usb_error;
 volatile uint8_t usb_task_state;
 //volatile uint8_t usb_task_polling_disabled;
 volatile uint8_t usb_host_speed;
 //volatile uint8_t hub_present;
 
+void VBUS_changed(void)
+{
+    /* modify USB task state because Vbus changed or unknown */
+    uint8_t speed = 1;
+#ifdef CONFIG_PRINTF
+    snprintf(str_temp, STR_LEN, "state 0x%x -> ", usb_task_state );
+    uart0_tx_str(str_temp, strlen(str_temp));
+#endif
+    switch (vbusState) {
+    case LSHOST:               // Low speed
+        speed = 0;
+        // Intentional fall-through
+    case FSHOST:               // Full speed
+        // Start device initialization if we are not initializing
+        // Resets to the device cause an IRQ
+        // usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE;
+        //if((usb_task_state & UHS_USB_HOST_STATE_MASK) != UHS_USB_HOST_STATE_DETACHED) {
+        //ReleaseChildren(); // FIXME
+        if (!(bus_event & doingreset)) {
+            if (usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE) {
+                usb_task_state = UHS_USB_HOST_STATE_WAIT_BUS_READY;
+            } else if (usb_task_state != UHS_USB_HOST_STATE_WAIT_BUS_READY) {
+                usb_task_state = UHS_USB_HOST_STATE_DEBOUNCE;
+            }
+        }
+        sof_countdown = 0;
+        break;
+    case SE1:                  //illegal state
+        sof_countdown = 0;
+        bus_event &= ~doingreset;
+        //ReleaseChildren(); FIXME
+        usb_task_state = UHS_USB_HOST_STATE_ILLEGAL;
+        break;
+    case SE0:                  //disconnected
+    default:
+        sof_countdown = 0;
+        bus_event &= ~doingreset;
+        //ReleaseChildren(); FIXME
+        usb_task_state = UHS_USB_HOST_STATE_IDLE;
+        break;
+    }
+    usb_host_speed = speed;
+#ifdef CONFIG_PRINTF
+    snprintf(str_temp, STR_LEN, "0x%x\r\n", usb_task_state );
+    uart0_tx_str(str_temp, strlen(str_temp));
+#endif
+    return;
+}
+
+// state machine
+void MAX3421_sm(void)
+{
+    uint8_t x;
+
+    if (bus_event & condet) {
+        VBUS_changed();
+        bus_event &= ~condet;
+    }
+
+    switch (usb_task_state) {
+    case UHS_USB_HOST_STATE_INITIALIZE:
+        // should never happen...
+#ifdef CONFIG_PRINTF
+        uart0_tx_str("sm init\r\n", 9);
+#endif
+        busprobe();
+        VBUS_changed();
+        break;
+    case UHS_USB_HOST_STATE_DEBOUNCE:
+#ifdef CONFIG_PRINTF
+        uart0_tx_str("sm debounce\r\n", 13);
+#endif
+        // This seems to not be needed. The host controller has debounce built in.
+        sof_countdown = UHS_HOST_DEBOUNCE_DELAY_MS;
+        usb_task_state = UHS_USB_HOST_STATE_DEBOUNCE_NOT_COMPLETE;
+        break;
+    case UHS_USB_HOST_STATE_DEBOUNCE_NOT_COMPLETE:
+#ifdef CONFIG_PRINTF
+        //uart0_tx_str("sm deb nc\r\n", 11);
+#endif
+        if (!sof_countdown) {
+            usb_task_state = UHS_USB_HOST_STATE_RESET_DEVICE;
+        }
+        break;
+    case UHS_USB_HOST_STATE_RESET_DEVICE:
+#ifdef CONFIG_PRINTF
+        uart0_tx_str("sm rst dev\r\n", 12);
+#endif
+        bus_event |= busevent;
+        usb_task_state = UHS_USB_HOST_STATE_RESET_NOT_COMPLETE;
+        regWr(rHIRQ, bmBUSEVENTIRQ);    // see data sheet.
+        regWr(rHCTL, bmBUSRST); // issue bus reset
+        break;
+    case UHS_USB_HOST_STATE_RESET_NOT_COMPLETE:
+#ifdef CONFIG_PRINTF
+        //uart0_tx_str("sm rst nc\r\n", 11);
+#endif
+        if (!busevent)
+            usb_task_state = UHS_USB_HOST_STATE_WAIT_BUS_READY;
+        break;
+    case UHS_USB_HOST_STATE_WAIT_BUS_READY:
+#ifdef CONFIG_PRINTF
+        uart0_tx_str("sm wait bus rdy\r\n", 17);
+#endif
+        usb_task_state = UHS_USB_HOST_STATE_CONFIGURING;
+        break;                  // don't fall through
+
+    case UHS_USB_HOST_STATE_CONFIGURING:
+        usb_task_state = UHS_USB_HOST_STATE_CHECK;
+#ifdef CONFIG_PRINTF
+        uart0_tx_str("sm conf\r\n", 9);
+#endif
+        /*
+           x = Configuring(0, 1, usb_host_speed);
+           usb_error = x;
+           if (usb_task_state == UHS_USB_HOST_STATE_CHECK) {
+           if (x) {
+           //_dbg("Error 0x%2.2x", x);
+           if (x == UHS_HOST_ERROR_JERR) {
+           usb_task_state = UHS_USB_HOST_STATE_IDLE;
+           } else if (x != UHS_HOST_ERROR_DEVICE_INIT_INCOMPLETE) {
+           usb_error = x;
+           usb_task_state = UHS_USB_HOST_STATE_ERROR;
+           }
+           } else
+           usb_task_state = UHS_USB_HOST_STATE_CONFIGURING_DONE;
+           }
+         */
+        break;
+    case UHS_USB_HOST_STATE_CHECK:
+        // Serial.println((uint32_t)__builtin_return_address(0), HEX);
+        break;
+    case UHS_USB_HOST_STATE_CONFIGURING_DONE:
+        usb_task_state = UHS_USB_HOST_STATE_RUNNING;
+        break;
+    case UHS_USB_HOST_STATE_RUNNING:
+#ifdef CONFIG_PRINTF
+        uart0_tx_str("sm running\r\n", 12);
+#endif
+        /*
+           Poll_Others();
+           for (x = 0;
+           (usb_task_state == UHS_USB_HOST_STATE_RUNNING) && (x < UHS_HOST_MAX_INTERFACE_DRIVERS);
+           x++) {
+           if (devConfig[x]) {
+           if (devConfig[x]->bPollEnable)
+           devConfig[x]->Poll();
+           }
+           }
+         */
+        // fall thru
+    default:
+        // Do nothing
+        break;
+    }                           // switch( usb_task_state )
+/*
+    if (bus_event & condet) {
+       VBUS_changed();
+       bus_event &= ~condet;
+    }
+*/
+}
+
 static void gpx_irq_handler(enum sys_message msg)
 {
-    uint8_t iv;
+    uint8_t iv, ret_iv = 0x0;
     uint8_t iostate;
 
     gpx_cnt_hl++;
 
-    // signal led1 (red)
+    // assert led1 (red)
     iostate = regRd(rIOPINS2) | bmGPOUT6;
     regWr(rIOPINS2, iostate);
+
+    // read interrupt register from SIE
     iv = regRd(rGPINIRQ);
 
     if (iv & bmGPINIRQ7) {
         // stop VBUS since MAX4789's FLAG has been asserted
         // FIXME
         // clear interrupt
-        regWr(rGPINIRQ, bmGPINIRQ7);
+        ret_iv |= bmGPINIRQ7;
+        // red led remains on as warning
     } else {
         // fake activation?
+        // deassert red led
         iostate = regRd(rIOPINS2) & ~bmGPOUT6;
         regWr(rIOPINS2, iostate);
     }
+
+    // clear serviced irqs
+    regWr(rGPINIRQ, ret_iv);
 }
 
 static void int_irq_handler(enum sys_message msg)
@@ -59,21 +234,45 @@ static void int_irq_handler(enum sys_message msg)
 
     iv = regRd(rHIRQ);
 
-    if (iv & bmCONNIRQ) {
+    bus_event &= ~counted;
+
+    if (iv & bmBUSEVENTIRQ) {
+        ret_iv |= bmBUSEVENTIRQ;
+        if (!(bus_event & doingreset)) {
+            bus_event |= condet;
+        }
         busprobe();
-
-        // turn green led off
-        iostate = regRd(rIOPINS2) & ~bmGPOUT7;
-        regWr(rIOPINS2, iostate);
-
-        ret_iv |= bmCONNIRQ;
+        bus_event &= ~busevent;
     }
+
+    if (iv & bmCONDETIRQ) {
+        if (!(bus_event & doingreset)) {
+            bus_event |= condet;
+        }
+        busprobe();
+        ret_iv |= bmCONDETIRQ;
+    }
+
     if (iv & bmFRAMEIRQ) {
         // 1ms SOF PID irq
+        if (sof_countdown) {
+            sof_countdown--;
+            bus_event |= counted;
+        }
+        bus_event &= ~sofevent;
         ret_iv |= bmFRAMEIRQ;
     }
+
+    // turn green led off
+    iostate = regRd(rIOPINS2) & ~bmGPOUT7;
+    regWr(rIOPINS2, iostate);
+
     // clear serviced irqs
     regWr(rHIRQ, ret_iv);
+   
+    if (!sof_countdown && !(bus_event & counted)) {
+        MAX3421_sm();
+    }
 }
 
 uint8_t MAX3421_init(void)
@@ -84,7 +283,7 @@ uint8_t MAX3421_init(void)
     int_cnt_hl = 0;
     gpx_cnt = 0;
     gpx_cnt_hl = 0;
-    bus_state = 0;
+    bus_event = 0;
     sof_countdown = 0;
 
     // red led on
@@ -99,11 +298,9 @@ uint8_t MAX3421_init(void)
     // detect presence and absence of VBUS
     regWr(rUSBIEN, bmVBUSIE);
 
-    // set full duplex SPI, level-active INT interrupt
-    //regWr(rPINCTL, (bmFDUPSPI | bmINTLEVEL));
-
     // set full duplex SPI, edge-active INT interrupt
-    regWr(rPINCTL, bmFDUPSPI | GPX_VBDET);
+    //regWr(rPINCTL, bmFDUPSPI | GPX_INIRQ);
+    regWr(rPINCTL, bmFDUPSPI);
 
     // MAX4789 is connected to GPOUT0 to controls the VBUS
     // enable VBUS 
@@ -145,7 +342,7 @@ uint8_t MAX3421_init(void)
     regWr(rMODE, bmDPPULLDN | bmDMPULLDN | bmHOST);
 
     // peripheral and frame generator interrupt enable
-    regWr(rHIEN, bmCONNIE | bmFRAMEIE);
+    regWr(rHIEN, bmCONNIE | bmFRAMEIE | bmBUSEVENTIE);
 
     // check if a peripheral is connected
     regWr(rHCTL, bmSAMPLEBUS);
@@ -303,63 +500,21 @@ void busprobe(void)
     }
 }
 
-void VBUS_changed(void)
-{
-    /* modify USB task state because Vbus changed or unknown */
-    uint8_t speed = 1;
-    //printf("\r\n\r\n\r\n\r\nSTATE %2.2x -> ", usb_task_state);
-    switch (vbusState) {
-    case LSHOST:               // Low speed
-        speed = 0;
-        // Intentional fall-through
-    case FSHOST:               // Full speed
-        // Start device initialization if we are not initializing
-        // Resets to the device cause an IRQ
-        // usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE;
-        //if((usb_task_state & UHS_USB_HOST_STATE_MASK) != UHS_USB_HOST_STATE_DETACHED) {
-        //ReleaseChildren(); // FIXME
-        if (!(bus_state & doingreset)) {
-            if (usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE) {
-                usb_task_state = UHS_USB_HOST_STATE_WAIT_BUS_READY;
-            } else if (usb_task_state != UHS_USB_HOST_STATE_WAIT_BUS_READY) {
-                usb_task_state = UHS_USB_HOST_STATE_DEBOUNCE;
-            }
-        }
-        sof_countdown = 0;
-        break;
-    case SE1:                  //illegal state
-        sof_countdown = 0;
-        bus_state &= ~doingreset;
-        //ReleaseChildren(); FIXME
-        usb_task_state = UHS_USB_HOST_STATE_ILLEGAL;
-        break;
-    case SE0:                  //disconnected
-    default:
-        sof_countdown = 0;
-        bus_state &= ~doingreset;
-        //ReleaseChildren(); FIXME
-        usb_task_state = UHS_USB_HOST_STATE_IDLE;
-        break;
-    }
-    usb_host_speed = speed;
-    //printf("0x%2.2x\r\n\r\n\r\n\r\n", usb_task_state);
-    return;
-}
-
-
-
 __attribute__ ((interrupt(PORT1_VECTOR)))
 void Port1_ISR(void)
 {
-    if (P1IFG & TRIG0) {
-        gpx_cnt++;
-        port1_ifg_gpx_last_event = 1;
-        P1IFG &= ~TRIG0;
-        LPM2_EXIT;
-    } else if (P1IFG & TRIG1) {
+    uint16_t iv;
+    iv = P1IFG;
+
+    if (iv & INT_TRIG) {
         int_cnt++;
         port1_ifg_int_last_event = 1;
-        P1IFG &= ~TRIG1;
-        LPM2_EXIT;
+        P1IFG &= ~INT_TRIG;
+        __bic_SR_register_on_exit(LPM3_bits);
+    } else if (iv & GPX_TRIG) {
+        gpx_cnt++;
+        port1_ifg_gpx_last_event = 1;
+        P1IFG &= ~GPX_TRIG;
+        __bic_SR_register_on_exit(LPM3_bits);
     }
 }
