@@ -277,7 +277,8 @@ struct ENUMERATION_INFO {
         struct INTERFACE_INFO interface;
 } __attribute__((packed));
 
-/* USB Setup Packet Structure   */
+// USB Setup Packet Structure
+// USB spec 2.0 chapter 9.3
 typedef struct {
         // offset   description
         //   0      Bit-map of request type

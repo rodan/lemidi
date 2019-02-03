@@ -79,7 +79,7 @@ void VBUS_changed(void)
 // state machine
 void MAX3421_sm(void)
 {
-    uint8_t x;
+    //uint8_t x;
 
     if (bus_event & condet) {
         VBUS_changed();
