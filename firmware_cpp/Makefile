@@ -14,11 +14,12 @@ CC_DMACH	= -D__MSP430F5510__
 #
 CFLAGS		+= $(CC_CMACH) $(CC_DMACH) -Wall -Wno-switch
 CFLAGS		+= -fno-force-addr -finline-limit=1 -fno-schedule-insns
+CFLAGS      += -fno-exceptions -fno-rtti -fno-stack-protector -fno-math-errno -ffast-math
 CFLAGS		+= -fshort-enums -Wl,-Map=output.map
 LDFLAGS		= -lm
 
-CFLAGS_REL	+= -Os -fdata-sections -ffunction-sections -fomit-frame-pointer
-LDFLAGS_REL	+= -Wl,--gc-sections -Wl,-s -dead_strip
+CFLAGS_REL	+= -Os -s -fdata-sections -ffunction-sections -fomit-frame-pointer
+LDFLAGS_REL	+= -Wl,--gc-sections -Wl,-s -dead_strip -Wl,--strip-all
 
 CFLAGS_DBG	+= -O1 -g
 LDFLAGS_DBG	+= -Wl,--gc-sections
