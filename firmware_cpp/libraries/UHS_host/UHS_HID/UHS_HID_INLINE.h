@@ -123,7 +123,7 @@ uint8_t UHS_NI UHS_HID::SetReport(uint8_t iface, uint8_t report_type, uint8_t re
 }
 
 uint8_t UHS_NI UHS_HID::Start(void) {
-        HID_DUBUG("HID START, A %02x I %02x O %02x\r\n", bAddress, epInfo[epInterruptInIndex].epAddr, epInfo[epInterruptOutIndex].epAddr);
+        //HID_DUBUG("HID START, A %02x I %02x O %02x\r\n", bAddress, epInfo[epInterruptInIndex].epAddr, epInfo[epInterruptOutIndex].epAddr);
         uint8_t rcode = pUsb->setEpInfoEntry(bAddress, bIface, 3, epInfo);
         if(rcode) {
                 Release();

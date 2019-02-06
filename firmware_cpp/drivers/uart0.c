@@ -1,3 +1,4 @@
+#include <string.h>
 
 #include "uart0.h"
 
@@ -46,11 +47,24 @@ void uart0_init(void)
     uart0_rx_enable = 1;
 }
 
-uint16_t uart0_tx_str(char *str, const uint16_t size)
+uint16_t uart0_tx_str(const char *str, const uint16_t size)
 {
     uint16_t p = 0;
     while (p < size) {
         while (!(UCA0IFG & UCTXIFG)) ;  // USCI_A0 TX buffer ready?
+        UCA0TXBUF = str[p];
+        p++;
+    }
+    return p;
+}
+
+uint16_t uart0_print(const char *str)
+{
+    size_t p = 0;
+    size_t size = strlen(str);
+    while (p < size) {
+        while (!(UCA0IFG & UCTXIFG)) {
+        }                       // USCI_A0 TX buffer ready?
         UCA0TXBUF = str[p];
         p++;
     }

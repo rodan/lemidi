@@ -35,26 +35,27 @@
 #include "version.h"
 #include "UHS_host.h"
 
+/*
 class myHID_processor:public UHS_HID_PROCESSOR {
  public:
 
     myHID_processor(void) {
     } void onRelease(UHS_HID_base * d) {
-        printf_P("HID device unplugged driver type %d no longer available.\r\n", d->driver);
+        //printf_P("HID device unplugged driver type %d no longer available.\r\n", d->driver);
     }
 
     void onStart(UHS_HID_base * d) {
-        printf_P("HID driver type %d started, Subclass %02x, Protocol %02x ", d->driver,
-                 d->parent->bSubClass, d->parent->bProtocol);
+        //printf_P("HID driver type %d started, Subclass %02x, Protocol %02x ", d->driver,
+        //         d->parent->bSubClass, d->parent->bProtocol);
         switch (d->driver) {
         case UHS_HID_raw:
-            printf_P(PSTR("HID-RAW"));
+            //printf_P(PSTR("HID-RAW"));
             break;
         case UHS_HID_mouse:
-            printf_P(PSTR("HIDBOOT-RAW-MOUSE"));
+            //printf_P(PSTR("HIDBOOT-RAW-MOUSE"));
             break;
         case UHS_HID_keyboard:
-            printf_P(PSTR("HIDBOOT-RAW-KEYBOARD"));
+            //printf_P(PSTR("HIDBOOT-RAW-KEYBOARD"));
             // This twinkles the LEDs a few times as an example.
             for (uint8_t i = 0, led = 0x40U, rv = 0; i < 10; i++) {
                 while (led) {
@@ -69,49 +70,50 @@ class myHID_processor:public UHS_HID_PROCESSOR {
 
             break;
         default:
-            printf_P(PSTR("HID-NOT_USED"));
+            //printf_P(PSTR("HID-NOT_USED"));
             break;
         }
-        printf_P(PSTR("\r\n"));
+        //printf_P(PSTR("\r\n"));
     }
 
     void onPoll(UHS_HID_base * d, uint8_t * data, uint16_t length) {
         MOUSEINFO *squeek = (MOUSEINFO *) data;
         switch (d->driver) {
         case UHS_HID_raw:
-            printf_P(PSTR("RAW input %d bytes interface %d, Subclass %02x, Protocol %02x Data:"),
-                     length, d->parent->bIface, d->parent->bSubClass, d->parent->bProtocol);
-            for (uint8_t i = 0; i < length; i++) {
-                printf_P(PSTR(" %02x"), data[i]);
-            }
+//            printf_P(PSTR("RAW input %d bytes interface %d, Subclass %02x, Protocol %02x Data:"),
+//                     length, d->parent->bIface, d->parent->bSubClass, d->parent->bProtocol);
+//            for (uint8_t i = 0; i < length; i++) {
+//                printf_P(PSTR(" %02x"), data[i]);
+//            }
             break;
         case UHS_HID_mouse:
-            printf_P(PSTR
-                     ("Mouse buttons left %s right %s mid %s fourth %s fifth %s motion (X,Y) %4d,%4d wheel %4d"),
-                     squeek->bmLeftButton == 1 ? "t" : "f", squeek->bmRightButton == 1 ? "t" : "f",
-                     squeek->bmMiddleButton == 1 ? "t" : "f", squeek->bmButton4 == 1 ? "t" : "f",
-                     squeek->bmButton5 == 1 ? "t" : "f", squeek->dX, squeek->dY, squeek->wheel1);
+//            printf_P(PSTR
+//                     ("Mouse buttons left %s right %s mid %s fourth %s fifth %s motion (X,Y) %4d,%4d wheel %4d"),
+//                     squeek->bmLeftButton == 1 ? "t" : "f", squeek->bmRightButton == 1 ? "t" : "f",
+//                     squeek->bmMiddleButton == 1 ? "t" : "f", squeek->bmButton4 == 1 ? "t" : "f",
+//                     squeek->bmButton5 == 1 ? "t" : "f", squeek->dX, squeek->dY, squeek->wheel1);
             break;
         case UHS_HID_keyboard:
-            printf_P(PSTR
-                     ("keyboard input %d bytes interface %d, Subclass %02x, Protocol %02x Data:"),
-                     length, d->parent->bIface, d->parent->bSubClass, d->parent->bProtocol);
-            for (uint8_t i = 0; i < length; i++) {
-                printf_P(PSTR(" %02x"), data[i]);
-            }
+//            printf_P(PSTR
+//                     ("keyboard input %d bytes interface %d, Subclass %02x, Protocol %02x Data:"),
+//                     length, d->parent->bIface, d->parent->bSubClass, d->parent->bProtocol);
+//            for (uint8_t i = 0; i < length; i++) {
+//                printf_P(PSTR(" %02x"), data[i]);
+//            }
             break;
         default:
             break;
         }
-        printf_P(PSTR("\r\n"));
+        //printf_P(PSTR("\r\n"));
     }
 };
+*/
 
-myHID_processor HID_processor1;
-myHID_processor HID_processor2;
+//myHID_processor HID_processor1;
+//myHID_processor HID_processor2;
 MAX3421E_HOST UHS_Usb;
 //UHS_USBHub hub_1(&UHS_Usb);
-UHS_HID hid1(&UHS_Usb, &HID_processor1);
+//UHS_HID hid1(&UHS_Usb, &HID_processor1);
 //UHS_HID hid2(&UHS_Usb, &HID_processor2);
 
 void main_init(void)
@@ -211,7 +213,7 @@ void main_init(void)
 
 }
 
-
+/*
 void display_menu(void)
 {
     char str_temp[STR_LEN];
@@ -231,9 +233,10 @@ void display_menu(void)
 
     snprintf(str_temp, STR_LEN, " \e[33;1mstat\e[0m             - system status\r\n" );
     uart0_tx_str(str_temp, strlen(str_temp));
-
 }
+*/
 
+/*
 void parse_user_input(void)
 {
     char *in = uart0_get_rx_buf();
@@ -290,8 +293,8 @@ void parse_user_input(void)
                 //mcp42_set_pot( 0, ctrl.j1[0], ctrl.j1[1]);
                 mcp42_set_pot_ch( 0, 0, ctrl.j0[0]);
                 mcp42_set_pot_ch( 0, 1, ctrl.j0[1]);
-                snprintf(str_temp, STR_LEN, "j0 0x%x 0x%x\r\n", ctrl.j0[0], ctrl.j0[1] );
-                uart0_tx_str(str_temp, strlen(str_temp));
+                //snprintf(str_temp, STR_LEN, "j0 0x%x 0x%x\r\n", ctrl.j0[0], ctrl.j0[1] );
+                //uart0_tx_str(str_temp, strlen(str_temp));
             }
 
         } else if (id == '1') {
@@ -301,18 +304,16 @@ void parse_user_input(void)
                 //mcp42_set_pot( 0, ctrl.j1[0], ctrl.j1[1]);
                 mcp42_set_pot_ch( 1, 0, ctrl.j1[0]);
                 mcp42_set_pot_ch( 1, 1, ctrl.j1[1]);
-                snprintf(str_temp, STR_LEN, "j1 0x%x 0x%x\r\n", ctrl.j1[0], ctrl.j1[1] );
-                uart0_tx_str(str_temp, strlen(str_temp));
+                //snprintf(str_temp, STR_LEN, "j1 0x%x 0x%x\r\n", ctrl.j1[0], ctrl.j1[1] );
+                //uart0_tx_str(str_temp, strlen(str_temp));
             }
         }
     } else if (d == 'l') {
-        /*
         if (strstr(in, "1 on")) {
             regWr(rIOPINS2, bmGPOUT6); //status led1 on
         } else if (strstr(in, "2 on")) {
             regWr(rIOPINS2, bmGPOUT7); //status led2 on
         }
-        */
         UHS_Usb.regWr(rIOPINS2, 0);
     } else if (d == 'i') {
         //reg = regRd(rIOPINS1);
@@ -350,10 +351,11 @@ void parse_user_input(void)
             SFRIFG1 &= ~OFIFG;
     }
 }
+*/
 
 static void parse_UI(const uint16_t msg)
 {
-    parse_user_input();
+    //parse_user_input();
     uart0_set_eol();
 }
 
@@ -416,7 +418,7 @@ int main(void)
     uart0_init();
     spi_init();
     //spi_fast_mode();
-    display_menu();
+    //display_menu();
 
     UHS_Usb.rst_ifg_int_event();
     UHS_Usb.rst_ifg_gpx_event();

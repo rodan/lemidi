@@ -20,6 +20,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <inttypes.h>
+#include <stdlib.h>
 #include "sys_messagebus.h"
 
 // static 
@@ -39,6 +41,7 @@ void sys_messagebus_register(void (*callback) (const uint16_t sys_message),
         p = &(*p)->next;
     }
 
+    *p = (struct sys_messagebus*)malloc(sizeof(struct sys_messagebus));
     //*p = malloc(sizeof(struct sys_messagebus));
     (*p)->next = NULL;
     (*p)->fn = callback;

@@ -2,7 +2,7 @@
 #define _CONFIG_H_
 
 //#define CONFIG_DEBUG
-#define CONFIG_PRINTF
+//#define CONFIG_PRINTF
 
 // dont touch
 //#define USE_WATCHDOG

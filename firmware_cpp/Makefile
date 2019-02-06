@@ -18,7 +18,7 @@ CFLAGS		+= -fshort-enums -Wl,-Map=output.map
 LDFLAGS		= -lm
 
 CFLAGS_REL	+= -Os -fdata-sections -ffunction-sections -fomit-frame-pointer
-LDFLAGS_REL	+= -Wl,--gc-sections -Wl,-s
+LDFLAGS_REL	+= -Wl,--gc-sections -Wl,-s -dead_strip
 
 CFLAGS_DBG	+= -O1 -g
 LDFLAGS_DBG	+= -Wl,--gc-sections
@@ -92,17 +92,17 @@ $(OBJS): $(PROJ).cflags
 
 $(PROJ).elf: $(OBJS)
 	@echo -e "\n>> Building $@ as target $(TARGET)"
-	@$(CXX) $(CFLAGS) $(LDFLAGS) $(INCLUDES) -o $@ $+ && size $@ && bash tools/setver.sh
+	$(CXX) $(CFLAGS) $(LDFLAGS) $(INCLUDES) -o $@ $+ && size $@ && bash tools/setver.sh
 	@#@python tools/msp430-ram-usage $@
 
 modinit.o: modinit.c
-	@echo "CC $<"
-	@$(CC) $(CFLAGS) -Wno-implicit-function-declaration \
+	@echo "CXX $<"
+	@$(CXX) $(CFLAGS) -Wno-implicit-function-declaration \
 		$(INCLUDES) -c $< -o $@
 
 %.o: %.c
-	@echo "CC $<"
-	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@echo "CXX $<"
+	@$(CXX) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 %.o: %.cpp
 	@echo "CXX $<"

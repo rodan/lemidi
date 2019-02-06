@@ -205,9 +205,9 @@ void UHS_NI MAX3421E_HOST::VBUS_changed(void)
     /* modify USB task state because Vbus changed or unknown */
     uint8_t speed = 1;
 #ifdef CONFIG_PRINTF
-    char str_temp[STR_LEN];
-    snprintf(str_temp, STR_LEN, "state 0x%x -> ", usb_task_state );
-    uart0_tx_str(str_temp, strlen(str_temp));
+    //char str_temp[STR_LEN];
+    //snprintf(str_temp, STR_LEN, "state 0x%x -> ", usb_task_state );
+    //uart0_tx_str(str_temp, strlen(str_temp));
 #endif
     switch (vbusState) {
     case LSHOST:               // Low speed
@@ -244,8 +244,8 @@ void UHS_NI MAX3421E_HOST::VBUS_changed(void)
     }
     usb_host_speed = speed;
 #ifdef CONFIG_PRINTF
-    snprintf(str_temp, STR_LEN, "0x%x\r\n", usb_task_state );
-    uart0_tx_str(str_temp, strlen(str_temp));
+    //snprintf(str_temp, STR_LEN, "0x%x\r\n", usb_task_state );
+    //uart0_tx_str(str_temp, strlen(str_temp));
 #endif
     return;
 };
@@ -783,14 +783,14 @@ void UHS_NI MAX3421E_HOST::ISRbottom(void)
     case UHS_USB_HOST_STATE_INITIALIZE:
         // should never happen...
 #ifdef CONFIG_PRINTF
-        uart0_tx_str((char *)"sm init\r\n", 9);
+        //uart0_tx_str((char *)"sm init\r\n", 9);
 #endif
         busprobe();
         VBUS_changed();
         break;
     case UHS_USB_HOST_STATE_DEBOUNCE:
 #ifdef CONFIG_PRINTF
-        uart0_tx_str((char *)"sm debounce\r\n", 13);
+        //uart0_tx_str((char *)"sm debounce\r\n", 13);
 #endif
         // This seems to not be needed. The host controller has debounce built in.
         sof_countdown = UHS_HOST_DEBOUNCE_DELAY_MS;

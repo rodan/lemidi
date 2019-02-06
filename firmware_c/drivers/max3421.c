@@ -286,6 +286,8 @@ uint8_t MAX3421_init(void)
     bus_event = 0;
     sof_countdown = 0;
 
+    usb_task_state = UHS_USB_HOST_STATE_INITIALIZE;
+
     // red led on
     regWr(rIOPINS2, bmGPOUT6);
 
@@ -349,6 +351,7 @@ uint8_t MAX3421_init(void)
     while (!(regRd(rHCTL) & bmSAMPLEBUS)) ;     //wait for sample operation to finish
 
     busprobe();
+    VBUS_changed();
 
     // clear connection detect interrupt
     regWr(rHIRQ, bmCONNIRQ);

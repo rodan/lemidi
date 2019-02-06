@@ -96,12 +96,10 @@ e-mail   :  support@circuitsathome.com
 #else
 // safe default
 //#warning Small flash?
-//#define UHS_BIG_FLASH 0
+#define UHS_BIG_FLASH 0
 #endif
 #endif
 
-// FIXME test with large flash
-#define UHS_BIG_FLASH 1
 
 #if UHS_BIG_FLASH
 #define UHS_DEVICE_WINDOWS_USB_SPEC_VIOLATION_DESCRIPTOR_DEVICE 1
