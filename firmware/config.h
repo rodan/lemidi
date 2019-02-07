@@ -7,9 +7,9 @@
 // dont touch
 //#define USE_WATCHDOG
 
+#define UART0_SPEED_115200_8M
+
 //#define USE_XT1
 #define USE_XT2
-
-//#define MSP430F5510_DEVBOARD
 
 #endif

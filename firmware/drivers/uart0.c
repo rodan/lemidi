@@ -24,8 +24,14 @@ void uart0_init(void)
 
 #ifdef UART0_SPEED_115200_1M
     UCA0CTLW0 |= UCSSEL__SMCLK;
+    UCA0BR0 = 0x08;
+    UCA0BR1 = 0x00;
+    UCA0MCTL = UCBRS_6 + UCBRF_0;
 #elif defined (UART0_SPEED_115200_8M)
     UCA0CTLW0 |= UCSSEL__SMCLK;
+    UCA0BR0 = 0x45;
+    UCA0BR1 = 0x00;
+    UCA0MCTL = UCBRS_4 + UCBRF_0;
 #else // a safer default of 9600 - does not depend on SMCLK
     UCA0CTL1 |= UCSSEL__ACLK;
     UCA0BR0 = 0x03;
