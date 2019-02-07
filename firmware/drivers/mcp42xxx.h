@@ -1,6 +1,10 @@
 #ifndef __MCP42XXX_H__
 #define __MCP42XXX_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <msp430.h>
 
 #define MCP42XXX_WRITE_DATA   0x10
@@ -22,5 +26,9 @@ void mcp42_set_pot_ch(const uint8_t mcp42_id, const uint8_t pot_id,
 void mcp42_set_pot(const uint8_t mcp42_id, const uint8_t pot_ch0_val, const uint8_t pot_ch1_val);
 
 void mcp42_shutdown_pot(const uint8_t mcp42_id, const uint8_t pot_id);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

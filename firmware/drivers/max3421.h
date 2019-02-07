@@ -1,6 +1,10 @@
 #ifndef __MAX3421_H__
 #define __MAX3421_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // customize the chip select pin for your environment
 //#define MAX3421_CS_SELECT   P4OUT |= BIT6
 //#define MAX3421_CS_DESELECT  P4OUT &= ~BIT6
@@ -31,6 +35,10 @@ uint8_t get_ifg_int_event(void);
 void rst_ifg_int_event(void);
 uint8_t get_ifg_gpx_event(void);
 void rst_ifg_gpx_event(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
