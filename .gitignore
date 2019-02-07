@@ -1,6 +1,7 @@
 main.txt
 main.elf
 main.dep
+main.hdep
 main.cflags
 *.[oa]
 *.pyc
@@ -14,3 +15,17 @@ main.cflags
 output.map
 tags
 docs
+attic
+hardware/*.GBL
+hardware/*.GBO
+hardware/*.GBP
+hardware/*.GBS
+hardware/*.GML
+hardware/*.GTL
+hardware/*.GTO
+hardware/*.GTP
+hardware/*.GTS
+hardware/*.TXT
+hardware/*.dri
+hardware/*.gpi
+
