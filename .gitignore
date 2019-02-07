@@ -1,7 +1,7 @@
-proj.txt
-proj.elf
-proj.dep
-proj.cflags
+main.txt
+main.elf
+main.dep
+main.cflags
 *.[oa]
 *.pyc
 *.*~
