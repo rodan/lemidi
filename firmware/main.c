@@ -168,9 +168,9 @@ void check_events(void)
     uint16_t msg = SYS_MSG_NULL;
 
     // drivers/timer0a
-    if (timer_a0_last_event) {
-        msg |= timer_a0_last_event;
-        timer_a0_last_event = TIMER_A0_EVENT_NONE;
+    if (timer_a0_get_event()) {
+        msg |= timer_a0_get_event();
+        timer_a0_rst_event();
     }
     // drivers/uart0
     if (uart0_get_event() & UART0_EV_RX) {

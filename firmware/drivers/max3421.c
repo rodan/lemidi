@@ -10,7 +10,7 @@
 #include "spi.h"
 #include "drivers/sys_messagebus.h"
 #include "proj.h"
-#include "UHS_host.h"
+#include "usb_spec.h"
 
 #ifdef CONFIG_PRINTF
 #include "drivers/uart0.h"
