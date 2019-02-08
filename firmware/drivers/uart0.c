@@ -18,7 +18,7 @@ volatile uint8_t uart0_last_event;
 // or use uart0_port_init() if no mapping is needed
 void uart0_init(void)
 {
-    UCA0CTLW0 = UCSWRST;        // put eUSCI state machine in reset
+    UCA0CTLW0 = UCSWRST;        // put USCI state machine in reset
 
     // consult 'Recommended Settings for Typical Crystals and Baud Rates' in slau208q
 

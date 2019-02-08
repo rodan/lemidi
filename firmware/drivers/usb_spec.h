@@ -22,6 +22,14 @@ extern "C" {
 ////////////////////////////////////////////////////////////////////////////////
 */
 
+#define                              USB_XFER_TIMEOUT 5000    //USB transfer timeout in milliseconds, per section 9.2.6.1 of USB 2.0 spec
+#define                                 USB_NAK_LIMIT 32000   //NAK limit for a transfer. o meand NAKs are not counted
+#define                               USB_RETRY_LIMIT 3       //retry limit for a transfer
+#define                              USB_SETTLE_DELAY 200     //settle delay in milliseconds
+#define                                USB_NAK_NOWAIT 1       //used in Richard's PS2/Wiimote code
+
+#define                                USB_NUMDEVICES 2           //number of USB devices
+
 // USB state machine states
 #define                       UHS_USB_HOST_STATE_MASK 0xF0U
 
@@ -44,7 +52,6 @@ extern "C" {
 #define                      UHS_USB_HOST_STATE_ERROR 0xF0U // Looks like "FO"o
 #define                 UHS_USB_HOST_STATE_INITIALIZE 0x10U // Looks like "I"nit
 
-/*
 // Host SE result codes.
 // Common SE results are stored in the low nybble, all interface drivers understand these plus 0x1f.
 // Extended SE results are 0x10-0x1e. SE code only understands these internal to the hardware.
@@ -101,79 +108,259 @@ extern "C" {
 #define                UHS_HOST_ERROR_NOT_IMPLEMENTED 0xFEU
 #define               UHS_HOST_ERROR_TRANSFER_TIMEOUT 0xFFU
 
-*/
-
 // SEI interaction defaults
 #define                      UHS_HOST_TRANSFER_MAX_MS 10000 // USB transfer timeout in ms, per section 9.2.6.1 of USB 2.0 spec
 #define               UHS_HOST_TRANSFER_RETRY_MAXIMUM 3     // 3 retry limit for a transfer
 #define                    UHS_HOST_DEBOUNCE_DELAY_MS 500   // settle delay in milliseconds
 #define                        UHS_HUB_RESET_DELAY_MS 20    // hub port reset delay, 10ms recomended, but can be up to 20ms
 
+// Misc.USB constants
+#define                           DEV_DESCR_LEN 18      //device descriptor length
+#define                          CONF_DESCR_LEN 9       //configuration descriptor length
+#define                          INTR_DESCR_LEN 9       //interface descriptor length
+#define                            EP_DESCR_LEN 7       //endpoint descriptor length
+
+// Standard Device Requests
+#define                  USB_REQUEST_GET_STATUS 0       // Standard Device Request - GET STATUS
+#define               USB_REQUEST_CLEAR_FEATURE 1       // Standard Device Request - CLEAR FEATURE
+#define                 USB_REQUEST_SET_FEATURE 3       // Standard Device Request - SET FEATURE
+#define                 USB_REQUEST_SET_ADDRESS 5       // Standard Device Request - SET ADDRESS
+#define              USB_REQUEST_GET_DESCRIPTOR 6       // Standard Device Request - GET DESCRIPTOR
+#define              USB_REQUEST_SET_DESCRIPTOR 7       // Standard Device Request - SET DESCRIPTOR
+#define           USB_REQUEST_GET_CONFIGURATION 8       // Standard Device Request - GET CONFIGURATION
+#define           USB_REQUEST_SET_CONFIGURATION 9       // Standard Device Request - SET CONFIGURATION
+#define               USB_REQUEST_GET_INTERFACE 10      // Standard Device Request - GET INTERFACE
+#define               USB_REQUEST_SET_INTERFACE 11      // Standard Device Request - SET INTERFACE
+#define                 USB_REQUEST_SYNCH_FRAME 12      // Standard Device Request - SYNCH FRAME
+
+// Wireless USB Device Requests
+#define                  USB_REQ_SET_ENCRYPTION 0x0D
+#define                  USB_REQ_GET_ENCRYPTION 0x0E
+#define                     USB_REQ_RPIPE_ABORT 0x0E
+#define                   USB_REQ_SET_HANDSHAKE 0x0F
+#define                     USB_REQ_RPIPE_RESET 0x0F
+#define                   USB_REQ_GET_HANDSHAKE 0x10
+#define                  USB_REQ_SET_CONNECTION 0x11
+#define               USB_REQ_SET_SECURITY_DATA 0x12
+#define               USB_REQ_GET_SECURITY_DATA 0x13
+#define                   USB_REQ_SET_WUSB_DATA 0x14
+#define             USB_REQ_LOOPBACK_DATA_WRITE 0x15
+#define              USB_REQ_LOOPBACK_DATA_READ 0x16
+#define                USB_REQ_SET_INTERFACE_DS 0x17
+
+// USB feature flags
+#define                 USB_DEVICE_SELF_POWERED 0   /* (read only) */
+#define                USB_DEVICE_REMOTE_WAKEUP 1   /* dev may initiate wakeup */
+#define                    USB_DEVICE_TEST_MODE 2   /* (wired high speed only) */
+#define                      USB_DEVICE_BATTERY 2   /* (wireless) */
+#define                 USB_DEVICE_B_HNP_ENABLE 3   /* (otg) dev may initiate HNP */
+#define                  USB_DEVICE_WUSB_DEVICE 3   /* (wireless)*/
+#define                USB_DEVICE_A_HNP_SUPPORT 4   /* (otg) RH port supports HNP */
+#define            USB_DEVICE_A_ALT_HNP_SUPPORT 5   /* (otg) other RH port does */
+#define                   USB_DEVICE_DEBUG_MODE 6   /* (special devices only) */
+
+#define               USB_FEATURE_ENDPOINT_HALT 0       // CLEAR/SET FEATURE - Endpoint Halt
+#define        USB_FEATURE_DEVICE_REMOTE_WAKEUP 1       // CLEAR/SET FEATURE - Device remote wake-up
+#define                   USB_FEATURE_TEST_MODE 2       // CLEAR/SET FEATURE - Test mode
+// OTG SET FEATURE Constants
+#define               OTG_FEATURE_B_HNP_ENABLE  3       // SET FEATURE OTG - Enable B device to perform HNP
+#define               OTG_FEATURE_A_HNP_SUPPORT 4       // SET FEATURE OTG - A device supports HNP
+#define           OTG_FEATURE_A_ALT_HNP_SUPPORT 5       // SET FEATURE OTG - Another port on the A device supports HNP
+
+// Setup Data Constants
+#define                USB_SETUP_HOST_TO_DEVICE 0x00    // Device Request bmRequestType transfer direction - host to device transfer
+#define                USB_SETUP_DEVICE_TO_HOST 0x80    // Device Request bmRequestType transfer direction - device to host transfer
+#define                 USB_SETUP_TYPE_STANDARD 0x00    // Device Request bmRequestType type - standard
+#define                    USB_SETUP_TYPE_CLASS 0x20    // Device Request bmRequestType type - class
+#define                   USB_SETUP_TYPE_VENDOR 0x40    // Device Request bmRequestType type - vendor
+#define              USB_SETUP_RECIPIENT_DEVICE 0x00    // Device Request bmRequestType recipient - device
+#define           USB_SETUP_RECIPIENT_INTERFACE 0x01    // Device Request bmRequestType recipient - interface
+#define            USB_SETUP_RECIPIENT_ENDPOINT 0x02    // Device Request bmRequestType recipient - endpoint
+#define               USB_SETUP_RECIPIENT_OTHER 0x03    // Device Request bmRequestType recipient - other
+#define                USB_SETUP_RECIPIENT_PORT 0x04    // Wireless USB 1.0
+#define               USB_SETUP_RECIPIENT_RPIPE 0x05    // Wireless USB 1.0
+
+
+// USB descriptors
+#define                   USB_DESCRIPTOR_DEVICE 0x01    // bDescriptorType for a Device Descriptor.
+#define            USB_DESCRIPTOR_CONFIGURATION 0x02    // bDescriptorType for a Configuration Descriptor.
+#define                   USB_DESCRIPTOR_STRING 0x03    // bDescriptorType for a String Descriptor.
+#define                USB_DESCRIPTOR_INTERFACE 0x04    // bDescriptorType for an Interface Descriptor.
+#define                 USB_DESCRIPTOR_ENDPOINT 0x05    // bDescriptorType for an Endpoint Descriptor.
+#define         USB_DESCRIPTOR_DEVICE_QUALIFIER 0x06    // bDescriptorType for a Device Qualifier.
+#define              USB_DESCRIPTOR_OTHER_SPEED 0x07    // bDescriptorType for a Other Speed Configuration.
+#define          USB_DESCRIPTOR_INTERFACE_POWER 0x08    // bDescriptorType for Interface Power.
+#define                      USB_DESCRIPTOR_OTG 0x09    // bDescriptorType for an OTG Descriptor.
+#define                    USB_DESCRIPTOR_DEBUG 0x0a
+#define    USB_DESCRIPTOR_INTERFACE_ASSOCIATION 0x0b
+#define                 USB_DESCRIPTOR_SECURITY 0x0c
+#define                      USB_DESCRIPTOR_KEY 0x0d
+#define          USB_DESCRIPTOR_ENCRYPTION_TYPE 0x0e
+#define                      USB_DESCRIPTOR_BOS 0x0f
+#define        USB_DESCRIPTOR_DEVICE_CAPABILITY 0x10
+#define   USB_DESCRIPTOR_WIRELESS_ENDPOINT_COMP 0x11
+#define             USB_DESCRIPTOR_WIRE_ADAPTER 0x21
+#define                    USB_DESCRIPTOR_RPIPE 0x22
+#define         USB_DESCRIPTOR_CS_RADIO_CONTROL 0x23
+#define         USB_DESCRIPTOR_SS_ENDPOINT_COMP 0x30
+
+#define                          HID_DESCRIPTOR 0x21
+
+
+// Conventional codes for class-specific descriptors. "Common Class" Spec (3.11)
+#define                USB_DESCRIPTOR_CS_DEVICE 0x21
+#define                USB_DESCRIPTOR_CS_CONFIG 0x22
+#define                USB_DESCRIPTOR_CS_STRING 0x23
+#define             USB_DESCRIPTOR_CS_INTERFACE 0x24
+#define              USB_DESCRIPTOR_CS_ENDPOINT 0x25
+
+
+
+// USB Endpoint Transfer Types
+#define               USB_TRANSFER_TYPE_CONTROL 0x00    // Endpoint is a control endpoint.
+#define           USB_TRANSFER_TYPE_ISOCHRONOUS 0x01    // Endpoint is an isochronous endpoint.
+#define                  USB_TRANSFER_TYPE_BULK 0x02    // Endpoint is a bulk endpoint.
+#define             USB_TRANSFER_TYPE_INTERRUPT 0x03    // Endpoint is an interrupt endpoint.
+#define                     bmUSB_TRANSFER_TYPE 0x03    // bit mask to separate transfer type from ISO attributes
+#define               USB_TRANSFER_DIRECTION_IN 0x80    // Indicate direction is IN
+
+// Standard Feature Selectors for CLEAR_FEATURE Requests
+#define              USB_FEATURE_ENDPOINT_STALL 0       // Endpoint recipient
+#define        USB_FEATURE_DEVICE_REMOTE_WAKEUP 1       // Device recipient
+#define                   USB_FEATURE_TEST_MODE 2       // Device recipient
+
+
+
+
+// Device descriptor structure
+typedef struct {
+    uint8_t bLength; // Length of this descriptor.
+    uint8_t bDescriptorType; // DEVICE descriptor type (USB_DESCRIPTOR_DEVICE).
+    uint16_t bcdUSB; // USB Spec Release Number (BCD).
+    uint8_t bDeviceClass; // Class code (assigned by the USB-IF). 0xFF-Vendor specific.
+    uint8_t bDeviceSubClass; // Subclass code (assigned by the USB-IF).
+    uint8_t bDeviceProtocol; // Protocol code (assigned by the USB-IF). 0xFF-Vendor specific.
+    uint8_t bMaxPacketSize0; // Maximum packet size for endpoint 0.
+    uint16_t idVendor; // Vendor ID (assigned by the USB-IF).
+    uint16_t idProduct; // Product ID (assigned by the manufacturer).
+    uint16_t bcdDevice; // Device release number (BCD).
+    uint8_t iManufacturer; // Index of String Descriptor describing the manufacturer.
+    uint8_t iProduct; // Index of String Descriptor describing the product.
+    uint8_t iSerialNumber; // Index of String Descriptor with the device's serial number.
+    uint8_t bNumConfigurations; // Number of possible configurations.
+} __attribute__((packed)) USB_DEVICE_DESCRIPTOR;
+
+// Configuration descriptor structure
+typedef struct {
+    uint8_t bLength; // Length of this descriptor.
+    uint8_t bDescriptorType; // CONFIGURATION descriptor type (USB_DESCRIPTOR_CONFIGURATION).
+    uint16_t wTotalLength; // Total length of all descriptors for this configuration.
+    uint8_t bNumInterfaces; // Number of interfaces in this configuration.
+    uint8_t bConfigurationValue; // Value of this configuration (1 based).
+    uint8_t iConfiguration; // Index of String Descriptor describing the configuration.
+    uint8_t bmAttributes; // Configuration characteristics.
+    uint8_t bMaxPower; // Maximum power consumed by this configuration.
+} __attribute__((packed)) USB_CONFIGURATION_DESCRIPTOR;
+
+// Interface descriptor structure
+typedef struct {
+    uint8_t bLength; // Length of this descriptor.
+    uint8_t bDescriptorType; // INTERFACE descriptor type (USB_DESCRIPTOR_INTERFACE).
+    uint8_t bInterfaceNumber; // Number of this interface (0 based).
+    uint8_t bAlternateSetting; // Value of this alternate interface setting.
+    uint8_t bNumEndpoints; // Number of endpoints in this interface.
+    uint8_t bInterfaceClass; // Class code (assigned by the USB-IF).  0xFF-Vendor specific.
+    uint8_t bInterfaceSubClass; // Subclass code (assigned by the USB-IF).
+    uint8_t bInterfaceProtocol; // Protocol code (assigned by the USB-IF).  0xFF-Vendor specific.
+    uint8_t iInterface; // Index of String Descriptor describing the interface.
+} __attribute__((packed)) USB_INTERFACE_DESCRIPTOR;
+
+// Endpoint descriptor structure
+typedef struct {
+    uint8_t bLength; // Length of this descriptor.
+    uint8_t bDescriptorType; // ENDPOINT descriptor type (USB_DESCRIPTOR_ENDPOINT).
+    uint8_t bEndpointAddress; // Endpoint address. Bit 7 indicates direction (0=OUT, 1=IN).
+    uint8_t bmAttributes; // Endpoint transfer type.
+    uint16_t wMaxPacketSize; // Maximum packet size.
+    uint8_t bInterval; // Polling interval in frames.
+} __attribute__((packed)) USB_ENDPOINT_DESCRIPTOR;
+
+// HID descriptor
+typedef struct {
+    uint8_t bLength;
+    uint8_t bDescriptorType;
+    uint16_t bcdHID; // HID class specification release
+    uint8_t bCountryCode;
+    uint8_t bNumDescriptors; // Number of additional class specific descriptors
+    uint8_t bDescrType; // Type of class descriptor
+    uint16_t wDescriptorLength; // Total size of the Report descriptor
+} __attribute__((packed)) USB_HID_DESCRIPTOR;
+
 struct ENDPOINT_INFO {
-        uint8_t bEndpointAddress;       // Endpoint address. Bit 7 indicates direction (0=OUT, 1=IN).
-        uint8_t bmAttributes;           // Endpoint transfer type.
-        uint16_t wMaxPacketSize;        // Maximum packet size.
-        uint8_t bInterval;              // Polling interval in frames.
+    uint8_t bEndpointAddress;       // Endpoint address. Bit 7 indicates direction (0=OUT, 1=IN).
+    uint8_t bmAttributes;           // Endpoint transfer type.
+    uint16_t wMaxPacketSize;        // Maximum packet size.
+    uint8_t bInterval;              // Polling interval in frames.
 } __attribute__((packed));
 
 struct INTERFACE_INFO {
-        uint8_t bInterfaceNumber;
-        uint8_t bAlternateSetting;
-        uint8_t numep;
-        uint8_t klass;
-        uint8_t subklass;
-        uint8_t protocol;
-        struct ENDPOINT_INFO epInfo[16];
+    uint8_t bInterfaceNumber;
+    uint8_t bAlternateSetting;
+    uint8_t numep;
+    uint8_t klass;
+    uint8_t subklass;
+    uint8_t protocol;
+    struct ENDPOINT_INFO epInfo[16];
 } __attribute__((packed));
 
 struct ENUMERATION_INFO {
-        uint16_t vid;
-        uint16_t pid;
-        uint16_t bcdDevice;
-        uint8_t klass;
-        uint8_t subklass;
-        uint8_t protocol;
-        uint8_t bMaxPacketSize0;
-        uint8_t currentconfig;
-        uint8_t parent;
-        uint8_t port;
-        uint8_t address;
-        struct INTERFACE_INFO interface;
+    uint16_t vid;
+    uint16_t pid;
+    uint16_t bcdDevice;
+    uint8_t klass;
+    uint8_t subklass;
+    uint8_t protocol;
+    uint8_t bMaxPacketSize0;
+    uint8_t currentconfig;
+    uint8_t parent;
+    uint8_t port;
+    uint8_t address;
+    struct INTERFACE_INFO interface;
 } __attribute__((packed));
 
 // USB Setup Packet Structure
 // USB spec 2.0 chapter 9.3
 struct SETUP_PKT {
-        // offset   description
-        //   0      Bit-map of request type
-         union {
-                uint8_t bmRequestType;
-
-                struct {
-                        uint8_t recipient : 5;  // Recipient of the request
-                        uint8_t type : 2;       // Type of request
-                        uint8_t direction : 1;  // Direction of data transfer
-                } __attribute__((packed));
-        } ReqType_u;
-
-        //   1      Request
-        uint8_t bRequest;
-
-        //   2      Depends on bRequest
-        union {
-                uint16_t wValue;
-
-                struct {
-                        uint8_t wValueLo;
-                        uint8_t wValueHi;
-                } __attribute__((packed));
-        } wVal_u;
-        //   4      Depends on bRequest
-        uint16_t wIndex;
-        //   6      Depends on bRequest
-        uint16_t wLength;
-        // 8 bytes total
+    uint8_t bmRequestType;
+    uint8_t bRequest;
+    union {
+        uint16_t wValue;
+        struct {
+            uint8_t wValueLo;
+            uint8_t wValueHi;
+        } __attribute__((packed));
+    } wVal_u;
+    uint16_t wIndex;
+    uint16_t wLength;
 } __attribute__((packed));
+
+// Endpoint information structure
+// bToggle of endpoint 0 initialized to 0xff
+// during enumeration bToggle is set to 00
+typedef struct {        
+    uint8_t epAddr;        //copy from endpoint descriptor. Bit 7 indicates direction ( ignored for control endpoints )
+    uint8_t Attr;          // Endpoint transfer type.
+    uint16_t MaxPktSize;    // Maximum packet size.
+    uint8_t Interval;      // Polling interval in frames.
+    uint8_t sndToggle;     //last toggle value, bitmask for HCTL toggle bits
+    uint8_t rcvToggle;     //last toggle value, bitmask for HCTL toggle bits
+} __attribute__((packed)) EP_RECORD;
+
+// device record structure
+typedef struct {
+    EP_RECORD* epinfo;      //device endpoint information
+    uint8_t devclass;          //device class    
+} __attribute__((packed)) DEV_RECORD;
 
 
 // little endian :-)                                                                             8                                8                          8                         8                          16                      16

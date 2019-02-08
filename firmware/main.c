@@ -40,7 +40,11 @@ static void timer_a0_ovf_irq(const uint16_t msg)
 int main(void)
 {
     main_init();
+
     timer_a0_init();
+    // start the millis counter
+    timer_a0_delay_noblk_ccr3(125);
+
     uart0_init();
     spi_init();
     //spi_fast_mode();
@@ -48,6 +52,11 @@ int main(void)
 
     sys_messagebus_register(&timer_a0_ovf_irq, SYS_MSG_TIMER0_IFG);
     sys_messagebus_register(&parse_UI, SYS_MSG_UART0_RX);
+
+    // stay a while and listen
+    while (millis() < 1000) {
+        __nop();
+    }
 
     MAX3421_init();
 

@@ -9,6 +9,7 @@
 #include "max3421.h"
 #include "spi.h"
 #include "drivers/sys_messagebus.h"
+#include "drivers/timer_a0.h"
 #include "proj.h"
 #include "usb_spec.h"
 
@@ -30,10 +31,14 @@ volatile uint8_t usb_host_speed;
 volatile uint8_t ifg_int_last_event;
 volatile uint8_t ifg_gpx_last_event;
 
+DEV_RECORD devtable[USB_NUMDEVICES];
+
 void VBUS_changed(void)
 {
     /* modify USB task state because Vbus changed or unknown */
     uint8_t speed = 1;
+    uint8_t iostate;
+
 #ifdef CONFIG_PRINTF
     char buf[18];
     uart0_print("state ");
@@ -70,6 +75,10 @@ void VBUS_changed(void)
         bus_event &= ~doingreset;
         //ReleaseChildren(); FIXME
         usb_task_state = UHS_USB_HOST_STATE_IDLE;
+        
+        // turn green led off
+        iostate = regRd(rIOPINS2) & ~bmGPOUT7;
+        regWr(rIOPINS2, iostate);
         break;
     }
     usb_host_speed = speed;
@@ -84,8 +93,11 @@ void VBUS_changed(void)
 // state machine
 void MAX3421_sm(void)
 {
-    //uint8_t x;
-
+    uint8_t x;
+    uint8_t iostate;
+#ifdef CONFIG_PRINTF
+    char buf[18];
+#endif
     if (bus_event & condet) {
         VBUS_changed();
         bus_event &= ~condet;
@@ -95,22 +107,18 @@ void MAX3421_sm(void)
     case UHS_USB_HOST_STATE_INITIALIZE:
         // should never happen...
 #ifdef CONFIG_PRINTF
-        uart0_tx_str("sm init\r\n", 9);
+        uart0_print("sm init\r\n");
 #endif
         busprobe();
         VBUS_changed();
         break;
     case UHS_USB_HOST_STATE_DEBOUNCE:
-#ifdef CONFIG_PRINTF
-        uart0_tx_str("sm debounce\r\n", 13);
-#endif
-        // This seems to not be needed. The host controller has debounce built in.
         sof_countdown = UHS_HOST_DEBOUNCE_DELAY_MS;
         usb_task_state = UHS_USB_HOST_STATE_DEBOUNCE_NOT_COMPLETE;
         break;
     case UHS_USB_HOST_STATE_DEBOUNCE_NOT_COMPLETE:
 #ifdef CONFIG_PRINTF
-        //uart0_tx_str("sm deb nc\r\n", 11);
+        //uart0_print("sm deb nc\r\n");
 #endif
         if (!sof_countdown) {
             usb_task_state = UHS_USB_HOST_STATE_RESET_DEVICE;
@@ -118,7 +126,7 @@ void MAX3421_sm(void)
         break;
     case UHS_USB_HOST_STATE_RESET_DEVICE:
 #ifdef CONFIG_PRINTF
-        uart0_tx_str("sm rst dev\r\n", 12);
+        uart0_print("sm rst dev\r\n");
 #endif
         bus_event |= busevent;
         usb_task_state = UHS_USB_HOST_STATE_RESET_NOT_COMPLETE;
@@ -126,15 +134,12 @@ void MAX3421_sm(void)
         regWr(rHCTL, bmBUSRST); // issue bus reset
         break;
     case UHS_USB_HOST_STATE_RESET_NOT_COMPLETE:
-#ifdef CONFIG_PRINTF
-        //uart0_tx_str("sm rst nc\r\n", 11);
-#endif
         if (!busevent)
             usb_task_state = UHS_USB_HOST_STATE_WAIT_BUS_READY;
         break;
     case UHS_USB_HOST_STATE_WAIT_BUS_READY:
 #ifdef CONFIG_PRINTF
-        uart0_tx_str("sm wait bus rdy\r\n", 17);
+        uart0_print("sm wait bus rdy\r\n");
 #endif
         usb_task_state = UHS_USB_HOST_STATE_CONFIGURING;
         break;                  // don't fall through
@@ -142,35 +147,39 @@ void MAX3421_sm(void)
     case UHS_USB_HOST_STATE_CONFIGURING:
         usb_task_state = UHS_USB_HOST_STATE_CHECK;
 #ifdef CONFIG_PRINTF
-        uart0_tx_str("sm conf\r\n", 9);
+        uart0_print("sm conf\r\n");
 #endif
-        /*
-           x = Configuring(0, 1, usb_host_speed);
-           usb_error = x;
-           if (usb_task_state == UHS_USB_HOST_STATE_CHECK) {
-           if (x) {
-           //_dbg("Error 0x%2.2x", x);
-           if (x == UHS_HOST_ERROR_JERR) {
-           usb_task_state = UHS_USB_HOST_STATE_IDLE;
-           } else if (x != UHS_HOST_ERROR_DEVICE_INIT_INCOMPLETE) {
-           usb_error = x;
-           usb_task_state = UHS_USB_HOST_STATE_ERROR;
-           }
-           } else
-           usb_task_state = UHS_USB_HOST_STATE_CONFIGURING_DONE;
-           }
-         */
+        x = configure(0, 1, usb_host_speed);
+        usb_error = x;
+        if (usb_task_state == UHS_USB_HOST_STATE_CHECK) {
+            if (x) {
+                uart0_print("Error ");
+                uart0_print(_utoh(buf, x));
+                if (x == UHS_HOST_ERROR_JERR) {
+                    usb_task_state = UHS_USB_HOST_STATE_IDLE;
+                } else if (x != UHS_HOST_ERROR_DEVICE_INIT_INCOMPLETE) {
+                    usb_error = x;
+                    usb_task_state = UHS_USB_HOST_STATE_ERROR;
+                }
+            } else {
+                usb_task_state = UHS_USB_HOST_STATE_CONFIGURING_DONE;
+            }
+        }
         break;
     case UHS_USB_HOST_STATE_CHECK:
-        // Serial.println((uint32_t)__builtin_return_address(0), HEX);
         break;
     case UHS_USB_HOST_STATE_CONFIGURING_DONE:
         usb_task_state = UHS_USB_HOST_STATE_RUNNING;
+        
+        // assert led2 (green)
+        iostate = regRd(rIOPINS2) | bmGPOUT7;
+        regWr(rIOPINS2, iostate);
+
+#ifdef CONFIG_PRINTF
+        uart0_print("config done\r\n");
+#endif
         break;
     case UHS_USB_HOST_STATE_RUNNING:
-#ifdef CONFIG_PRINTF
-        uart0_tx_str("sm running\r\n", 12);
-#endif
         /*
            Poll_Others();
            for (x = 0;
@@ -229,13 +238,8 @@ static void gpx_irq_handler(const uint16_t msg)
 static void int_irq_handler(const uint16_t msg)
 {
     uint8_t iv, ret_iv = 0x0;
-    uint8_t iostate;
 
     int_cnt_hl++;
-
-    // assert led2 (green)
-    iostate = regRd(rIOPINS2) | bmGPOUT7;
-    regWr(rIOPINS2, iostate);
 
     iv = regRd(rHIRQ);
 
@@ -268,13 +272,9 @@ static void int_irq_handler(const uint16_t msg)
         ret_iv |= bmFRAMEIRQ;
     }
 
-    // turn green led off
-    iostate = regRd(rIOPINS2) & ~bmGPOUT7;
-    regWr(rIOPINS2, iostate);
-
     // clear serviced irqs
     regWr(rHIRQ, ret_iv);
-   
+
     if (!sof_countdown && !(bus_event & counted)) {
         MAX3421_sm();
     }
@@ -293,7 +293,9 @@ uint8_t MAX3421_init(void)
     ifg_int_last_event = 0;
     ifg_gpx_last_event = 0;
 
-    usb_task_state = UHS_USB_HOST_STATE_INITIALIZE;
+    //usb_task_state = UHS_USB_HOST_STATE_INITIALIZE;
+
+    //regWr(rPINCTL, bmFDUPSPI);
 
     // red led on
     regWr(rIOPINS2, bmGPOUT6);
@@ -508,6 +510,277 @@ void busprobe(void)
         vbusState = SE0;
         break;
     }
+}
+
+// dispatch usb packet. Assumes peripheral address is set and relevant buffer is loaded/empty
+// If NAK, tries to re-send up to nak_limit times
+// If nak_limit == 0, do not count NAKs, exit after timeout
+// If bus timeout, re-sends up to USB_RETRY_LIMIT times
+// return codes 0x00-0x0f are HRSLT( 0x00 being success ), 0xff means timeout
+uint8_t dispatchPkt(const uint8_t token, const uint8_t ep, uint16_t nak_limit)
+{
+    uint32_t timeout = millis() + UHS_HOST_TRANSFER_MAX_MS;
+    uint8_t tmpdata;
+    uint8_t rcode = UHS_HOST_ERROR_NONE;
+    uint8_t retry_count = 0;
+    uint16_t nak_count = 0;
+
+    for (;;) {
+        regWr(rHXFR, (token | ep));     //launch the transfer
+        while ((int32_t)(millis() - timeout) < 0L) { //wait for transfer completion
+            tmpdata = regRd(rHIRQ);
+
+            if (tmpdata & bmHXFRDNIRQ) {
+                regWr(rHIRQ, bmHXFRDNIRQ);      //clear the interrupt
+                //rcode = 0x00;
+                break;
+            }
+        }
+
+        rcode = (regRd(rHRSL) & 0x0f);  //analyze transfer result
+
+        switch (rcode) {
+        case UHS_HOST_ERROR_NAK:
+            nak_count++;
+            if (nak_limit && (nak_count == nak_limit)) {
+                return (rcode);
+            }
+            timer_a0_delay_ccr4(_200us);
+            break;
+        case UHS_HOST_ERROR_TIMEOUT:
+            retry_count++;
+            if (retry_count == UHS_HOST_TRANSFER_RETRY_MAXIMUM)
+                return (rcode);
+            break;
+        default:
+            return (rcode);
+        }
+    }
+}
+
+// OUT transfer to arbitrary endpoint. Assumes PERADDR is set. Handles multiple packets if necessary. Transfers 'nbytes' bytes
+// Handles NAK bug per Maxim Application Note 4000 for single buffer transfer
+// rcode 0 if no errors. rcode 01-0f is relayed from HRSL
+// major part of this function borrowed from code shared by Richard Ibbotson
+uint8_t outTransfer(const uint8_t addr, const uint8_t ep, const uint16_t nbytes, uint8_t *data, const uint16_t nak_limit)
+{
+    uint8_t rcode, retry_count;
+    uint8_t *data_p = data;        //local copy of the data pointer
+    uint16_t bytes_tosend, nak_count;
+    uint16_t bytes_left = nbytes;
+    uint8_t maxpktsize = devtable[addr].epinfo[ep].MaxPktSize;
+    unsigned long timeout = millis() + USB_XFER_TIMEOUT;
+
+    if (!maxpktsize) {          //todo: move this check close to epinfo init. Make it 1< pktsize <64
+        return 0xFE;
+    }
+
+    regWr(rHCTL, devtable[addr].epinfo[ep].sndToggle);  //set toggle value
+    while (bytes_left) {
+        retry_count = 0;
+        nak_count = 0;
+        bytes_tosend = (bytes_left >= maxpktsize) ? maxpktsize : bytes_left;
+        bytesWr(rSNDFIFO, bytes_tosend, data_p);        //filling output FIFO
+        regWr(rSNDBC, bytes_tosend);    //set number of bytes    
+        regWr(rHXFR, (tokOUT | ep));    //dispatch packet
+        while (!(regRd(rHIRQ) & bmHXFRDNIRQ)) ; //wait for the completion IRQ
+        regWr(rHIRQ, bmHXFRDNIRQ);      //clear IRQ
+        rcode = (regRd(rHRSL) & 0x0f);
+        while ((rcode) && (timeout > millis())) {
+            switch (rcode) {
+            case hrNAK:
+                nak_count++;
+                if (nak_limit && (nak_count == USB_NAK_LIMIT)) {
+                    return (rcode);     //return NAK
+                }
+                break;
+            case hrTIMEOUT:
+                retry_count++;
+                if (retry_count == USB_RETRY_LIMIT) {
+                    return (rcode);     //return TIMEOUT
+                }
+                break;
+            default:
+                return (rcode);
+            }                   //switch( rcode...
+            // process NAK according to Host out NAK bug
+            regWr(rSNDBC, 0);
+            regWr(rSNDFIFO, *data_p);
+            regWr(rSNDBC, bytes_tosend);
+            regWr(rHXFR, (tokOUT | ep));        //dispatch packet
+            while (!(regRd(rHIRQ) & bmHXFRDNIRQ)) ;     //wait for the completion IRQ
+            regWr(rHIRQ, bmHXFRDNIRQ);  //clear IRQ
+            rcode = (regRd(rHRSL) & 0x0f);
+        }                       //while( rcode && ....
+        bytes_left -= bytes_tosend;
+        data_p += bytes_tosend;
+    }                           //while( bytes_left...
+    devtable[addr].epinfo[ep].sndToggle = (regRd(rHRSL) & bmSNDTOGRD) ? bmSNDTOG1 : bmSNDTOG0;  //update toggle
+    return (rcode);             //should be 0 in all cases
+}
+
+// IN transfer to arbitrary endpoint. Assumes PERADDR is set. Handles multiple packets if necessary. Transfers 'nbytes' bytes.
+// Keep sending INs and writes data to memory area pointed by 'data'
+// rcode 0 if no errors. rcode 01-0f is relayed from dispatchPkt(). Rcode f0 means RCVDAVIRQ error,
+//            fe USB xfer timeout
+uint8_t inTransfer(const uint8_t addr, const uint8_t ep, const uint16_t nbytes, uint8_t * data,
+                   uint16_t nak_limit)
+{
+    uint8_t rcode;
+    uint8_t pktsize;
+    uint8_t maxpktsize = devtable[addr].epinfo[ep].MaxPktSize;
+    unsigned int xfrlen = 0;
+    char buf[18];
+    regWr(rHCTL, devtable[addr].epinfo[ep].rcvToggle);  //set toggle value
+    while (1) {                 // use a 'return' to exit this loop
+        rcode = dispatchPkt(tokIN, ep, nak_limit);      //IN packet to EP-'endpoint'. Function takes care of NAKS.
+        uart0_print(_utoh(buf, rcode));
+        uart0_print(" rcode\r\n");
+
+        if (rcode) {
+            return (rcode);     //should be 0, indicating ACK. Else return error code.
+        }
+        // check for RCVDAVIRQ and generate error if not present
+        // the only case when absense of RCVDAVIRQ makes sense is when toggle error occured. Need to add handling for that
+        if ((regRd(rHIRQ) & bmRCVDAVIRQ) == 0) {
+            return (0xf0);      //receive error
+        }
+        pktsize = regRd(rRCVBC);        //number of received bytes
+        uart0_print(_utoa(buf, pktsize));
+        uart0_print("\r\n");
+
+        data = bytesRd(rRCVFIFO, pktsize, data);
+        regWr(rHIRQ, bmRCVDAVIRQ);      // Clear the IRQ & free the buffer
+
+        xfrlen += pktsize;      // add this packet's byte count to total transfer length
+        // The transfer is complete under two conditions:
+        // 1. The device sent a short packet (L.T. maxPacketSize)
+        // 2. 'nbytes' have been transferred.
+        if ((pktsize < maxpktsize) || (xfrlen >= nbytes)) {     // have we transferred 'nbytes' bytes?
+            if (regRd(rHRSL) & bmRCVTOGRD) {    //save toggle value
+                devtable[addr].epinfo[ep].rcvToggle = bmRCVTOG1;
+            } else {
+                devtable[addr].epinfo[ep].rcvToggle = bmRCVTOG0;
+            }
+            return (0);
+        }
+    }                           //while( 1 )
+}
+
+// Control transfer with status stage and no data stage
+// Assumed peripheral address is already set
+uint8_t ctrlStatus(const uint8_t ep, const uint8_t direction, const uint16_t nak_limit)
+{
+    uint8_t rcode;
+    if (direction) {            //GET
+        rcode = dispatchPkt(tokOUTHS, ep, nak_limit);
+    } else {
+        rcode = dispatchPkt(tokINHS, ep, nak_limit);
+    }
+    return (rcode);
+}
+
+// Control transfer with data stage. Stages 2 and 3 of control transfer. Assumes peripheral address is set and setup packet has been sent
+uint8_t ctrlData(const uint8_t addr, const uint8_t ep, const uint16_t nbytes, uint8_t * dataptr,
+                 const uint8_t direction, const uint16_t nak_limit)
+{
+    uint8_t rcode;
+    if (direction) {            //IN transfer
+        devtable[addr].epinfo[ep].rcvToggle = bmRCVTOG1;
+        //uart0_print("in data start\r\n");
+        rcode = inTransfer(addr, ep, nbytes, dataptr, nak_limit);
+        //uart0_print("after data\r\n");
+        return (rcode);
+    } else {                    //OUT transfer
+        devtable[addr].epinfo[ep].sndToggle = bmSNDTOG1;
+        rcode = outTransfer(addr, ep, nbytes, dataptr, nak_limit);
+        return (rcode);
+    }
+}
+
+// Control transfer. Sets address, endpoint, fills control packet with necessary data, dispatches control packet, and initiates bulk IN transfer,
+// depending on request. Actual requests are defined as inlines
+// return codes:
+// 00       =   success
+// 01-0f    =   non-zero HRSLT
+uint8_t ctrlReq(const uint8_t addr, const uint8_t ep, const uint8_t bmReqType,
+                const uint8_t bRequest, const uint8_t wValLo, const uint8_t wValHi, uint16_t wInd,
+                uint16_t nbytes, uint8_t * dataptr, uint16_t nak_limit)
+{
+    uint8_t direction = 0;      //request direction, IN or OUT
+    uint8_t rcode;
+    struct SETUP_PKT setup_pkt;
+#ifdef CONFIG_PRINTF
+    char buf[18];
+    uint8_t *setup = (uint8_t *) &setup_pkt;
+    uint8_t i;
+#endif
+
+    regWr(rPERADDR, addr);      //set peripheral address
+    if (bmReqType & 0x80) {
+        direction = 1;          //determine request direction
+    }
+    // fill in setup packet
+    setup_pkt.bmRequestType = bmReqType;
+    setup_pkt.bRequest = bRequest;
+    setup_pkt.wVal_u.wValueLo = wValLo;
+    setup_pkt.wVal_u.wValueHi = wValHi;
+    setup_pkt.wIndex = wInd;
+    setup_pkt.wLength = nbytes;
+    bytesWr(rSUDFIFO, 8, (uint8_t *) & setup_pkt);      //transfer to setup packet FIFO
+#ifdef CONFIG_PRINTF
+//    for (i=0; i<9; i++) {
+//        uart0_print(_utoh(buf, setup[i] ));
+//        uart0_print(" ");
+//    }
+//    uart0_print("\r\nsetup pkt ^\r\n");
+#endif
+    rcode = dispatchPkt(tokSETUP, ep, nak_limit);       //dispatch packet
+    uart0_print("setup sent\r\n");
+    //Serial.println("Setup packet");   //DEBUG
+    if (rcode) {                //return HRSLT if not zero
+#ifdef CONFIG_PRINTF
+        uart0_print("Setup packet error: ");
+        uart0_print(_utoh(buf, rcode));
+#endif
+        return (rcode);
+    }
+    //Serial.println( direction, HEX ); 
+    if (dataptr != NULL) {      //data stage, if present
+        rcode = ctrlData(addr, ep, nbytes, dataptr, direction, nak_limit);
+    }
+    if (rcode) {                //return error
+#ifdef CONFIG_PRINTF
+        uart0_print("Data packet error: ");
+        uart0_print(_utoh(buf, rcode));
+#endif
+        return (rcode);
+    }
+    rcode = ctrlStatus(ep, direction, nak_limit);       //status stage
+    return (rcode);
+}
+
+/**
+ * enumerates interfaces on devices
+ *
+ * @param parent index to Parent
+ * @param port what port on the parent
+ * @param speed the speed of the device
+ * @return Zero for success, or error code
+ */
+uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
+{
+    uint16_t nak_limit = 3;
+    uint8_t rv = 0;
+    USB_DEVICE_DESCRIPTOR buf;
+
+    devtable[0].epinfo->MaxPktSize = 8;
+
+    // get device descriptor
+    rv = ctrlReq(0, 0, USB_SETUP_DEVICE_TO_HOST, USB_REQUEST_GET_DESCRIPTOR, 0x00,
+                 USB_DESCRIPTOR_DEVICE, 0x0000, 8, (uint8_t *) & buf, nak_limit);
+
+    return rv;
 }
 
 uint8_t get_ifg_int_event(void)

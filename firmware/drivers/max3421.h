@@ -31,6 +31,8 @@ uint8_t gpioRd(void);
 uint8_t gpioRdOutput(void);
 void busprobe(void);
 
+uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed);
+
 uint8_t get_ifg_int_event(void);
 void rst_ifg_int_event(void);
 uint8_t get_ifg_gpx_event(void);

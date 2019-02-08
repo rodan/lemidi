@@ -213,13 +213,13 @@ e-mail   :  support@circuitsathome.com
 #define           rHXFR 0xf0            //30<<3
 /* Host transfer token values for writing the HXFR register (R30)   */
 /* OR this bit field with the endpoint number in bits 3:0               */
-#define       MAX3421E_tokSETUP 0x10    // HS=0, ISO=0, OUTNIN=0, SETUP=1
-#define          MAX3421E_tokIN 0x00    // HS=0, ISO=0, OUTNIN=0, SETUP=0
-#define         MAX3421E_tokOUT 0x20    // HS=0, ISO=0, OUTNIN=1, SETUP=0
-#define        MAX3421E_tokINHS 0x80    // HS=1, ISO=0, OUTNIN=0, SETUP=0
-#define       MAX3421E_tokOUTHS 0xA0    // HS=1, ISO=0, OUTNIN=1, SETUP=0
-#define       MAX3421E_tokISOIN 0x40    // HS=0, ISO=1, OUTNIN=0, SETUP=0
-#define      MAX3421E_tokISOOUT 0x60    // HS=0, ISO=1, OUTNIN=1, SETUP=0
+#define                tokSETUP 0x10    // HS=0, ISO=0, OUTNIN=0, SETUP=1
+#define                   tokIN 0x00    // HS=0, ISO=0, OUTNIN=0, SETUP=0
+#define                  tokOUT 0x20    // HS=0, ISO=0, OUTNIN=1, SETUP=0
+#define                 tokINHS 0x80    // HS=1, ISO=0, OUTNIN=0, SETUP=0
+#define                tokOUTHS 0xA0    // HS=1, ISO=0, OUTNIN=1, SETUP=0
+#define                tokISOIN 0x40    // HS=0, ISO=1, OUTNIN=0, SETUP=0
+#define               tokISOOUT 0x60    // HS=0, ISO=1, OUTNIN=1, SETUP=0
 
 // (HRSL)
 #define           rHRSL 0xf8            //31<<3
@@ -229,6 +229,25 @@ e-mail   :  support@circuitsathome.com
 #define       bmJSTATUS 0x80            //
 #define           bmSE0 0x00            //SE0 - disconnect state
 #define           bmSE1 0xc0            //SE1 - illegal state
+
+// Host error result codes, the 4 LSB's in the HRSL register
+#define hrSUCCESS   0x00
+#define hrBUSY      0x01
+#define hrBADREQ    0x02
+#define hrUNDEF     0x03
+#define hrNAK       0x04
+#define hrSTALL     0x05
+#define hrTOGERR    0x06
+#define hrWRONGPID  0x07
+#define hrBADBC     0x08
+#define hrPIDERR    0x09
+#define hrPKTERR    0x0A
+#define hrCRCERR    0x0B
+#define hrKERR      0x0C
+#define hrJERR      0x0D
+#define hrTIMEOUT   0x0E
+#define hrBABBLE    0x0F
+
 
 #define    MODE_FS_HOST (bmDPPULLDN|bmDMPULLDN|bmHOST|bmSOFKAENAB|bmSEPIRQ)
 #define    MODE_LS_HOST (bmDPPULLDN|bmDMPULLDN|bmHOST|bmLOWSPEED|bmSOFKAENAB|bmSEPIRQ)

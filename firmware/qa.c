@@ -96,13 +96,6 @@ void parse_user_input(void)
             }
         }
     } else if (d == 'l') {
-        /*
-        if (strstr(in, "1 on")) {
-            regWr(rIOPINS2, bmGPOUT6); //status led1 on
-        } else if (strstr(in, "2 on")) {
-            regWr(rIOPINS2, bmGPOUT7); //status led2 on
-        }
-        */
         regWr(rIOPINS2, 0);
     } else if (d == 'i') {
         //reg = regRd(rIOPINS1);
@@ -120,14 +113,14 @@ void parse_user_input(void)
             uart0_print("\r\nR");
             uart0_print(_utoa(buf, i+13));
             uart0_print(" ");
-            uart0_print(_utob(buf, reg[i]));
+            uart0_print(_utoh(buf, reg[i]));
         }
         bytesRd(21<<3, 11, reg);
         for (i=0;i<11;i++) {
             uart0_print("\r\nR");
             uart0_print(_utoa(buf, i+21));
             uart0_print(" ");
-            uart0_print(_utob(buf, reg[i]));
+            uart0_print(_utoh(buf, reg[i]));
         }
         uart0_print("\r\nvbusState ");
         uart0_print(_utoa(buf, MAX3421_getVbusState()));
@@ -141,6 +134,10 @@ void parse_user_input(void)
         uart0_print(_utoa(buf, gpx_cnt));
         uart0_print(" handled ");
         uart0_print(_utoa(buf, gpx_cnt_hl));
+
+        uart0_print("\r\nmillis ");
+        uart0_print(_utoa(buf, millis()));
+        uart0_print("\r\n");
         
         } else if (strstr(in, "stat")) {
             /*

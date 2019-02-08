@@ -38,7 +38,7 @@ void timer_a0_init(void)
     timer_a0_ovf = 0;
     milliseconds = 0;
     TA0EX0 |= TAIDEX_7;
-    TA0CTL |= TASSEL__ACLK + MC__CONTINOUS + TACLR + ID__8 + TAIE;
+    TA0CTL |= TASSEL__SMCLK + MC__CONTINOUS + TACLR + ID__8 + TAIE;
     __enable_interrupt();
 }
 
@@ -110,11 +110,9 @@ void timer0_A1_ISR(void)
         // disable interrupt
         //TA0CCTL3 &= ~CCIE;
         milliseconds++;
-        TA0CCTL3 += 125;
-        // use hardware flow control to stop the remote equipment
-        // from sending more data
+        timer_a0_delay_noblk_ccr3(125);
         // timer_a0_last_event |= TIMER_A0_EVENT_CCR3;
-        _BIC_SR_IRQ(LPM3_bits);
+        //_BIC_SR_IRQ(LPM3_bits);
     } else if (iv == TA0IV_TA0IFG) {
         TA0CTL &= ~TAIFG;
         timer_a0_ovf++;
