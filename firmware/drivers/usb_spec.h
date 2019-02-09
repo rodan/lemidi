@@ -229,6 +229,19 @@ extern "C" {
 #define        USB_FEATURE_DEVICE_REMOTE_WAKEUP 1       // Device recipient
 #define                   USB_FEATURE_TEST_MODE 2       // Device recipient
 
+//get descriptor request type
+#define                           UHS_bmREQ_GET_DESCR (USB_SETUP_DEVICE_TO_HOST|USB_SETUP_TYPE_STANDARD|USB_SETUP_RECIPIENT_DEVICE)
+
+//set request type for all but 'set feature' and 'set interface'
+#define                                 UHS_bmREQ_SET (USB_SETUP_HOST_TO_DEVICE|USB_SETUP_TYPE_STANDARD|USB_SETUP_RECIPIENT_DEVICE)
+
+//get interface request type
+#define                         UHS_bmREQ_CL_GET_INTF (USB_SETUP_DEVICE_TO_HOST|USB_SETUP_TYPE_CLASS|USB_SETUP_RECIPIENT_INTERFACE)
+
+// D7           data transfer direction (0 - host-to-device, 1 - device-to-host)
+// D6-5         Type (0- standard, 1 - class, 2 - vendor, 3 - reserved)
+// D4-0         Recipient (0 - device, 1 - interface, 2 - endpoint, 3 - other, 4..31 - reserved)
+
 
 
 
@@ -344,6 +357,7 @@ struct SETUP_PKT {
     uint16_t wLength;
 } __attribute__((packed));
 
+/*
 // Endpoint information structure
 // bToggle of endpoint 0 initialized to 0xff
 // during enumeration bToggle is set to 00
@@ -361,6 +375,72 @@ typedef struct {
     EP_RECORD* epinfo;      //device endpoint information
     uint8_t devclass;          //device class    
 } __attribute__((packed)) DEV_RECORD;
+*/
+
+/* NAK powers. To save space in endpoint data structure, amount of retries before giving up and returning 0x4 is stored in */
+/* bmNakPower as a power of 2. The actual nak_limit is then calculated as nak_limit = ( 2^bmNakPower - 1) */
+#define UHS_USB_NAK_MAX_POWER               14      // NAK binary order maximum value
+#define UHS_USB_NAK_DEFAULT                 13      // default 16K-1 NAKs before giving up
+#define UHS_USB_NAK_NOWAIT                  1       // Single NAK stops transfer
+#define UHS_USB_NAK_NONAK                   0       // Do not count NAKs, stop retrying after USB Timeout. Try not to use this.
+
+#define bmUSB_DEV_ADDR_PORT             0x07
+#define bmUSB_DEV_ADDR_PARENT           0x78
+#define bmUSB_DEV_ADDR_HUB              0x40
+
+// TODO: embed parent?
+struct UHS_EpInfo {
+    uint8_t epAddr; // Endpoint address
+    uint8_t bIface;
+    uint16_t maxPktSize; // Maximum packet size
+
+    union {
+        uint8_t epAttribs;
+
+        struct {
+            uint8_t bmSndToggle : 1; // Send toggle, when zero bmSNDTOG0, bmSNDTOG1 otherwise
+            uint8_t bmRcvToggle : 1; // Send toggle, when zero bmRCVTOG0, bmRCVTOG1 otherwise
+            uint8_t bmNeedPing : 1; // 1 == ping protocol needed for next out packet
+            uint8_t bmNakPower : 5; // Binary order for NAK_LIMIT value
+        } __attribute__((packed));
+    };
+} __attribute__((packed));
+
+// TODO: embed parent address and port into epinfo struct,
+// and nuke this address stupidity.
+// This is a compact scheme. Should also support full spec.
+// This produces a 7 hub limit, 49 devices + 7 hubs, 56 total.
+//
+//    7   6   5   4   3   2   1   0
+//  ---------------------------------
+//  |   | H | P | P | P | A | A | A |
+//  ---------------------------------
+//
+// H - if 1 the address is a hub address
+// P - parent hub number
+// A - port number of parent
+//
+
+struct UHS_DeviceAddress {
+    union {
+        struct {
+            uint8_t bmAddress : 3; // port number
+            uint8_t bmParent : 3; // parent hub address
+            uint8_t bmHub : 1; // hub flag
+            uint8_t bmReserved : 1; // reserved, must be zero
+        } __attribute__((packed));
+        uint8_t devAddress;
+    };
+} __attribute__((packed));
+
+#define UHS_HOST_MAX_INTERFACE_DRIVERS 16
+
+struct UHS_Device {
+    volatile struct UHS_EpInfo *epinfo[UHS_HOST_MAX_INTERFACE_DRIVERS]; // endpoint info pointer
+    struct UHS_DeviceAddress address;
+    uint8_t epcount; // number of endpoints
+    uint8_t speed; // indicates device speed
+} __attribute__((packed));
 
 
 // little endian :-)                                                                             8                                8                          8                         8                          16                      16
