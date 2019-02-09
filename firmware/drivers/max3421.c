@@ -811,7 +811,7 @@ struct UHS_EpInfo *getEpInfoEntry(const uint8_t addr, const uint8_t ep)
 #ifdef CONFIG_PRINTF
                 //HOST_DUBUG("ep entry for interface %d ep %d max packet size = %d\r\n", pep->bIface,
                 //           ep, pep->maxPktSize);
-                uart0_print("\r\ngetEpInfoEntry if ");
+                uart0_print("* getEpInfoEntry if ");
                 uart0_print(_utoh(itoa_buf, pep->bIface));
                 uart0_print(" ep ");
                 uart0_print(_utoh(itoa_buf, ep));
@@ -839,6 +839,11 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
     uint16_t nak_lim;
     struct UHS_Device *p = GetUsbDevicePtr(addr);
 
+#ifdef CONFIG_PRINTF
+    uart0_print("* SetAddress ");
+    uart0_print(_utoh(itoa_buf, addr));
+    uart0_print("\r\n");
+#endif
     if (!p) {
         return UHS_HOST_ERROR_NO_ADDRESS_IN_POOL;
     }
@@ -858,21 +863,10 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
            UHS_USB_NAK_MAX_POWER) ? UHS_USB_NAK_MAX_POWER : (*ppep)->bmNakPower));
     nak_lim--;
     *nak_limit = nak_lim;
-    /*
-       USBTRACE2("\r\nAddress: ", addr);
-       USBTRACE2(" EP: ", ep);
-       USBTRACE2(" NAK Power: ",(*ppep)->bmNakPower);
-       USBTRACE2(" NAK Limit: ", nak_limit);
-       USBTRACE("\r\n");
-     */
+
     regWr(rPERADDR, addr);      //set peripheral address
 
     uint8_t mode = regRd(rMODE);
-
-    //Serial.print("\r\nMode: ");
-    //Serial.println( mode, HEX);
-    //Serial.print("\r\nLS: ");
-    //Serial.println(p->speed, HEX);
 
     // Set bmLOWSPEED and bmHUBPRE in case of low-speed device, reset them otherwise
     regWr(rMODE, (p->speed) ? mode & ~(bmHUBPRE | bmLOWSPEED) : mode | bmLOWSPEED);
@@ -890,9 +884,9 @@ struct UHS_EpInfo *ctrlReqOpen(const uint8_t addr, const uint64_t Request, uint8
     uint8_t i;
     uint8_t *req = (uint8_t *) & Request;
 
-    uart0_print("\r\nctrlReqOpen\r\n addr ");
+    uart0_print("* ctrlReqOpen  addr ");
     uart0_print(_utoh(itoa_buf, addr));
-    uart0_print("\r\n request ");
+    uart0_print(" request ");
     for (i = 0; i < 8; i++) {
         uart0_print(_utoh(itoa_buf, req[i]));
         uart0_print(" ");
@@ -901,12 +895,6 @@ struct UHS_EpInfo *ctrlReqOpen(const uint8_t addr, const uint64_t Request, uint8
 #endif
 
     rcode = SetAddress(addr, 0, &pep, &nak_limit);
-
-#ifdef CONFIG_PRINTF
-    uart0_print("\r\nctrlReqOpen SetAddress ");
-    uart0_print(_utoh(itoa_buf, rcode));
-    uart0_print("\r\n");
-#endif
 
     if (!rcode) {
 
@@ -923,11 +911,9 @@ struct UHS_EpInfo *ctrlReqOpen(const uint8_t addr, const uint64_t Request, uint8
             }
         } else {
 #ifdef CONFIG_PRINTF
-            //HOST_DUBUG("ep entry for interface %d ep %d max packet size = %d\r\n", pep->bIface,
-            //           ep, pep->maxPktSize);
-            uart0_print("\r\ndispatchPkt err ");
-            uart0_print(_utoh(itoa_buf, rcode));
-            uart0_print("\r\n");
+            //uart0_print("\r\ndispatchPkt err ");
+            //uart0_print(_utoh(itoa_buf, rcode));
+            //uart0_print("\r\n");
 #endif
             pep = NULL;
         }
@@ -940,7 +926,12 @@ uint8_t ctrlReqRead(struct UHS_EpInfo * pep, uint16_t * left, uint16_t * read,
 {
     *read = 0;
     uint16_t nak_limit = 0;
-    //MAX_HOST_DEBUG("ctrlReqRead left: %i\r\n", *left);
+
+#ifdef CONFIG_PRINTF
+    uart0_print("* ctrlReqRead ");
+    uart0_print(_utoh(itoa_buf, *left));
+#endif
+
     if (*left) {
  again:
         *read = nbytes;
@@ -956,7 +947,13 @@ uint8_t ctrlReqRead(struct UHS_EpInfo * pep, uint16_t * left, uint16_t * read,
             return rcode;
         }
         *left -= *read;
-        //MAX_HOST_DEBUG("ctrlReqRead left: %i, read %i\r\n", *left, *read);
+#ifdef CONFIG_PRINTF
+        uart0_print(" left ");
+        uart0_print(_utoh(itoa_buf, *left));
+        uart0_print(" read ");
+        uart0_print(_utoh(itoa_buf, *read));
+        uart0_print("\r\n");
+#endif
     }
     return 0;
 }
@@ -1004,15 +1001,13 @@ uint8_t ctrlReq(uint8_t addr, uint64_t Request, uint16_t nbytes, uint8_t * datap
 
     struct UHS_EpInfo *pep = ctrlReqOpen(addr, Request, dataptr);
     if (!pep) {
-#ifdef CONFIG_PRINTF
-        uart0_print("\r\nctrlReq null epinfo\r\n");
-#endif
-        //HOST_DUBUG("ctrlReq1: ERROR_NULL_EPINFO addr: %d\r\n", addr);
+//#ifdef CONFIG_PRINTF
+//        uart0_print("\r\nctrlReq null epinfo\r\n");
+//#endif
         return UHS_HOST_ERROR_NULL_EPINFO;
     }
     uint8_t rt = (uint8_t) (Request & 0xFFU);
 
-    //        Serial.println("Opened");
     uint16_t left = (uint16_t) (Request >> 48) /*total */ ;
     if (dataptr != NULL) {
         //data stage
@@ -1021,9 +1016,18 @@ uint8_t ctrlReq(uint8_t addr, uint64_t Request, uint16_t nbytes, uint8_t * datap
             while (left) {
                 // Bytes read into buffer
                 uint16_t read = nbytes;
-                //HOST_DUBUG("ctrlReq2: left: %i, read:%i, nbytes %i\r\n", left, read, nbytes);
                 rcode = ctrlReqRead(pep, &left, &read, nbytes, dataptr);
-
+/*
+#ifdef CONFIG_PRINTF
+                uart0_print("* ctrlReq ");
+                uart0_print(_utoh(itoa_buf,left));
+                uart0_print(" ");
+                uart0_print(_utoh(itoa_buf,read));
+                uart0_print(" ");
+                uart0_print(_utoh(itoa_buf,nbytes));
+                uart0_print("\r\n");
+#endif
+*/
                 if (rcode) {
                     return rcode;
                 }
@@ -1032,7 +1036,6 @@ uint8_t ctrlReq(uint8_t addr, uint64_t Request, uint16_t nbytes, uint8_t * datap
                     && ((Request & (uint32_t) 0xFF00FF00U) ==
                         (((uint32_t) USB_REQUEST_GET_DESCRIPTOR << 8) |
                          ((uint32_t) USB_DESCRIPTOR_DEVICE << 24)))) {
-                    //HOST_DUBUG("ctrlReq3: acceptBuffer sz %i nbytes %i left %i\n\r", read, nbytes, left);
                     left = 0;
                     break;
                 }
@@ -1046,11 +1049,8 @@ uint8_t ctrlReq(uint8_t addr, uint64_t Request, uint16_t nbytes, uint8_t * datap
             return (rcode);
         }
     }
-    //        Serial.println("Close Phase");
-    //        Serial.flush();
     // Status stage
     rcode = ctrlReqClose(pep, rt, left, nbytes, dataptr);
-    //        Serial.println("Closed");
     return rcode;
 }
 
@@ -1150,8 +1150,8 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
 {
     //uint16_t nak_limit;
     uint8_t rv = 0;
-    //USB_DEVICE_DESCRIPTOR *udd;
-    //USB_CONFIGURATION_DESCRIPTOR *ucd;
+    USB_DEVICE_DESCRIPTOR *udd;
+    USB_CONFIGURATION_DESCRIPTOR *ucd;
     struct UHS_Device *p = NULL;
     const uint8_t biggest = 0x40;
     uint8_t buf[biggest];
@@ -1159,28 +1159,32 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uint8_t i;
 
     p = GetUsbDevicePtr(0);
-    //udd = (USB_DEVICE_DESCRIPTOR *) buf;
-    //ucd = (USB_CONFIGURATION_DESCRIPTOR *) buf;
+    udd = (USB_DEVICE_DESCRIPTOR *) buf;
+    ucd = (USB_CONFIGURATION_DESCRIPTOR *) buf;
 
     sof_delay(200);
     p->speed = speed;
     p->epinfo[0][0].maxPktSize = biggest;
     memset(buf, 0x00, biggest);
 
+    // get device descriptor
     rcode = getDevDescr(0, biggest, buf);
 
 #ifdef CONFIG_PRINTF
-    uart0_print("rcode ");
+    uart0_print("* c1 rcode ");
     uart0_print(_utoh(itoa_buf, rcode));
     uart0_print("\r\n");
+#endif
+
+/*
+#ifdef CONFIG_PRINTF
     for (i = 0; i < biggest; i++) {
         uart0_print(_utoh(itoa_buf, buf[i]));
         uart0_print(" ");
     }
     uart0_print("\r\nbuf ^\r\n");
 #endif
-
-    // get device descriptor
+*/
 
     return rv;
 }
