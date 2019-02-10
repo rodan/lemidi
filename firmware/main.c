@@ -62,7 +62,7 @@ int main(void)
 
     // main loop
     while (1) {
-        __bis_SR_register(LPM3_bits + GIE);
+        //__bis_SR_register(LPM3_bits + GIE);
         //__no_operation();
 #ifdef USE_WATCHDOG
         // reset watchdog counter
@@ -207,4 +207,17 @@ void check_events(void)
         p = p->next;
     }
 }
+
+void noInterrupts(void)
+{
+    P1IFG &= ~(INT_TRIG | GPX_TRIG);
+    P1IE &= ~(INT_TRIG | GPX_TRIG);
+}
+
+void interrupts(void)
+{
+    P1IFG &= ~(INT_TRIG | GPX_TRIG);
+    P1IE |= (INT_TRIG | GPX_TRIG);
+}
+
 

@@ -15,6 +15,7 @@ extern "C" {
 #define MAX3421_WRITE 0x2
 #define MAX3421_READ  0x0
 
+void doHostReset(void);
 uint8_t MAX3421_init(void);
 uint8_t MAX3421_getVbusState(void);
 uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed);
@@ -43,12 +44,18 @@ struct UHS_Device *GetUsbDevicePtr(const uint8_t addr);
 struct UHS_EpInfo *getEpInfoEntry(const uint8_t addr, const uint8_t ep);
 uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo **ppep,
                    uint16_t * nak_limit);
+
+uint8_t getone(struct UHS_EpInfo *pep, uint16_t *left, uint16_t *read, uint8_t *dataptr, uint8_t *offset);
+uint8_t eat(struct UHS_EpInfo *pep, uint16_t *left, uint16_t *read, uint8_t *dataptr, uint8_t *offset, uint16_t *yum);
 struct UHS_EpInfo *ctrlReqOpen(const uint8_t addr, const uint64_t Request, uint8_t * dataptr);
 uint8_t ctrlReqRead(struct UHS_EpInfo *pep, uint16_t * left, uint16_t * read,
                     const uint16_t nbytes, uint8_t * dataptr);
 uint8_t ctrlReqClose(struct UHS_EpInfo *pep, const uint8_t bmReqType, uint16_t left,
                      const uint16_t nbytes, uint8_t * dataptr);
 uint8_t ctrlReq(uint8_t addr, uint64_t Request, uint16_t nbytes, uint8_t * dataptr);
+
+uint8_t TestInterface(struct ENUMERATION_INFO * ei);
+uint8_t enumerateInterface(struct ENUMERATION_INFO * ei);
 
 uint8_t getDevDescr(const uint8_t addr, const uint16_t nbytes, uint8_t * dataptr);
 uint8_t getConfDescr(const uint8_t addr, const uint16_t nbytes, const uint8_t conf,

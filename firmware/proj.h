@@ -73,6 +73,7 @@ struct controller_t ctrl;
 
 void main_init(void);
 void check_events(void);
-
+void noInterrupts(void);
+void interrupts(void);
 
 #endif
