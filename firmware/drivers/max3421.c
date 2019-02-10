@@ -1635,6 +1635,7 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     // get device descriptor
     rcode = getDevDescr(0, biggest, buf);
     // TX 0x80 0x06 0x0 0x01 0x0 0x0 0x12 0x0
+    // RX 0x12 0x01 0x10 0x01 0x0 0x0 0x0 0x08 0x6d 0x04 0x14 0xc2 0x05 0x02 0x01 0x02 0x0 0x01
 
 #ifdef CONFIG_PRINTF
     uart0_print("* c1 rcode ");
@@ -1642,7 +1643,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uart0_print("\r\n");
 #endif
 
-/*
 #ifdef CONFIG_PRINTF
     for (i = 0; i < biggest; i++) {
         uart0_print(_utoh(itoa_buf, buf[i]));
@@ -1650,7 +1650,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     }
     uart0_print("\r\nbuf ^\r\n");
 #endif
-*/
 
     ei.vid = udd->idVendor;
     ei.pid = udd->idProduct;
