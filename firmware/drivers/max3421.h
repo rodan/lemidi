@@ -77,6 +77,7 @@ uint8_t FindAddressIndex(const uint8_t address);
 uint8_t FindChildIndex(struct UHS_DeviceAddress addr, const uint8_t start);
 void FreeAddressByIndex(const uint8_t index);
 void InitAllAddresses(void);
+void FreeAddress(const uint8_t addr);
 struct UHS_Device *GetUsbDevicePtr(uint8_t addr);
 
 #ifdef __cplusplus

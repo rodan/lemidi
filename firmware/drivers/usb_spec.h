@@ -102,6 +102,7 @@ extern "C" {
 #define                UHS_HOST_ERROR_FailGetDevDescr 0xE1U
 #define             UHS_HOST_ERROR_FailSetDevTblEntry 0xE2U
 #define               UHS_HOST_ERROR_FailGetConfDescr 0xE3U
+#define               UHS_HOST_ERROR_FailSetConfDescr 0xE4U
 #define                  UHS_HOST_ERROR_END_OF_STREAM 0xEFU
 
 // Host base class specific Error codes
@@ -247,7 +248,7 @@ extern "C" {
 
 // Device descriptor structure
 typedef struct {
-    uint8_t bLength; // Length of this descriptor.
+    uint8_t bLength; // size of descriptor in bytes
     uint8_t bDescriptorType; // DEVICE descriptor type (USB_DESCRIPTOR_DEVICE).
     uint16_t bcdUSB; // USB Spec Release Number (BCD).
     uint8_t bDeviceClass; // Class code (assigned by the USB-IF). 0xFF-Vendor specific.
@@ -433,7 +434,7 @@ struct UHS_DeviceAddress {
     };
 } __attribute__((packed));
 
-#define UHS_HOST_MAX_INTERFACE_DRIVERS 16
+#define UHS_HOST_MAX_INTERFACE_DRIVERS 2
 
 struct UHS_Device {
     volatile struct UHS_EpInfo *epinfo[UHS_HOST_MAX_INTERFACE_DRIVERS]; // endpoint info pointer

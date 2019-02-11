@@ -33,7 +33,7 @@ e-mail   :  support@circuitsathome.com
 #include "proj.h"
 #include "usb_spec.h"
 
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_NONE)
 #include "drivers/uart0.h"
 #include "drivers/helper.h"
 char itoa_buf[18];
@@ -62,7 +62,7 @@ void VBUS_changed(void)
     uint8_t speed = 1;
     uint8_t iostate;
 
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
     uart0_print("state ");
     uart0_print(_utoh(itoa_buf, usb_task_state));
 #endif
@@ -98,13 +98,15 @@ void VBUS_changed(void)
         //ReleaseChildren(); FIXME
         usb_task_state = UHS_USB_HOST_STATE_IDLE;
 
+        // only one device can be connected and it's currently not
+        FreeAddress(1);
         // turn green led off
         iostate = regRd(rIOPINS2) & ~bmGPOUT7;
         regWr(rIOPINS2, iostate);
         break;
     }
     usb_host_speed = speed;
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
     uart0_print("-> ");
     uart0_print(_utoh(itoa_buf, usb_task_state));
     uart0_print("\r\n");
@@ -125,7 +127,7 @@ void MAX3421_sm(void)
     switch (usb_task_state) {
     case UHS_USB_HOST_STATE_INITIALIZE:
         // should never happen...
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
         uart0_print("sm init\r\n");
 #endif
         busprobe();
@@ -136,15 +138,12 @@ void MAX3421_sm(void)
         usb_task_state = UHS_USB_HOST_STATE_DEBOUNCE_NOT_COMPLETE;
         break;
     case UHS_USB_HOST_STATE_DEBOUNCE_NOT_COMPLETE:
-#ifdef CONFIG_PRINTF
-        //uart0_print("sm deb nc\r\n");
-#endif
         if (!sof_countdown) {
             usb_task_state = UHS_USB_HOST_STATE_RESET_DEVICE;
         }
         break;
     case UHS_USB_HOST_STATE_RESET_DEVICE:
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
         uart0_print("sm rst dev\r\n");
 #endif
         bus_event |= busevent;
@@ -157,7 +156,7 @@ void MAX3421_sm(void)
             usb_task_state = UHS_USB_HOST_STATE_WAIT_BUS_READY;
         break;
     case UHS_USB_HOST_STATE_WAIT_BUS_READY:
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
         uart0_print("sm wait bus rdy\r\n");
 #endif
         usb_task_state = UHS_USB_HOST_STATE_CONFIGURING;
@@ -165,14 +164,14 @@ void MAX3421_sm(void)
 
     case UHS_USB_HOST_STATE_CONFIGURING:
         usb_task_state = UHS_USB_HOST_STATE_CHECK;
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
         uart0_print("sm conf\r\n");
 #endif
         x = configure(0, 1, usb_host_speed);
         usb_error = x;
         if (usb_task_state == UHS_USB_HOST_STATE_CHECK) {
             if (x) {
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_NONE)
                 uart0_print("sm err ");
                 uart0_print(_utoh(itoa_buf, x));
 #endif
@@ -196,7 +195,7 @@ void MAX3421_sm(void)
         iostate = regRd(rIOPINS2) | bmGPOUT7;
         regWr(rIOPINS2, iostate);
 
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
         uart0_print("config done\r\n");
 #endif
         break;
@@ -383,7 +382,7 @@ uint8_t AllocAddress(const uint8_t parent, const uint8_t port)
 
     thePool[index].address = addr;
 
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
     uart0_print("* AllocAddress dA ");
     uart0_print(_utoh(itoa_buf, addr.devAddress));
     uart0_print(" bP ");
@@ -456,8 +455,9 @@ uint8_t MAX3421_init(void)
 
     // init address space
     InitEntry(0);
+    //thePool[0].epinfo[0] = &dev0ep;
     dev0ep.epAddr = 0;
-    dev0ep.maxPktSize = 0x40;
+    dev0ep.maxPktSize = 0x08;
     dev0ep.epAttribs = 0;
     dev0ep.bmNakPower = UHS_USB_NAK_MAX_POWER;
     InitAllAddresses();
@@ -833,7 +833,7 @@ uint8_t InTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, uint16_t *
     uint16_t nbytes = *nbytesptr;
     uint8_t maxpktsize = pep->maxPktSize;
 
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
     uart0_print("\r\n* InTransfer ");
     uart0_print(_utoh(itoa_buf, nbytes));
     uart0_print("B\r\n");
@@ -856,7 +856,7 @@ uint8_t InTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, uint16_t *
         }
 #endif
         if (rcode) {
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_FATAL)
             uart0_print("! InTransfer err dP ");
             uart0_print(_utoh(itoa_buf, rcode));
             uart0_print("\r\n");
@@ -866,21 +866,23 @@ uint8_t InTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, uint16_t *
         /* check for RCVDAVIRQ and generate error if not present */
         /* the only case when absence of RCVDAVIRQ makes sense is when toggle error occurred. Need to add handling for that */
         if ((regRd(rHIRQ) & bmRCVDAVIRQ) == 0) {
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_FATAL)
             uart0_print("! InTransfer err no RCVDAVIRQ\r\n");
 #endif
             rcode = 0xf0;       //receive error
             break;
         }
         pktsize = regRd(rRCVBC);        //number of received bytes
-#ifdef CONFIG_PRINTF
-            uart0_print("* InTransfer got ");
-            uart0_print(_utoh(itoa_buf, pktsize));
-            uart0_print("B\r\n");
+
+
+#if (CONFIG_LOG_LVL > LOG_LEVEL_TRACE)
+        uart0_print("* InTransfer got ");
+        uart0_print(_utoh(itoa_buf, pktsize));
+        uart0_print("B\r\n");
 #endif
 
         if (pktsize > nbytes) { //certain devices send more than asked
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_ERROR)
             uart0_print("! InTransfer ");
             uart0_print(_utoh(itoa_buf, nbytes));
             uart0_print("B != ");
@@ -1021,20 +1023,18 @@ uint8_t OutTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, const uin
     return (rcode);             //should be 0 in all cases
 }
 
-/**
- * Send the actual packet.
- *
- * @param token
- * @param ep Endpoint
- * @param nak_limit how many NAKs before aborting, 0 == exit after timeout
- * @return 0 on success, 0xFF indicates NAK timeout. @see
- */
-/* Assumes peripheral address is set and relevant buffer is loaded/empty       */
-/* If NAK, tries to re-send up to nak_limit times                                                   */
-/* If nak_limit == 0, do not count NAKs, exit after timeout                                         */
-/* If bus timeout, re-sends up to USB_RETRY_LIMIT times                                             */
-
-/* return codes 0x00-0x0f are HRSLT( 0x00 being success ), 0xff means timeout                       */
+// * Send the actual packet.
+// *
+// * @param token
+// * @param ep Endpoint
+// * @param nak_limit how many NAKs before aborting, 0 == exit after timeout
+// * @return 0 on success, 0xFF indicates NAK timeout. @see
+// *
+// Assumes peripheral address is set and relevant buffer is loaded/empty
+// If NAK, tries to re-send up to nak_limit times
+// If nak_limit == 0, do not count NAKs, exit after timeout
+// If bus timeout, re-sends up to USB_RETRY_LIMIT times
+// return codes 0x00-0x0f are HRSLT( 0x00 being success ), 0xff means timeout
 uint8_t dispatchPkt(const uint8_t token, const uint8_t ep, const uint16_t nak_limit)
 {
     unsigned long timeout = millis() + UHS_HOST_TRANSFER_MAX_MS;
@@ -1044,20 +1044,22 @@ uint8_t dispatchPkt(const uint8_t token, const uint8_t ep, const uint16_t nak_li
     uint16_t nak_count = 0;
 
     for (;;) {
-        regWr(rHXFR, (token | ep));     //launch the transfer
-        while ((long)(millis() - timeout) < 0L) //wait for transfer completion
+        // launch the host transfer
+        regWr(rHXFR, (token | ep));
+        while ((long)(millis() - timeout) < 0L)
         {
+            // check if host transfer is complete
             tmpdata = regRd(rHIRQ);
-
             if (tmpdata & bmHXFRDNIRQ) {
-                regWr(rHIRQ, bmHXFRDNIRQ);      //clear the interrupt
-                //rcode = 0x00;
+                // clear the interrupt
+                regWr(rHIRQ, bmHXFRDNIRQ);
                 break;
-            }                   //if( tmpdata & bmHXFRDNIRQ
+            }
+        }
 
-        }                       //while ( millis() < timeout
-
-        rcode = (regRd(rHRSL) & 0x0f);  //analyze transfer result
+        // read the HRSLT[0-3] register bits
+        // that contain the transfer result
+        rcode = (regRd(rHRSL) & 0x0f);
 
         switch (rcode) {
         case UHS_HOST_ERROR_NAK:
@@ -1075,7 +1077,7 @@ uint8_t dispatchPkt(const uint8_t token, const uint8_t ep, const uint16_t nak_li
             break;
         default:
             return (rcode);
-        }                       //switch( rcode
+        }
     }
 }
 
@@ -1092,9 +1094,7 @@ struct UHS_EpInfo *getEpInfoEntry(const uint8_t addr, const uint8_t ep)
 
         for (uint8_t i = 0; i < p->epcount; i++) {
             if ((pep)->epAddr == ep) {
-#ifdef CONFIG_PRINTF
-                //HOST_DUBUG("ep entry for interface %d ep %d max packet size = %d\r\n", pep->bIface,
-                //           ep, pep->maxPktSize);
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
                 uart0_print("* getEpInfoEntry if ");
                 uart0_print(_utoh(itoa_buf, pep->bIface));
                 uart0_print(" ep ");
@@ -1123,11 +1123,12 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
     uint16_t nak_lim;
     struct UHS_Device *p = GetUsbDevicePtr(addr);
 
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
     uart0_print("* SetAddress ");
     uart0_print(_utoh(itoa_buf, addr));
     uart0_print("\r\n");
 #endif
+
     if (!p) {
         return UHS_HOST_ERROR_NO_ADDRESS_IN_POOL;
     }
@@ -1148,6 +1149,7 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
     nak_lim--;
     *nak_limit = nak_lim;
 
+    //timer_a0_delay_ccr4(_1ms);
     regWr(rPERADDR, addr);      //set peripheral address
 
     uint8_t mode = regRd(rMODE);
@@ -1164,18 +1166,20 @@ struct UHS_EpInfo *ctrlReqOpen(const uint8_t addr, const uint64_t Request, uint8
     struct UHS_EpInfo *pep = NULL;
     uint16_t nak_limit = 0;
 
-#ifdef CONFIG_PRINTF
-    uint8_t i;
-    uint8_t *req = (uint8_t *) & Request;
-
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
     uart0_print("* ctrlReqOpen  addr ");
     uart0_print(_utoh(itoa_buf, addr));
     uart0_print(" request ");
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
+    uint8_t i;
+    uint8_t *req = (uint8_t *) & Request;
+
     for (i = 0; i < 8; i++) {
         uart0_print(_utoh(itoa_buf, req[i]));
         uart0_print(" ");
     }
-    uart0_print("\r\n");
+#endif
+    //uart0_print("\r\n");
 #endif
 
     rcode = SetAddress(addr, 0, &pep, &nak_limit);
@@ -1194,11 +1198,6 @@ struct UHS_EpInfo *ctrlReqOpen(const uint8_t addr, const uint64_t Request, uint8
                 }
             }
         } else {
-#ifdef CONFIG_PRINTF
-            //uart0_print("\r\ndispatchPkt err ");
-            //uart0_print(_utoh(itoa_buf, rcode));
-            //uart0_print("\r\n");
-#endif
             pep = NULL;
         }
     }
@@ -1211,7 +1210,7 @@ uint8_t ctrlReqRead(struct UHS_EpInfo * pep, uint16_t * left, uint16_t * read,
     *read = 0;
     uint16_t nak_limit = 0;
 
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
     uart0_print("* ctrlReqRead ");
     uart0_print(_utoh(itoa_buf, *left));
 #endif
@@ -1231,7 +1230,7 @@ uint8_t ctrlReqRead(struct UHS_EpInfo * pep, uint16_t * left, uint16_t * read,
             return rcode;
         }
         *left -= *read;
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
         uart0_print(" left ");
         uart0_print(_utoh(itoa_buf, *left));
         uart0_print(" read ");
@@ -1325,9 +1324,6 @@ uint8_t ctrlReq(uint8_t addr, uint64_t Request, uint16_t nbytes, uint8_t * datap
 
     struct UHS_EpInfo *pep = ctrlReqOpen(addr, Request, dataptr);
     if (!pep) {
-//#ifdef CONFIG_PRINTF
-//        uart0_print("\r\nctrlReq null epinfo\r\n");
-//#endif
         return UHS_HOST_ERROR_NULL_EPINFO;
     }
     uint8_t rt = (uint8_t) (Request & 0xFFU);
@@ -1341,17 +1337,6 @@ uint8_t ctrlReq(uint8_t addr, uint64_t Request, uint16_t nbytes, uint8_t * datap
                 // Bytes read into buffer
                 uint16_t read = nbytes;
                 rcode = ctrlReqRead(pep, &left, &read, nbytes, dataptr);
-/*
-#ifdef CONFIG_PRINTF
-                uart0_print("* ctrlReq ");
-                uart0_print(_utoh(itoa_buf,left));
-                uart0_print(" ");
-                uart0_print(_utoh(itoa_buf,read));
-                uart0_print(" ");
-                uart0_print(_utoh(itoa_buf,nbytes));
-                uart0_print("\r\n");
-#endif
-*/
                 if (rcode) {
                     return rcode;
                 }
@@ -1377,97 +1362,6 @@ uint8_t ctrlReq(uint8_t addr, uint64_t Request, uint16_t nbytes, uint8_t * datap
     rcode = ctrlReqClose(pep, rt, left, nbytes, dataptr);
     return rcode;
 }
-
-uint8_t TestInterface(struct ENUMERATION_INFO * ei)
-{
-
-    //HOST_DUBUG("TestInterface VID:%4.4x PID:%4.4x Class:%2.2x Subclass:%2.2x Protocol %2.2x\r\n",
-    //           ei->vid, ei->pid, ei->klass, ei->subklass, ei->protocol);
-    //HOST_DUBUG
-    //    ("Interface data: Class:%2.2x Subclass:%2.2x Protocol %2.2x, number of endpoints %i\r\n",
-    //     ei->interface.klass, ei->interface.subklass, ei->interface.subklass, ei->interface.numep);
-    //HOST_DUBUG("Parent: %2.2x, bAddress: %2.2x\r\n", ei->parent, ei->address);
-
-    return 0;
-
-    /*
-       //uint8_t devConfigIndex;
-       //uint8_t rcode = 0;
-
-       for (devConfigIndex = 0; devConfigIndex < UHS_HOST_MAX_INTERFACE_DRIVERS; devConfigIndex++) {
-       if (!devConfig[devConfigIndex]) {
-       //HOST_DUBUG("No driver at index %i\r\n", devConfigIndex);
-       continue;           // no driver
-       }
-       if (devConfig[devConfigIndex]->bAddress) {
-       //HOST_DUBUG("Driver %i is already consumed @ %2.2x\r\n", devConfigIndex,
-       //           devConfig[devConfigIndex]->bAddress);
-       continue;           // consumed
-       }
-
-       if (devConfig[devConfigIndex]->OKtoEnumerate(ei)) {
-       //HOST_DUBUG("Driver %i supports this interface\r\n", devConfigIndex);
-       break;
-       }
-       }
-       if (devConfigIndex == UHS_HOST_MAX_INTERFACE_DRIVERS) {
-       rcode = UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED;
-       #if 0                           // defined(UHS_HID_LOADED)
-       // Check HID here, if it is, then lie
-       if (ei->klass == UHS_USB_CLASS_HID) {
-       devConfigIndex = UHS_HID_INDEX;     // for debugging, otherwise this has no use.
-       rcode = 0;
-       }
-       #endif
-       }
-       if (!rcode) {
-       //HOST_DUBUG("Driver %i can be used for this interface\r\n", devConfigIndex);
-       } else {
-       //HOST_DUBUG("No driver for this interface.\r\n");
-       }
-       return rcode;
-     */
-};
-
-uint8_t enumerateInterface(struct ENUMERATION_INFO * ei)
-{
-
-    return 0;
-
-    //HOST_DUBUG("AttemptConfig: parent = %i, port = %i\r\n", ei->parent, ei->port);
-
-/*
-
-    uint8_t devConfigIndex;
-#if 0                           // defined(UHS_HID_LOADED)
-    // Check HID here, if it is, then lie
-    if (ei->klass == UHS_USB_CLASS_HID || ei->interface.klass == UHS_USB_CLASS_HID) {
-        UHS_HID_SetUSBInterface(this, ENUMERATION_INFO * ei);
-        devConfigIndex = UHS_HID_INDEX;
-    } else
-#endif
-        for (devConfigIndex = 0; devConfigIndex < UHS_HOST_MAX_INTERFACE_DRIVERS; devConfigIndex++) {
-            if (!devConfig[devConfigIndex]) {
-                //HOST_DUBUG("No driver at index %i\r\n", devConfigIndex);
-                continue;       // no driver
-            }
-            if (devConfig[devConfigIndex]->bAddress) {
-                //HOST_DUBUG("Driver %i is already consumed @ %2.2x\r\n", devConfigIndex,
-                //           devConfig[devConfigIndex]->bAddress);
-                continue;       // consumed
-            }
-
-            if (devConfig[devConfigIndex]->OKtoEnumerate(ei)) {
-                //HOST_DUBUG("Driver %i supports this interface\r\n", devConfigIndex);
-                if (!devConfig[devConfigIndex]->SetInterface(ei))
-                    break;
-                else
-                    devConfigIndex = UHS_HOST_MAX_INTERFACE_DRIVERS;
-            }
-        }
-    return devConfigIndex;
-*/
-};
 
 // * Gets the device descriptor, or part of it from endpoint Zero.
 // *
@@ -1546,7 +1440,7 @@ uint8_t doSoftReset(const uint8_t parent, const uint8_t port, const uint8_t addr
 {
     uint8_t rcode = 0;
 
-#ifdef CONFIG_PRINTF
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
     uart0_print("* doSoftReset ");
     uart0_print(_utoh(itoa_buf, parent));
     uart0_print(" ");
@@ -1579,14 +1473,20 @@ uint8_t doSoftReset(const uint8_t parent, const uint8_t port, const uint8_t addr
             retries++;
             sof_delay(10);
         } while (retries < 200);
-#ifdef CONFIG_PRINTF
-        //uart0_print("* doSoftReset ");
-        //uart0_print(_utoh(itoa_buf,retries));
-        //uart0_print(" retries\r\n");
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+        uart0_print("* doSoftReset ");
+        uart0_print(_utoh(itoa_buf,retries));
+        uart0_print(" retries\r\n");
 #endif
     }
     return rcode;
 }
+
+// DEVICE_DESCRIPTOR size is 18bytes
+// CONFIGURATION is 34bytes
+// HID report size is 74bytes
+//#define MAX_PACKET_LEN  0x12
+#define MAX_PACKET_LEN  128
 
 // * enumerates interfaces on devices
 // *
@@ -1597,22 +1497,18 @@ uint8_t doSoftReset(const uint8_t parent, const uint8_t port, const uint8_t addr
 
 uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
 {
-    //uint16_t nak_limit;
     uint8_t rcode = 0;
-    uint8_t rv = 0;
+    //uint16_t i;
+
     struct UHS_Device *p = NULL;
     struct ENUMERATION_INFO ei;
-    uint16_t i;
+    uint8_t buf[MAX_PACKET_LEN];
+    uint8_t udd_bNumConfigurations = 0;
+    uint8_t ucd_wTotalLength = 0;
 
-    USB_DEVICE_DESCRIPTOR *udd;
-    USB_CONFIGURATION_DESCRIPTOR *ucd;
-    const uint8_t biggest = 0x12;
-    uint8_t buf[biggest];
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    uint8_t i;
 
-    udd = (USB_DEVICE_DESCRIPTOR *) buf;
-    ucd = (USB_CONFIGURATION_DESCRIPTOR *) buf;
-
-#ifdef CONFIG_PRINTF
     uart0_print("* configuring parent ");
     uart0_print(_utoh(itoa_buf, parent));
     uart0_print(" port ");
@@ -1630,93 +1526,88 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
 
     p->speed = speed;
     p->epinfo[0][0].maxPktSize = 0x08;
-    memset(buf, 0x00, biggest);
 
+    ///////////////////////////////////////
     // get device descriptor
-    rcode = getDevDescr(0, biggest, buf);
+    //
+
+    memset(buf, 0x00, MAX_PACKET_LEN);
+    timer_a0_delay_ccr4(_1ms);
+    rcode = getDevDescr(0, MAX_PACKET_LEN, buf);
     // TX 0x80 0x06 0x0 0x01 0x0 0x0 0x12 0x0
     // RX 0x12 0x01 0x10 0x01 0x0 0x0 0x0 0x08 0x6d 0x04 0x14 0xc2 0x05 0x02 0x01 0x02 0x0 0x01
+    if (rcode) {
+        return UHS_HOST_ERROR_FailGetConfDescr;
+    }
 
-#ifdef CONFIG_PRINTF
-    uart0_print("* c1 rcode ");
-    uart0_print(_utoh(itoa_buf, rcode));
-    uart0_print("\r\n");
-#endif
+    {
+        USB_DEVICE_DESCRIPTOR *udd;
+        udd = (USB_DEVICE_DESCRIPTOR *) buf;
 
-#ifdef CONFIG_PRINTF
-    for (i = 0; i < biggest; i++) {
+        ei.vid = udd->idVendor;
+        ei.pid = udd->idProduct;
+        ei.bcdDevice = udd->bcdDevice;
+        ei.klass = udd->bDeviceClass;
+        ei.subklass = udd->bDeviceSubClass;
+        ei.protocol = udd->bDeviceProtocol;
+        ei.bMaxPacketSize0 = udd->bMaxPacketSize0;
+        ei.currentconfig = 0;
+        ei.parent = parent;
+        ei.port = port;
+        udd_bNumConfigurations = udd->bNumConfigurations;
+    }
+
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    for (i = 0; i < buf[0]; i++) {
         uart0_print(_utoh(itoa_buf, buf[i]));
         uart0_print(" ");
     }
     uart0_print("\r\nbuf ^\r\n");
 #endif
 
-    ei.vid = udd->idVendor;
-    ei.pid = udd->idProduct;
-    ei.bcdDevice = udd->bcdDevice;
-    ei.klass = udd->bDeviceClass;
-    ei.subklass = udd->bDeviceSubClass;
-    ei.protocol = udd->bDeviceProtocol;
-    ei.bMaxPacketSize0 = udd->bMaxPacketSize0;
-    ei.currentconfig = 0;
-    ei.parent = parent;
-    ei.port = port;
-/*
-#ifdef CONFIG_PRINTF
-    uart0_print("idV ");
-    uart0_print(_utoh(itoa_buf, ei.vid));
-    uart0_print(" idP ");
-    uart0_print(_utoh(itoa_buf, ei.pid));
-    uart0_print(" bcdD ");
-    uart0_print(_utoh(itoa_buf, ei.bcdDevice));
-    uart0_print(" bDC ");
-    uart0_print(_utoh(itoa_buf, ei.klass));
-    uart0_print(" bDP ");
-    uart0_print(_utoh(itoa_buf, ei.protocol));
-    uart0_print(" MPS ");
-    uart0_print(_utoh(itoa_buf, ei.bMaxPacketSize0));
-    uart0_print(" pa ");
-    uart0_print(_utoh(itoa_buf, ei.parent));
-    uart0_print(" po ");
-    uart0_print(_utoh(itoa_buf, ei.port));
-    uart0_print(" con ");
-    uart0_print(_utoh(itoa_buf, configs));
-    uart0_print("\r\n");
-#endif
-*/
     ei.address = AllocAddress(parent, port);
-
     if (!ei.address) {
         return UHS_HOST_ERROR_ADDRESS_POOL_FULL;
     }
 
+    // shift p to address = 1;
     p = GetUsbDevicePtr(ei.address);
-
     p->speed = speed;
 
+    //timer_a0_delay_ccr4(_1ms);
     rcode = doSoftReset(parent, port, ei.address);
     if (rcode) {
         FreeAddress(ei.address);
-        //uart0_print("cant set USB if addr\r\n");
         return rcode;
     }
 
-    if (udd->bNumConfigurations < 1) {
-        uart0_print("err: no interfaces\r\n");
+    if (udd_bNumConfigurations < 1) {
+        //uart0_print("err: no interfaces\r\n");
         FreeAddress(ei.address);
-        // rcode = TestInterface(&ei);
-        // Not implemented (yet)
-        rcode = UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED;
+        return UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED;
     }
+
+    /////////////////////////////////////////
     // read the minimal config descriptor
+    //
+
+    memset(buf, 0x00, MAX_PACKET_LEN);
+    timer_a0_delay_ccr4(_1ms);
     rcode = getConfDescr(ei.address, sizeof(USB_CONFIGURATION_DESCRIPTOR), 0, buf);
     // TX 0x80 0x06 0x00 0x02 0x00 0x00 0x09 0x00
     // RX 0x09 0x02 0x22 0x00 0x01 0x01 0x00 0x80 0x0f
-
     if (rcode) {
         return UHS_HOST_ERROR_FailGetConfDescr;
     }
-#ifdef CONFIG_PRINTF //size 9
+
+    {
+        USB_CONFIGURATION_DESCRIPTOR *ucd;
+        ucd = (USB_CONFIGURATION_DESCRIPTOR *) buf;
+        ucd_wTotalLength = ucd->wTotalLength;
+    }
+
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    // size is 9
     for (i = 0; i < sizeof(USB_CONFIGURATION_DESCRIPTOR); i++) {
         uart0_print(_utoh(itoa_buf, buf[i]));
         uart0_print(" ");
@@ -1724,27 +1615,44 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uart0_print("\r\nucd ^\r\n");
 #endif
 
-    uint8_t data[64];
+    //memset(buf, 0x00, MAX_PACKET_LEN);
+    //rcode = getStrDescr(ei.address, 64, 2, 0x0409, data);
 
-    memset(data, 0x00, 64);
 
+    /////////////////////////////////////////
     // read the full config descriptor
-    rcode = getConfDescr(ei.address, ucd->wTotalLength, 0, data);
+    //
+
+    memset(buf, 0x00, MAX_PACKET_LEN);
+    timer_a0_delay_ccr4(_1ms);
+    rcode = getConfDescr(ei.address, ucd_wTotalLength, 0, buf);
     // TX 0x80 0x06 0x01 0x02 0x00 0x00 0x22 0x00
+    // RX 0x09 0x02 0x22 0    0x01 0x01 0    0x80 0x0f \  // CONFIGURATION DESCRIPTOR
+    //    0x09 0x04 0    0    0x01 0x03 0    0    0    \  // INTERFACE DESCRIPTOR
+    //    0x09 0x21 0x10 0x01 0    0x01 0x22 0x4a 0    \  // HID DESCRIPTOR
+    //    0x07 0x05 0x81 0x03 0x05 0    0x0a              // ENDPOINT DESCRIPTOR
     if (rcode) {
         return UHS_HOST_ERROR_FailGetConfDescr;
     }
 
-#ifdef CONFIG_PRINTF //size ucd->wTotalLength aka 34
-    for (i = 0; i < ucd->wTotalLength; i++) {
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    // size ucd->wTotalLength aka 34
+    for (i = 0; i < 64; i++) {
         uart0_print(_utoh(itoa_buf, buf[i]));
         uart0_print(" ");
     }
-    uart0_print("\r\nucd full ^\r\n");
+    uart0_print("\r\nstr full ^\r\n");
 #endif
 
+    rcode = setConf(ei.address, 1);
+    // TX 0 0x09 0x01 0 0 0 0 0
 
-    return rv;
+    if (rcode) {
+        FreeAddress(ei.address);
+        return UHS_HOST_ERROR_FailGetConfDescr;
+    }
+
+    return 0;
 }
 
 uint8_t get_ifg_int_event(void)

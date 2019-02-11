@@ -10,6 +10,7 @@ extern "C" {
 #define _200us          25UL
 #define _1ms            125UL
 #define _10ms           _1ms * 10
+#define _200ms          _1ms * 200
 #define _500ms          _1ms * 500
 
 #define    TIMER_A0_EVENT_NONE 0
