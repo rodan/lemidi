@@ -1167,9 +1167,9 @@ struct UHS_EpInfo *ctrlReqOpen(const uint8_t addr, const uint64_t Request, uint8
     uint16_t nak_limit = 0;
 
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
-    uart0_print("* ctrlReqOpen  addr ");
+    uart0_print("* ctrlReqOpen  ad ");
     uart0_print(_utoh(itoa_buf, addr));
-    uart0_print(" request ");
+    uart0_print(" rq ");
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
     uint8_t i;
     uint8_t *req = (uint8_t *) & Request;
@@ -1179,7 +1179,7 @@ struct UHS_EpInfo *ctrlReqOpen(const uint8_t addr, const uint64_t Request, uint8
         uart0_print(" ");
     }
 #endif
-    //uart0_print("\r\n");
+    uart0_print("\r\n");
 #endif
 
     rcode = SetAddress(addr, 0, &pep, &nak_limit);

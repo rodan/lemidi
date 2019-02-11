@@ -9,7 +9,7 @@ extern "C" {
 #define    UART0_EV_RX 0x1
 #define    UART0_EV_TX 0x2
 
-#define UART0_RXBUF_SZ 64
+#define UART0_RXBUF_SZ 16
 
 void uart0_init();
 void uart0_port_init(void);

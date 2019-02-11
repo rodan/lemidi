@@ -17,11 +17,13 @@
 #include "drivers/max3421.h"
 #include "qa.h"
 
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_NONE)
 static void parse_UI(const uint16_t msg)
 {
     parse_user_input();
     uart0_set_eol();
 }
+#endif
 
 static void timer_a0_ovf_irq(const uint16_t msg)
 {
@@ -45,13 +47,16 @@ int main(void)
     // start the millis counter
     timer_a0_delay_noblk_ccr3(125);
 
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_NONE)
     uart0_init();
+    sys_messagebus_register(&parse_UI, SYS_MSG_UART0_RX);
+#endif
+
     spi_init();
     //spi_fast_mode();
     display_menu();
 
     sys_messagebus_register(&timer_a0_ovf_irq, SYS_MSG_TIMER0_IFG);
-    sys_messagebus_register(&parse_UI, SYS_MSG_UART0_RX);
 
     // stay a while and listen
     while (millis() < 1000) {
