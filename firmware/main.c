@@ -67,7 +67,7 @@ int main(void)
 
     // main loop
     while (1) {
-        //__bis_SR_register(LPM3_bits + GIE);
+        __bis_SR_register(LPM3_bits + GIE);
         //__no_operation();
 #ifdef USE_WATCHDOG
         // reset watchdog counter

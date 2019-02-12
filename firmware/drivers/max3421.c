@@ -126,10 +126,6 @@ void MAX3421_sm(void)
 
     switch (usb_task_state) {
     case UHS_USB_HOST_STATE_INITIALIZE:
-        // should never happen...
-#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
-        uart0_print("sm init\r\n");
-#endif
         busprobe();
         VBUS_changed();
         break;
@@ -156,9 +152,6 @@ void MAX3421_sm(void)
             usb_task_state = UHS_USB_HOST_STATE_WAIT_BUS_READY;
         break;
     case UHS_USB_HOST_STATE_WAIT_BUS_READY:
-#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
-        uart0_print("sm wait bus rdy\r\n");
-#endif
         usb_task_state = UHS_USB_HOST_STATE_CONFIGURING;
         break;                  // don't fall through
 
@@ -211,7 +204,7 @@ void MAX3421_sm(void)
            }
            }
          */
-        // fall thru
+        break;
     default:
         // Do nothing
         break;
@@ -370,7 +363,6 @@ uint8_t AllocAddress(const uint8_t parent, const uint8_t port)
     }
     // finds first empty address entry starting from one
     uint8_t index = FindAddressIndex(0);
-
     if (!index) {
         // if empty entry is not found
         return 0;
@@ -916,35 +908,6 @@ uint8_t InTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, uint16_t *
     return (rcode);
 }
 
-// * Set the address of a device to a new address via endpoint Zero.
-// *
-// * @param oldaddr current address
-// * @param newaddr new address
-// * @return status of the request, zero is success.
-
-uint8_t setAddr(const uint8_t oldaddr, const uint8_t newaddr)
-{
-    uint8_t rcode = ctrlReq(oldaddr,
-                            mkSETUP_PKT8(UHS_bmREQ_SET, USB_REQUEST_SET_ADDRESS, newaddr, 0x00,
-                                         0x0000, 0x0000),
-                            0x0000, NULL);
-    sof_delay(300);             // Older spec says you should wait at least 200ms
-    return rcode;
-}
-
-// * Set the configuration for the device to use via endpoint Zero.
-// *
-// * @param addr Address of the device
-// * @param conf_value configuration index value
-// * @return status of the request, zero is success.
-
-uint8_t setConf(const uint8_t addr, const uint8_t conf_value)
-{
-    return (ctrlReq
-            (addr,
-             mkSETUP_PKT8(UHS_bmREQ_SET, USB_REQUEST_SET_CONFIGURATION, conf_value, 0x00, 0x0000,
-                          0x0000), 0x0000, NULL));
-}
 
 // * Transmit a packet
 // *
@@ -1149,13 +1112,15 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
     nak_lim--;
     *nak_limit = nak_lim;
 
-    //timer_a0_delay_ccr4(_1ms);
     regWr(rPERADDR, addr);      //set peripheral address
 
     uint8_t mode = regRd(rMODE);
 
     // Set bmLOWSPEED and bmHUBPRE in case of low-speed device, reset them otherwise
     regWr(rMODE, (p->speed) ? mode & ~(bmHUBPRE | bmLOWSPEED) : mode | bmLOWSPEED);
+
+    // recovery
+    timer_a0_delay_ccr4(_2ms);
 
     return 0;
 }
@@ -1413,6 +1378,52 @@ uint8_t getStrDescr(const uint8_t addr, const uint16_t ns, const uint8_t index,
                           USB_DESCRIPTOR_STRING, langid, ns), ns, dataptr));
 }
 
+// * Get the configuration for the device to use via endpoint Zero.
+// *
+// * @param addr Address of the device
+// * @param conf_value configuration index value
+// * @param dataptr pointer to the data to return
+// * @return status of the request, zero is success.
+
+uint8_t getConf(const uint8_t addr, const uint8_t conf_value, uint8_t * dataptr)
+{
+    return (ctrlReq
+            (addr,
+             mkSETUP_PKT8(USB_SETUP_DEVICE_TO_HOST, USB_REQUEST_GET_CONFIGURATION, 0x00, 0x00, 0x0000,
+                          conf_value), conf_value, dataptr));
+}
+
+// * Set the address of a device to a new address via endpoint Zero.
+// *
+// * @param oldaddr current address
+// * @param newaddr new address
+// * @return status of the request, zero is success.
+
+uint8_t setAddr(const uint8_t oldaddr, const uint8_t newaddr)
+{
+    uint8_t rcode = ctrlReq(oldaddr,
+                            mkSETUP_PKT8(UHS_bmREQ_SET, USB_REQUEST_SET_ADDRESS, newaddr, 0x00,
+                                         0x0000, 0x0000),
+                            0x0000, NULL);
+    sof_delay(300);             // Older spec says you should wait at least 200ms
+    return rcode;
+}
+
+// * Set the configuration for the device to use via endpoint Zero.
+// *
+// * @param addr Address of the device
+// * @param conf_value configuration index value
+// * @return status of the request, zero is success.
+
+uint8_t setConf(const uint8_t addr, const uint8_t conf_value)
+{
+    return (ctrlReq
+            (addr,
+             mkSETUP_PKT8(UHS_bmREQ_SET, USB_REQUEST_SET_CONFIGURATION, conf_value, 0x00, 0x0000,
+                          0x0000), 0x0000, NULL));
+}
+
+
 uint8_t sof_delay(const uint16_t x)
 {
     uint16_t ticks = x;
@@ -1565,6 +1576,10 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uart0_print("\r\nbuf ^\r\n");
 #endif
 
+    /////////////////////////////////////////
+    // allocate permanent address to device
+    // (it's always 1 since we only support 1 device)
+
     ei.address = AllocAddress(parent, port);
     if (!ei.address) {
         return UHS_HOST_ERROR_ADDRESS_POOL_FULL;
@@ -1574,12 +1589,13 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     p = GetUsbDevicePtr(ei.address);
     p->speed = speed;
 
-    //timer_a0_delay_ccr4(_1ms);
     rcode = doSoftReset(parent, port, ei.address);
     if (rcode) {
         FreeAddress(ei.address);
         return rcode;
     }
+    // the USB spec requires a 2ms delay after the address is set
+    timer_a0_delay_ccr4(_2ms);
 
     if (udd_bNumConfigurations < 1) {
         //uart0_print("err: no interfaces\r\n");
@@ -1592,7 +1608,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     //
 
     memset(buf, 0x00, MAX_PACKET_LEN);
-    timer_a0_delay_ccr4(_1ms);
     rcode = getConfDescr(ei.address, sizeof(USB_CONFIGURATION_DESCRIPTOR), 0, buf);
     // TX 0x80 0x06 0x00 0x02 0x00 0x00 0x09 0x00
     // RX 0x09 0x02 0x22 0x00 0x01 0x01 0x00 0x80 0x0f
@@ -1624,7 +1639,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     //
 
     memset(buf, 0x00, MAX_PACKET_LEN);
-    timer_a0_delay_ccr4(_1ms);
     rcode = getConfDescr(ei.address, ucd_wTotalLength, 0, buf);
     // TX 0x80 0x06 0x01 0x02 0x00 0x00 0x22 0x00
     // RX 0x09 0x02 0x22 0    0x01 0x01 0    0x80 0x0f \  // CONFIGURATION DESCRIPTOR
@@ -1644,12 +1658,25 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uart0_print("\r\nstr full ^\r\n");
 #endif
 
+    /////////////////////////////////////////
+    // set configuration
+    //
+
     rcode = setConf(ei.address, 1);
     // TX 0 0x09 0x01 0 0 0 0 0
-
     if (rcode) {
         FreeAddress(ei.address);
-        return UHS_HOST_ERROR_FailGetConfDescr;
+        return UHS_HOST_ERROR_FailSetConf;
+    }
+
+    // test if device considers the configuration set 
+    buf[0]=0;
+    rcode = getConf(ei.address, 1, buf);
+    // TX 0x80 0x08 0x0 0x0 0x0 0x0 0x01 0x0
+    // RX 0x01
+    if (rcode || (buf[0] != 0x01)) {
+        FreeAddress(ei.address);
+        return UHS_HOST_ERROR_FailSetConf;
     }
 
     return 0;

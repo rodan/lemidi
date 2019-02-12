@@ -102,7 +102,7 @@ extern "C" {
 #define                UHS_HOST_ERROR_FailGetDevDescr 0xE1U
 #define             UHS_HOST_ERROR_FailSetDevTblEntry 0xE2U
 #define               UHS_HOST_ERROR_FailGetConfDescr 0xE3U
-#define               UHS_HOST_ERROR_FailSetConfDescr 0xE4U
+#define                    UHS_HOST_ERROR_FailSetConf 0xE4U
 #define                  UHS_HOST_ERROR_END_OF_STREAM 0xEFU
 
 // Host base class specific Error codes
