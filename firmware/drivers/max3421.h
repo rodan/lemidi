@@ -62,6 +62,11 @@ uint8_t getConfDescr(const uint8_t addr, const uint16_t nbytes, const uint8_t co
                      uint8_t * dataptr);
 uint8_t getStrDescr(const uint8_t addr, const uint16_t ns, const uint8_t index,
                     const uint16_t langid, uint8_t * dataptr);
+uint8_t ReportDescr(const uint8_t addr, const uint16_t wIndex, const uint16_t nbytes, uint8_t *buffer);
+uint8_t SetIdle(const uint8_t addr, const uint8_t iface, const uint8_t reportID, const uint8_t duration);
+uint8_t SetProtocol(const uint8_t addr, const uint8_t iface, const uint8_t protocol);
+uint8_t SetReport(const uint8_t addr, const uint8_t iface, const uint8_t report_type, const uint8_t report_id, const uint16_t nbytes, uint8_t* dataptr);
+
 uint8_t sof_delay(const uint16_t x);
 
 

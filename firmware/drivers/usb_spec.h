@@ -6,21 +6,14 @@
 extern "C" {
 #endif
 
-/*
 ////////////////////////////////////////////////////////////////////////////////
 // HID
 #define                             UHS_USB_CLASS_HID 0x03U
-// Subclasses
-#define                         UHS_HID_BOOT_SUBCLASS 0x01U
-// Protocols
-#define             UHS_HID_PROTOCOL_HIDBOOT_KEYBOARD 0x01U
-#define                UHS_HID_PROTOCOL_HIDBOOT_MOUSE 0x02U
 ////////////////////////////////////////////////////////////////////////////////
 // Physical
 #define                        UHS_USB_CLASS_PHYSICAL 0x05U
 
 ////////////////////////////////////////////////////////////////////////////////
-*/
 
 #define                              USB_XFER_TIMEOUT 5000    //USB transfer timeout in milliseconds, per section 9.2.6.1 of USB 2.0 spec
 #define                                 USB_NAK_LIMIT 32000   //NAK limit for a transfer. o meand NAKs are not counted
@@ -103,6 +96,7 @@ extern "C" {
 #define             UHS_HOST_ERROR_FailSetDevTblEntry 0xE2U
 #define               UHS_HOST_ERROR_FailGetConfDescr 0xE3U
 #define                    UHS_HOST_ERROR_FailSetConf 0xE4U
+#define                    UHS_HOST_ERROR_FailGetHIDr 0xE5U
 #define                  UHS_HOST_ERROR_END_OF_STREAM 0xEFU
 
 // Host base class specific Error codes

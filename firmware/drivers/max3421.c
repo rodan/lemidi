@@ -30,6 +30,7 @@ e-mail   :  support@circuitsathome.com
 #include "spi.h"
 #include "drivers/sys_messagebus.h"
 #include "drivers/timer_a0.h"
+#include "HIDParser.h"
 #include "proj.h"
 #include "usb_spec.h"
 
@@ -55,6 +56,8 @@ volatile uint8_t ifg_gpx_last_event;
 struct UHS_Device thePool[UHS_HOST_MAX_INTERFACE_DRIVERS];
 // Endpoint data structure used during enumeration for uninitialized device
 struct UHS_EpInfo dev0ep;
+
+HID_ReportInfo_t HID_ri;
 
 void VBUS_changed(void)
 {
@@ -1195,7 +1198,7 @@ uint8_t ctrlReqRead(struct UHS_EpInfo * pep, uint16_t * left, uint16_t * read,
             return rcode;
         }
         *left -= *read;
-#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+#if 0 // (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
         uart0_print(" left ");
         uart0_print(_utoh(itoa_buf, *left));
         uart0_print(" read ");
@@ -1423,6 +1426,22 @@ uint8_t setConf(const uint8_t addr, const uint8_t conf_value)
                           0x0000), 0x0000, NULL));
 }
 
+uint8_t ReportDescr(const uint8_t addr, const uint16_t wIndex, const uint16_t nbytes, uint8_t *buffer) {
+    return ctrlReq(addr, mkSETUP_PKT8(0x81U, USB_REQUEST_GET_DESCRIPTOR, 0x00U, 0x22U, wIndex, nbytes), nbytes, buffer);
+}
+
+uint8_t SetIdle(const uint8_t addr, const uint8_t iface, const uint8_t reportID, const uint8_t duration) {
+    return ctrlReq(addr, mkSETUP_PKT8(0x21U, 0x0AU, reportID, duration, iface, 0x0000U), 0, NULL);
+}
+
+uint8_t SetProtocol(const uint8_t addr, const uint8_t iface, const uint8_t protocol) {
+    return ctrlReq(addr, mkSETUP_PKT8(0x21, 0x0B, protocol, 0x00, iface, 0x0000U), 0, NULL);
+}
+
+uint8_t SetReport(const uint8_t addr, const uint8_t iface, const uint8_t report_type, const uint8_t report_id, const uint16_t nbytes, uint8_t* dataptr) {
+    return ctrlReq(addr, mkSETUP_PKT8(0x21U, 0x09U, report_id, report_type, iface, nbytes), nbytes, dataptr);
+}
+
 
 uint8_t sof_delay(const uint16_t x)
 {
@@ -1516,7 +1535,8 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uint8_t buf[MAX_PACKET_LEN];
     uint8_t udd_bNumConfigurations = 0;
     uint8_t ucd_wTotalLength = 0;
-
+    uint8_t uhd_wDescriptorLength = 0;
+    
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
     uint8_t i;
 
@@ -1612,6 +1632,7 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     // TX 0x80 0x06 0x00 0x02 0x00 0x00 0x09 0x00
     // RX 0x09 0x02 0x22 0x00 0x01 0x01 0x00 0x80 0x0f
     if (rcode) {
+        FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailGetConfDescr;
     }
 
@@ -1633,7 +1654,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     //memset(buf, 0x00, MAX_PACKET_LEN);
     //rcode = getStrDescr(ei.address, 64, 2, 0x0409, data);
 
-
     /////////////////////////////////////////
     // read the full config descriptor
     //
@@ -1646,17 +1666,46 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     //    0x09 0x21 0x10 0x01 0    0x01 0x22 0x4a 0    \  // HID DESCRIPTOR
     //    0x07 0x05 0x81 0x03 0x05 0    0x0a              // ENDPOINT DESCRIPTOR
     if (rcode) {
+        FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailGetConfDescr;
     }
 
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
-    // size ucd->wTotalLength aka 34
-    for (i = 0; i < 64; i++) {
+    for (i = 0; i < ucd_wTotalLength; i++) {
         uart0_print(_utoh(itoa_buf, buf[i]));
         uart0_print(" ");
     }
-    uart0_print("\r\nstr full ^\r\n");
+    uart0_print("\r\nucd ^\r\n");
 #endif
+
+    // make sure the device is actually a HID thingamabob
+    // and get the HID REPORT descriptor size
+    {
+        USB_CONFIGURATION_DESCRIPTOR *ucd;
+        USB_INTERFACE_DESCRIPTOR *uid;
+        USB_HID_DESCRIPTOR *uhd;
+        ucd = (USB_CONFIGURATION_DESCRIPTOR *) buf;
+        uid = (USB_INTERFACE_DESCRIPTOR *) (buf + ucd->bLength);
+        if (uid->bInterfaceClass != UHS_USB_CLASS_HID) {
+            // hey this ain't no HID device dammit
+            FreeAddress(ei.address);
+            return UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED;
+        }
+        uhd = (USB_HID_DESCRIPTOR *) (buf + ucd->bLength + uid->bLength);
+        uhd_wDescriptorLength = uhd->wDescriptorLength;
+    }
+
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    uart0_print("wDL ");
+    uart0_print(_utoh(itoa_buf, uhd_wDescriptorLength));
+    uart0_print("\r\n");
+#endif
+
+    if ( uhd_wDescriptorLength > MAX_PACKET_LEN ) {
+        // too big of a HID report
+        FreeAddress(ei.address);
+        return UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED;
+    }
 
     /////////////////////////////////////////
     // set configuration
@@ -1678,6 +1727,35 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailSetConf;
     }
+
+
+    /////////////////////////////////////////
+    // get the HID descriptor report
+    //
+
+    memset(buf, 0x00, MAX_PACKET_LEN);
+    rcode = ReportDescr(ei.address, 0, uhd_wDescriptorLength, buf);
+    // TX 0x81 0x06 0x0 0x22 0x0 0x0 0x4a 0x0
+    // RX 0x05 0x01 0x09 0x04 0xa1 0x01 0xa1 0x02 0x15 0x0 0x26 0xff 0x0 0x35
+    // 0x0 0x46 0xff 0x0 0x75 0x08 0x95 0x03 0x09 0x30 0x09 0x31 0x09 0x32 
+    // 0x81 0x02 0x25 0x01 0x45 0x01 0x75 0x01 0x95 0x0b 0x05 0x09 0x19 0x01
+    // 0x29 0x0b 0x81 0x02 0x75 0x01 0x95 0x05 0x81 0x01 0xc0 0xa1 0x02 0x26
+    // 0xff 0x0 0x46 0xff 0x0 0x75 0x08 0x95 0x04 0x06 0x0 0xff 0x09 0x01
+    // 0xb1 0x02 0xc0 0xc0
+    if (rcode) {
+        FreeAddress(ei.address);
+        return UHS_HOST_ERROR_FailGetHIDr;
+    }
+
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    for (i = 0; i < uhd_wDescriptorLength; i++) {
+        uart0_print(_utoh(itoa_buf, buf[i]));
+        uart0_print(" ");
+    }
+    uart0_print("\r\nuhd ^\r\n");
+#endif
+
+    rcode = USB_ProcessHIDReport( buf, uhd_wDescriptorLength, &HID_ri);
 
     return 0;
 }
