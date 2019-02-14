@@ -426,6 +426,9 @@ uint8_t CALLBACK_HIDParser_FilterHIDReportItem(HID_ReportItem_t* const CurrentIt
 	 * structure to save RAM and ignore the rest
 	 */
 	return ((CurrentItem->Attributes.Usage.Page == USAGE_PAGE_BUTTON) ||
-	        (CurrentItem->Attributes.Usage.Page == USAGE_PAGE_GENERIC_DCTRL));
+	        (CurrentItem->Attributes.Usage.Page == USAGE_PAGE_GENERIC_DCTRL) ||
+	        (CurrentItem->Attributes.Usage.Page == USAGE_X) ||
+	        (CurrentItem->Attributes.Usage.Page == USAGE_Y) ||
+	        (CurrentItem->Attributes.Usage.Page == USAGE_Z));
 }
 

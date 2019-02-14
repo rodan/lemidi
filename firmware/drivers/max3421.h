@@ -19,6 +19,7 @@ void doHostReset(void);
 uint8_t MAX3421_init(void);
 uint8_t MAX3421_getVbusState(void);
 uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed);
+void poll_joystick(struct ENUMERATION_INFO *ei);
 
 // interrupt counters
 volatile uint32_t int_cnt, int_cnt_hl;
@@ -33,6 +34,8 @@ void gpioWr(const uint8_t data);
 uint8_t gpioRd(void);
 uint8_t gpioRdOutput(void);
 void busprobe(void);
+
+uint8_t inTransfer(uint8_t addr, uint8_t ep, uint16_t * nbytesptr, uint8_t * data);
 
 uint8_t InTransfer(struct UHS_EpInfo *pep, const uint16_t nak_limit, uint16_t * nbytesptr,
                    uint8_t * data);

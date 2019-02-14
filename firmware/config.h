@@ -11,7 +11,7 @@
 #define LOG_LEVEL_DEBUG     0x5 // 10002
 #define LOG_LEVEL_TRACE     0x6 // 10574
 
-#define CONFIG_LOG_LEVEL    LOG_LEVEL_TRACE
+#define CONFIG_LOG_LEVEL    LOG_LEVEL_WARNING
 
 // dont touch
 //#define USE_WATCHDOG

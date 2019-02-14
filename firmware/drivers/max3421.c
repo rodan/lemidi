@@ -46,17 +46,19 @@ volatile uint8_t bus_event;
 
 volatile uint8_t usb_error;
 volatile uint8_t usb_task_state;
-//volatile uint8_t usb_task_polling_disabled;
 volatile uint8_t usb_host_speed;
-//volatile uint8_t hub_present;
 
 volatile uint8_t ifg_int_last_event;
 volatile uint8_t ifg_gpx_last_event;
 
+uint32_t qNextPollTime;
+
 struct UHS_Device thePool[UHS_HOST_MAX_INTERFACE_DRIVERS];
 // Endpoint data structure used during enumeration for uninitialized device
 struct UHS_EpInfo dev0ep;
-
+// HID-related epInfo
+struct UHS_EpInfo hid_epInfo;
+struct ENUMERATION_INFO ei;
 HID_ReportInfo_t HID_ri;
 
 void VBUS_changed(void)
@@ -78,7 +80,6 @@ void VBUS_changed(void)
         // Resets to the device cause an IRQ
         // usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE;
         //if((usb_task_state & UHS_USB_HOST_STATE_MASK) != UHS_USB_HOST_STATE_DETACHED) {
-        //ReleaseChildren(); // FIXME
         if (!(bus_event & doingreset)) {
             if (usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE) {
                 usb_task_state = UHS_USB_HOST_STATE_WAIT_BUS_READY;
@@ -91,14 +92,12 @@ void VBUS_changed(void)
     case SE1:                  //illegal state
         sof_countdown = 0;
         bus_event &= ~doingreset;
-        //ReleaseChildren(); FIXME
         usb_task_state = UHS_USB_HOST_STATE_ILLEGAL;
         break;
     case SE0:                  //disconnected
     default:
         sof_countdown = 0;
         bus_event &= ~doingreset;
-        //ReleaseChildren(); FIXME
         usb_task_state = UHS_USB_HOST_STATE_IDLE;
 
         // only one device can be connected and it's currently not
@@ -196,17 +195,7 @@ void MAX3421_sm(void)
 #endif
         break;
     case UHS_USB_HOST_STATE_RUNNING:
-        /*
-           Poll_Others();
-           for (x = 0;
-           (usb_task_state == UHS_USB_HOST_STATE_RUNNING) && (x < UHS_HOST_MAX_INTERFACE_DRIVERS);
-           x++) {
-           if (devConfig[x]) {
-           if (devConfig[x]->bPollEnable)
-           devConfig[x]->Poll();
-           }
-           }
-         */
+        poll_joystick(&ei);
         break;
     default:
         // Do nothing
@@ -218,6 +207,68 @@ void MAX3421_sm(void)
        bus_event &= ~condet;
     }
 */
+}
+
+void poll_joystick(struct ENUMERATION_INFO *ei)
+{
+    uint8_t rcode;
+    uint8_t buf[8];
+    uint16_t length = 5;
+    uint8_t rep_cnt;
+    HID_ReportItem_t *ReportItem;
+
+    memset(buf, 0x0, 8);
+    if ((long)(millis() - qNextPollTime) >= 0L) {
+        rcode = inTransfer(ei->address, 1, &length, buf);
+        if (!rcode) {
+            //uart0_print("+");
+
+            for (rep_cnt = 0; rep_cnt < HID_ri.TotalReportItems; rep_cnt++) {
+                ReportItem = &HID_ri.ReportItems[rep_cnt];
+
+                // Update the report item value if it is contained within the current report
+                if (!(USB_GetHIDReportItemInfo(buf, ReportItem))) {
+                    continue;
+                }
+                if (ReportItem->Value != ReportItem->PreviousValue) {
+                    if (ReportItem->Attributes.Usage.Page == USAGE_PAGE_BUTTON) {
+                        uart0_print(_utoh(itoa_buf, ReportItem->Attributes.Usage.Usage));
+                        uart0_print(" ");
+                        uart0_print(_utoh(itoa_buf, ReportItem->Value));
+                        uart0_print("\r\n");
+                    } else {
+                        // not a button so it's a pot
+                        switch (ReportItem->Attributes.Usage.Usage) {
+                        case USAGE_X:
+                            uart0_print("x ");
+                            break;
+                        case USAGE_Y:
+                            uart0_print("y ");
+                            break;
+                        case USAGE_Z:
+                            uart0_print("z ");
+                            break;
+                        }
+                        uart0_print(_utoh(itoa_buf, ReportItem->Value));
+                        uart0_print("\r\n");
+                    }
+                }
+            }
+
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+            uint8_t i;
+            uart0_print("IN ");
+            //uart0_print(_utoh(itoa_buf, length));
+            //uart0_print(" ");
+            for (i = 0; i < length; i++) {
+                uart0_print(_utoh(itoa_buf, buf[i]));
+                uart0_print(" ");
+            }
+            uart0_print("\r\n");
+#endif
+        }
+        qNextPollTime = millis() + 10;  // hardcoded FIXME
+    }
 }
 
 static void gpx_irq_handler(const uint16_t msg)
@@ -378,12 +429,14 @@ uint8_t AllocAddress(const uint8_t parent, const uint8_t port)
     thePool[index].address = addr;
 
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
-    uart0_print("* AllocAddress dA ");
+    uart0_print("* AllocAddress pA ");
+    uart0_print(_utoh(itoa_buf, parent));
+    uart0_print(" po ");
+    uart0_print(_utoh(itoa_buf, port));
+    uart0_print(" dA ");
     uart0_print(_utoh(itoa_buf, addr.devAddress));
-    uart0_print(" bP ");
-    uart0_print(_utoh(itoa_buf, addr.bmParent));
-    uart0_print(" bA ");
-    uart0_print(_utoh(itoa_buf, addr.bmAddress));
+    uart0_print(" idx ");
+    uart0_print(_utoh(itoa_buf, index));
     uart0_print("\r\n");
 #endif
     return thePool[index].address.devAddress;
@@ -831,7 +884,7 @@ uint8_t InTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, uint16_t *
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
     uart0_print("\r\n* InTransfer ");
     uart0_print(_utoh(itoa_buf, nbytes));
-    uart0_print("B\r\n");
+    uart0_print("\r\n");
 #endif
 
     *nbytesptr = 0;
@@ -851,7 +904,8 @@ uint8_t InTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, uint16_t *
         }
 #endif
         if (rcode) {
-#if (CONFIG_LOG_LEVEL > LOG_LEVEL_FATAL)
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+            // NAKs are too common to print these while LOG_LEVEL_ERROR
             uart0_print("! InTransfer err dP ");
             uart0_print(_utoh(itoa_buf, rcode));
             uart0_print("\r\n");
@@ -869,11 +923,10 @@ uint8_t InTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, uint16_t *
         }
         pktsize = regRd(rRCVBC);        //number of received bytes
 
-
-#if (CONFIG_LOG_LVL > LOG_LEVEL_TRACE)
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
         uart0_print("* InTransfer got ");
         uart0_print(_utoh(itoa_buf, pktsize));
-        uart0_print("B\r\n");
+        uart0_print("\r\n");
 #endif
 
         if (pktsize > nbytes) { //certain devices send more than asked
@@ -910,7 +963,6 @@ uint8_t InTransfer(struct UHS_EpInfo * pep, const uint16_t nak_limit, uint16_t *
     }
     return (rcode);
 }
-
 
 // * Transmit a packet
 // *
@@ -1012,8 +1064,7 @@ uint8_t dispatchPkt(const uint8_t token, const uint8_t ep, const uint16_t nak_li
     for (;;) {
         // launch the host transfer
         regWr(rHXFR, (token | ep));
-        while ((long)(millis() - timeout) < 0L)
-        {
+        while ((long)(millis() - timeout) < 0L) {
             // check if host transfer is complete
             tmpdata = regRd(rHIRQ);
             if (tmpdata & bmHXFRDNIRQ) {
@@ -1047,12 +1098,40 @@ uint8_t dispatchPkt(const uint8_t token, const uint8_t ep, const uint16_t nak_li
     }
 }
 
+//
+// * Sets a device table entry for a device.
+// * Each device is different and has different number of endpoints.
+// * This function plugs endpoint record structure, defined in application, to devtable
+// *
+// * @param addr device address
+// * @param epcount how many endpoints
+// * @param eprecord pointer to the endpoint structure
+// * @return Zero for success, or error code
+
+uint8_t setEpInfoEntry(uint8_t addr, uint8_t iface, uint8_t epcount, struct UHS_EpInfo * eprecord)
+{
+    if (!eprecord) {
+        return UHS_HOST_ERROR_BAD_ARGUMENT;
+    }
+
+    struct UHS_Device *p = GetUsbDevicePtr(addr);
+
+    if (!p) {
+        return UHS_HOST_ERROR_NO_ADDRESS_IN_POOL;
+    }
+    // p->address.devAddress = addr; the fuck??
+    p->epinfo[iface] = eprecord;        // overwrites epinfo[0] wtf FIXME
+    p->epcount = epcount;
+    return 0;
+}
+
 struct UHS_EpInfo *getEpInfoEntry(const uint8_t addr, const uint8_t ep)
 {
     struct UHS_Device *p = GetUsbDevicePtr(addr);
 
-    if (!p || !p->epinfo)
+    if (!p || !p->epinfo) {
         return NULL;
+    }
 
     struct UHS_EpInfo *pep;
     for (uint8_t j = 0; j < UHS_HOST_MAX_INTERFACE_DRIVERS; j++) {
@@ -1089,9 +1168,11 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
     uint16_t nak_lim;
     struct UHS_Device *p = GetUsbDevicePtr(addr);
 
-#if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
     uart0_print("* SetAddress ");
     uart0_print(_utoh(itoa_buf, addr));
+    uart0_print(" ");
+    uart0_print(_utoh(itoa_buf, ep));
     uart0_print("\r\n");
 #endif
 
@@ -1105,8 +1186,9 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
 
     *ppep = getEpInfoEntry(addr, ep);
 
-    if (!*ppep)
+    if (!*ppep) {
         return UHS_HOST_ERROR_NO_ENDPOINT_IN_TABLE;
+    }
 
     nak_lim =
         (0x0001UL <<
@@ -1121,9 +1203,6 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
 
     // Set bmLOWSPEED and bmHUBPRE in case of low-speed device, reset them otherwise
     regWr(rMODE, (p->speed) ? mode & ~(bmHUBPRE | bmLOWSPEED) : mode | bmLOWSPEED);
-
-    // recovery
-    timer_a0_delay_ccr4(_2ms);
 
     return 0;
 }
@@ -1198,7 +1277,7 @@ uint8_t ctrlReqRead(struct UHS_EpInfo * pep, uint16_t * left, uint16_t * read,
             return rcode;
         }
         *left -= *read;
-#if 0 // (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+#if 0                           // (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
         uart0_print(" left ");
         uart0_print(_utoh(itoa_buf, *left));
         uart0_print(" read ");
@@ -1392,8 +1471,8 @@ uint8_t getConf(const uint8_t addr, const uint8_t conf_value, uint8_t * dataptr)
 {
     return (ctrlReq
             (addr,
-             mkSETUP_PKT8(USB_SETUP_DEVICE_TO_HOST, USB_REQUEST_GET_CONFIGURATION, 0x00, 0x00, 0x0000,
-                          conf_value), conf_value, dataptr));
+             mkSETUP_PKT8(USB_SETUP_DEVICE_TO_HOST, USB_REQUEST_GET_CONFIGURATION, 0x00, 0x00,
+                          0x0000, conf_value), conf_value, dataptr));
 }
 
 // * Set the address of a device to a new address via endpoint Zero.
@@ -1426,22 +1505,31 @@ uint8_t setConf(const uint8_t addr, const uint8_t conf_value)
                           0x0000), 0x0000, NULL));
 }
 
-uint8_t ReportDescr(const uint8_t addr, const uint16_t wIndex, const uint16_t nbytes, uint8_t *buffer) {
-    return ctrlReq(addr, mkSETUP_PKT8(0x81U, USB_REQUEST_GET_DESCRIPTOR, 0x00U, 0x22U, wIndex, nbytes), nbytes, buffer);
+uint8_t ReportDescr(const uint8_t addr, const uint16_t wIndex, const uint16_t nbytes,
+                    uint8_t * buffer)
+{
+    return ctrlReq(addr,
+                   mkSETUP_PKT8(0x81U, USB_REQUEST_GET_DESCRIPTOR, 0x00U, 0x22U, wIndex, nbytes),
+                   nbytes, buffer);
 }
 
-uint8_t SetIdle(const uint8_t addr, const uint8_t iface, const uint8_t reportID, const uint8_t duration) {
+uint8_t SetIdle(const uint8_t addr, const uint8_t iface, const uint8_t reportID,
+                const uint8_t duration)
+{
     return ctrlReq(addr, mkSETUP_PKT8(0x21U, 0x0AU, reportID, duration, iface, 0x0000U), 0, NULL);
 }
 
-uint8_t SetProtocol(const uint8_t addr, const uint8_t iface, const uint8_t protocol) {
+uint8_t SetProtocol(const uint8_t addr, const uint8_t iface, const uint8_t protocol)
+{
     return ctrlReq(addr, mkSETUP_PKT8(0x21, 0x0B, protocol, 0x00, iface, 0x0000U), 0, NULL);
 }
 
-uint8_t SetReport(const uint8_t addr, const uint8_t iface, const uint8_t report_type, const uint8_t report_id, const uint16_t nbytes, uint8_t* dataptr) {
-    return ctrlReq(addr, mkSETUP_PKT8(0x21U, 0x09U, report_id, report_type, iface, nbytes), nbytes, dataptr);
+uint8_t SetReport(const uint8_t addr, const uint8_t iface, const uint8_t report_type,
+                  const uint8_t report_id, const uint16_t nbytes, uint8_t * dataptr)
+{
+    return ctrlReq(addr, mkSETUP_PKT8(0x21U, 0x09U, report_id, report_type, iface, nbytes), nbytes,
+                   dataptr);
 }
-
 
 uint8_t sof_delay(const uint16_t x)
 {
@@ -1485,7 +1573,8 @@ uint8_t doSoftReset(const uint8_t parent, const uint8_t port, const uint8_t addr
         doHostReset();
     } else {
         // reset parent port
-        //devConfig[parent]->ResetHubPort(port); // FIXME
+        //devConfig[parent]->ResetHubPort(port); 
+        // FIXME // well, hubs are not supported at this point
     }
 
     //
@@ -1505,7 +1594,7 @@ uint8_t doSoftReset(const uint8_t parent, const uint8_t port, const uint8_t addr
         } while (retries < 200);
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
         uart0_print("* doSoftReset ");
-        uart0_print(_utoh(itoa_buf,retries));
+        uart0_print(_utoh(itoa_buf, retries));
         uart0_print(" retries\r\n");
 #endif
     }
@@ -1531,12 +1620,11 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     //uint16_t i;
 
     struct UHS_Device *p = NULL;
-    struct ENUMERATION_INFO ei;
     uint8_t buf[MAX_PACKET_LEN];
     uint8_t udd_bNumConfigurations = 0;
     uint8_t ucd_wTotalLength = 0;
     uint8_t uhd_wDescriptorLength = 0;
-    
+
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
     uint8_t i;
 
@@ -1563,7 +1651,7 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     //
 
     memset(buf, 0x00, MAX_PACKET_LEN);
-    timer_a0_delay_ccr4(_1ms);
+    timer_a0_delay_ccr4(_2ms);
     rcode = getDevDescr(0, MAX_PACKET_LEN, buf);
     // TX 0x80 0x06 0x0 0x01 0x0 0x0 0x12 0x0
     // RX 0x12 0x01 0x10 0x01 0x0 0x0 0x0 0x08 0x6d 0x04 0x14 0xc2 0x05 0x02 0x01 0x02 0x0 0x01
@@ -1604,7 +1692,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     if (!ei.address) {
         return UHS_HOST_ERROR_ADDRESS_POOL_FULL;
     }
-
     // shift p to address = 1;
     p = GetUsbDevicePtr(ei.address);
     p->speed = speed;
@@ -1622,12 +1709,12 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED;
     }
-
     /////////////////////////////////////////
     // read the minimal config descriptor
     //
 
     memset(buf, 0x00, MAX_PACKET_LEN);
+    timer_a0_delay_ccr4(_2ms);
     rcode = getConfDescr(ei.address, sizeof(USB_CONFIGURATION_DESCRIPTOR), 0, buf);
     // TX 0x80 0x06 0x00 0x02 0x00 0x00 0x09 0x00
     // RX 0x09 0x02 0x22 0x00 0x01 0x01 0x00 0x80 0x0f
@@ -1669,7 +1756,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailGetConfDescr;
     }
-
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
     for (i = 0; i < ucd_wTotalLength; i++) {
         uart0_print(_utoh(itoa_buf, buf[i]));
@@ -1684,6 +1770,8 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         USB_CONFIGURATION_DESCRIPTOR *ucd;
         USB_INTERFACE_DESCRIPTOR *uid;
         USB_HID_DESCRIPTOR *uhd;
+        USB_ENDPOINT_DESCRIPTOR *ued;
+
         ucd = (USB_CONFIGURATION_DESCRIPTOR *) buf;
         uid = (USB_INTERFACE_DESCRIPTOR *) (buf + ucd->bLength);
         if (uid->bInterfaceClass != UHS_USB_CLASS_HID) {
@@ -1693,7 +1781,116 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         }
         uhd = (USB_HID_DESCRIPTOR *) (buf + ucd->bLength + uid->bLength);
         uhd_wDescriptorLength = uhd->wDescriptorLength;
+        ued = (USB_ENDPOINT_DESCRIPTOR *) (buf + ucd->bLength + uid->bLength + uhd->bLength);
+        hid_epInfo.epAddr = ued->bEndpointAddress & 0xf;
+        hid_epInfo.bIface = 0;  // hardcoded FIXME
+        hid_epInfo.maxPktSize = ued->wMaxPacketSize;
+        hid_epInfo.epAttribs = 0;
+        hid_epInfo.bmNakPower = UHS_USB_NAK_DEFAULT;
     }
+
+#if 0                           // (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    uart0_print("tP0 epcount ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epcount));
+    uart0_print(" speed ");
+    uart0_print(_utoh(itoa_buf, thePool[0].speed));
+    uart0_print("\r\n address ");
+    uart0_print(_utoh(itoa_buf, thePool[0].address.devAddress));
+    uart0_print("\r\n epi[0] eAd ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[0]->epAddr));
+    uart0_print(" bIf ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[0]->bIface));
+    uart0_print(" mPS ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[0]->maxPktSize));
+    uart0_print(" eAt");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[0]->epAttribs));
+    uart0_print("\r\n epi[1] eAd ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[1]->epAddr));
+    uart0_print(" bIf ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[1]->bIface));
+    uart0_print(" mPS ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[1]->maxPktSize));
+    uart0_print(" eAt");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[1]->epAttribs));
+    uart0_print("\r\n");
+
+    uart0_print("tP1 epcount ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epcount));
+    uart0_print(" speed ");
+    uart0_print(_utoh(itoa_buf, thePool[1].speed));
+    uart0_print("\r\n address ");
+    uart0_print(_utoh(itoa_buf, thePool[1].address.devAddress));
+    uart0_print("\r\n epi[0] eAd ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[0]->epAddr));
+    uart0_print(" bIf ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[0]->bIface));
+    uart0_print(" mPS ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[0]->maxPktSize));
+    uart0_print(" eAt");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[0]->epAttribs));
+    uart0_print("\r\n epi[1] eAd ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[1]->epAddr));
+    uart0_print(" bIf ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[1]->bIface));
+    uart0_print(" mPS ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[1]->maxPktSize));
+    uart0_print(" eAt");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[1]->epAttribs));
+    uart0_print("\r\n");
+#endif
+
+    // hardcoded 1 endpoint FIXME
+    setEpInfoEntry(ei.address, 1, 2, &hid_epInfo);
+
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    uart0_print("tP0 epcount ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epcount));
+    uart0_print(" speed ");
+    uart0_print(_utoh(itoa_buf, thePool[0].speed));
+    uart0_print("\r\n address ");
+    uart0_print(_utoh(itoa_buf, thePool[0].address.devAddress));
+    uart0_print("\r\n epi[0] eAd ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[0]->epAddr));
+    uart0_print(" bIf ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[0]->bIface));
+    uart0_print(" mPS ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[0]->maxPktSize));
+    uart0_print(" eAt");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[0]->epAttribs));
+    uart0_print("\r\n epi[1] eAd ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[1]->epAddr));
+    uart0_print(" bIf ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[1]->bIface));
+    uart0_print(" mPS ");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[1]->maxPktSize));
+    uart0_print(" eAt");
+    uart0_print(_utoh(itoa_buf, thePool[0].epinfo[1]->epAttribs));
+    uart0_print("\r\n");
+
+    uart0_print("tP1 epcount ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epcount));
+    uart0_print(" speed ");
+    uart0_print(_utoh(itoa_buf, thePool[1].speed));
+    uart0_print("\r\n address ");
+    uart0_print(_utoh(itoa_buf, thePool[1].address.devAddress));
+    uart0_print("\r\n epi[0] eAd ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[0]->epAddr));
+    uart0_print(" bIf ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[0]->bIface));
+    uart0_print(" mPS ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[0]->maxPktSize));
+    uart0_print(" eAt");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[0]->epAttribs));
+    uart0_print("\r\n epi[1] eAd ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[1]->epAddr));
+    uart0_print(" bIf ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[1]->bIface));
+    uart0_print(" mPS ");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[1]->maxPktSize));
+    uart0_print(" eAt");
+    uart0_print(_utoh(itoa_buf, thePool[1].epinfo[1]->epAttribs));
+    uart0_print("\r\n");
+#endif
 
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
     uart0_print("wDL ");
@@ -1701,12 +1898,11 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uart0_print("\r\n");
 #endif
 
-    if ( uhd_wDescriptorLength > MAX_PACKET_LEN ) {
+    if (uhd_wDescriptorLength > MAX_PACKET_LEN) {
         // too big of a HID report
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_DEVICE_NOT_SUPPORTED;
     }
-
     /////////////////////////////////////////
     // set configuration
     //
@@ -1717,9 +1913,8 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailSetConf;
     }
-
     // test if device considers the configuration set 
-    buf[0]=0;
+    buf[0] = 0;
     rcode = getConf(ei.address, 1, buf);
     // TX 0x80 0x08 0x0 0x0 0x0 0x0 0x01 0x0
     // RX 0x01
@@ -1727,8 +1922,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailSetConf;
     }
-
-
     /////////////////////////////////////////
     // get the HID descriptor report
     //
@@ -1746,7 +1939,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailGetHIDr;
     }
-
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
     for (i = 0; i < uhd_wDescriptorLength; i++) {
         uart0_print(_utoh(itoa_buf, buf[i]));
@@ -1755,9 +1947,66 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uart0_print("\r\nuhd ^\r\n");
 #endif
 
-    rcode = USB_ProcessHIDReport( buf, uhd_wDescriptorLength, &HID_ri);
+    rcode = USB_ProcessHIDReport(buf, uhd_wDescriptorLength, &HID_ri);
+    if (rcode) {
+        FreeAddress(ei.address);
+        return rcode;
+    }
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    uart0_print("HID items ");
+    uart0_print(_utoh(itoa_buf, HID_ri.TotalReportItems));
+    uart0_print("\r\n");
+#endif
+
+    if (!(HID_ri.TotalReportItems)) {
+        FreeAddress(ei.address);
+        return rcode;
+    }
+    /////////////////////////////////////////
+    // set the idle intervals
+    //
+
+    rcode = SetIdle(1, 0, 0, 0);
+    if (rcode) {
+        FreeAddress(ei.address);
+        return rcode;
+    }
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    uint8_t x;
+    for (i = 0; i < sizeof(struct UHS_Device); i++) {
+        x = *((uint8_t *) & thePool[0] + i);
+        uart0_print(_utoh(itoa_buf, x));
+    }
+    uart0_print("thePool[0]^ \r\n");
+    for (i = 0; i < sizeof(struct UHS_Device); i++) {
+        x = *((uint8_t *) & thePool[1] + i);
+        uart0_print(_utoh(itoa_buf, x));
+    }
+    uart0_print("thePool[1]^ \r\n");
+#endif
 
     return 0;
+}
+
+/**
+ * Reads data from an interface pipe
+ *
+ * @param addr Address of the device
+ * @param ep Endpoint of the pipe
+ * @param nbytesptr number of bytes to transfer
+ * @param data pointer to buffer to hold transfer
+ * @return zero for success or error code
+ */
+uint8_t inTransfer(const uint8_t addr, const uint8_t ep, uint16_t * nbytesptr, uint8_t * data)
+{
+    struct UHS_EpInfo *pep = NULL;
+    uint16_t nak_limit = 0;
+
+    uint8_t rcode = SetAddress(addr, ep, &pep, &nak_limit);
+    if (!rcode) {
+        rcode = InTransfer(pep, nak_limit, nbytesptr, data);
+    }
+    return rcode;
 }
 
 uint8_t get_ifg_int_event(void)

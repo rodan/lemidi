@@ -375,7 +375,7 @@ typedef struct {
 /* NAK powers. To save space in endpoint data structure, amount of retries before giving up and returning 0x4 is stored in */
 /* bmNakPower as a power of 2. The actual nak_limit is then calculated as nak_limit = ( 2^bmNakPower - 1) */
 #define UHS_USB_NAK_MAX_POWER               14      // NAK binary order maximum value
-#define UHS_USB_NAK_DEFAULT                 13      // default 16K-1 NAKs before giving up
+#define UHS_USB_NAK_DEFAULT                 2       // default 16K-1 NAKs before giving up
 #define UHS_USB_NAK_NOWAIT                  1       // Single NAK stops transfer
 #define UHS_USB_NAK_NONAK                   0       // Do not count NAKs, stop retrying after USB Timeout. Try not to use this.
 
