@@ -52,8 +52,8 @@ volatile uint8_t usb_host_speed;
 volatile uint8_t ifg_int_last_event;
 volatile uint8_t ifg_gpx_last_event;
 
-uint16_t HID_bInterval; // bInterval saved from the Endpoint Descriptor (poll time in ms)
-uint32_t qNextPollTime; // when the next poll will take place (ms based on millis)
+uint16_t HID_bInterval;         // bInterval saved from the Endpoint Descriptor (poll time in ms)
+uint32_t qNextPollTime;         // when the next poll will take place (ms based on millis)
 
 struct UHS_Device thePool[UHS_HOST_MAX_INTERFACE_DRIVERS];
 // Endpoint data structure used during enumeration for uninitialized device
@@ -235,7 +235,7 @@ void poll_joystick(struct ENUMERATION_INFO *ei)
     uint8_t rcode;
     uint8_t buf[8];
     uint8_t rep_cnt;
-    uint16_t length = hid_epInfo.maxPktSize; // 5 or 6
+    uint16_t length = hid_epInfo.maxPktSize;    // 5 or 6
     HID_ReportItem_t *ReportItem;
 
     memset(buf, 0x0, 8);
@@ -309,25 +309,37 @@ void poll_joystick(struct ENUMERATION_INFO *ei)
                         // not a button so it's a pot
                         switch (ReportItem->AxisId) {
                         case 1:
-                            mcp42_set_pot_ch( 0, 1, axis_rescale(ReportItem->Value,ReportItem->Attributes.Logical.Minimum,ReportItem->Attributes.Logical.Maximum));
+                            mcp42_set_pot_ch(0, 1,
+                                             axis_rescale(ReportItem->Value,
+                                                          ReportItem->Attributes.Logical.Minimum,
+                                                          ReportItem->Attributes.Logical.Maximum));
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_ERROR)
                             uart0_print("a1 ");
 #endif
                             break;
                         case 2:
-                            mcp42_set_pot_ch( 0, 0, axis_rescale(ReportItem->Value,ReportItem->Attributes.Logical.Minimum,ReportItem->Attributes.Logical.Maximum));
+                            mcp42_set_pot_ch(0, 0,
+                                             axis_rescale(ReportItem->Value,
+                                                          ReportItem->Attributes.Logical.Minimum,
+                                                          ReportItem->Attributes.Logical.Maximum));
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_ERROR)
                             uart0_print("a2 ");
 #endif
                             break;
                         case 3:
-                            mcp42_set_pot_ch( 1, 1, axis_rescale(ReportItem->Value,ReportItem->Attributes.Logical.Minimum,ReportItem->Attributes.Logical.Maximum));
+                            mcp42_set_pot_ch(1, 1,
+                                             axis_rescale(ReportItem->Value,
+                                                          ReportItem->Attributes.Logical.Minimum,
+                                                          ReportItem->Attributes.Logical.Maximum));
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_ERROR)
                             uart0_print("a3 ");
 #endif
                             break;
                         case 4:
-                            mcp42_set_pot_ch( 1, 0, axis_rescale(ReportItem->Value,ReportItem->Attributes.Logical.Minimum,ReportItem->Attributes.Logical.Maximum));
+                            mcp42_set_pot_ch(1, 0,
+                                             axis_rescale(ReportItem->Value,
+                                                          ReportItem->Attributes.Logical.Minimum,
+                                                          ReportItem->Attributes.Logical.Maximum));
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_ERROR)
                             uart0_print("a4 ");
 #endif
@@ -344,7 +356,11 @@ void poll_joystick(struct ENUMERATION_INFO *ei)
                         uart0_print(" ");
                         uart0_print(_utoh(itoa_buf, ReportItem->Value));
                         uart0_print(" ");
-                        uart0_print(_utoh(itoa_buf, axis_rescale(ReportItem->Value,ReportItem->Attributes.Logical.Minimum,ReportItem->Attributes.Logical.Maximum)));
+                        uart0_print(_utoh
+                                    (itoa_buf,
+                                     axis_rescale(ReportItem->Value,
+                                                  ReportItem->Attributes.Logical.Minimum,
+                                                  ReportItem->Attributes.Logical.Maximum)));
                         uart0_print("\r\n");
 #endif
 
@@ -1430,10 +1446,9 @@ uint8_t ctrlReqClose(struct UHS_EpInfo * pep, const uint8_t bmReqType, uint16_t 
         rcode = dispatchPkt(((bmReqType & 0x80) == 0x80) ? tokOUTHS : tokINHS, 0, 0);   //GET if direction
         if (rcode) {
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_ERROR)
-           uart0_print("! ctrlReqClose dP err\r\n");
+            uart0_print("! ctrlReqClose dP err\r\n");
 #endif
         }
-
         //        } else {
         //                Serial.println("Bypassed Dispatch");
     }
@@ -1995,7 +2010,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailItems;
     }
-
     /////////////////////////////////////////
     // set up the scaling for all axis
     //
@@ -2006,14 +2020,14 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     for (i = 0; i < HID_ri.TotalReportItems; i++) {
         ReportItem = &HID_ri.ReportItems[i];
         if (ReportItem->Attributes.Usage.Page != USAGE_PAGE_BUTTON) {
-            if (ReportItem->Attributes.Logical.Maximum - ReportItem->Attributes.Logical.Minimum > 126) {
+            if (ReportItem->Attributes.Logical.Maximum - ReportItem->Attributes.Logical.Minimum >
+                126) {
                 // looks like a potentiometer, consider this an axis and give it an id
                 ReportItem->AxisId = j;
                 j++;
             }
         }
-     }
-
+    }
 
     /////////////////////////////////////////
     // set the idle intervals
