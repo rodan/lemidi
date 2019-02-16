@@ -95,8 +95,14 @@ extern "C" {
 #define                UHS_HOST_ERROR_FailGetDevDescr 0xE1U
 #define             UHS_HOST_ERROR_FailSetDevTblEntry 0xE2U
 #define               UHS_HOST_ERROR_FailGetConfDescr 0xE3U
-#define                    UHS_HOST_ERROR_FailSetConf 0xE4U
-#define                    UHS_HOST_ERROR_FailGetHIDr 0xE5U
+#define           UHS_HOST_ERROR_FailGetConfDescr_st2 0xE4U
+#define                      UHS_HOST_ERROR_FailReset 0xE5U
+#define               UHS_HOST_ERROR_NoConfigurations 0xE6U
+#define                    UHS_HOST_ERROR_FailSetConf 0xE7U
+#define                    UHS_HOST_ERROR_FailGetConf 0xE8U
+#define                    UHS_HOST_ERROR_FailGetHIDr 0xE9U
+#define                  UHS_HOST_ERROR_FailParseHIDr 0xEAU
+#define                      UHS_HOST_ERROR_FailItems 0xEBU
 #define                  UHS_HOST_ERROR_END_OF_STREAM 0xEFU
 
 // Host base class specific Error codes
@@ -105,7 +111,7 @@ extern "C" {
 
 // SEI interaction defaults
 #define                      UHS_HOST_TRANSFER_MAX_MS 10000 // USB transfer timeout in ms, per section 9.2.6.1 of USB 2.0 spec
-#define               UHS_HOST_TRANSFER_RETRY_MAXIMUM 3     // 3 retry limit for a transfer
+#define               UHS_HOST_TRANSFER_RETRY_MAXIMUM 4     // 3 retry limit for a transfer
 #define                    UHS_HOST_DEBOUNCE_DELAY_MS 500   // settle delay in milliseconds
 #define                        UHS_HUB_RESET_DELAY_MS 20    // hub port reset delay, 10ms recomended, but can be up to 20ms
 
@@ -375,7 +381,7 @@ typedef struct {
 /* NAK powers. To save space in endpoint data structure, amount of retries before giving up and returning 0x4 is stored in */
 /* bmNakPower as a power of 2. The actual nak_limit is then calculated as nak_limit = ( 2^bmNakPower - 1) */
 #define UHS_USB_NAK_MAX_POWER               14      // NAK binary order maximum value
-#define UHS_USB_NAK_DEFAULT                 2       // default 16K-1 NAKs before giving up
+#define UHS_USB_NAK_DEFAULT                 1       // default 16K-1 NAKs before giving up
 #define UHS_USB_NAK_NOWAIT                  1       // Single NAK stops transfer
 #define UHS_USB_NAK_NONAK                   0       // Do not count NAKs, stop retrying after USB Timeout. Try not to use this.
 

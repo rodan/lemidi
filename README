@@ -14,15 +14,23 @@ once the prototype is ready and working I will remove this warning.
                 https://cadlab.io/projects/lemidi
  author:       Petre Rodan <2b4eda@subdimension.ro>
  license:      GNU GPLv3
+ prototype pictures available here: https://photos.app.goo.gl/fXdDBng4dvEepq8V7
 
-Features:
- - both hardware and software are opensource
 
- prototype pictures available here:  
- documentation available here:       
+ tested joysticks:
+
+    Logitech Attack 3
+        ID 046d:c214 Logitech, Inc. ATK3 (Attack III Joystick)
+
+    Genius F-23
+        ID 0458:1004 KYE Systems Corp. (Mouse Systems) Flight2000 F-23 Joystick
+
 
  power consumption
    800uA without the USB subsystem
    +5mA for each active button
+
+interesting resources:
+https://eleccelerator.com/usbdescreqparser/
 
 

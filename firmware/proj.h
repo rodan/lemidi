@@ -59,7 +59,6 @@
 #define MAX3421E_RST_ON     P6OUT &= ~BIT1
 #define MAX3421E_RST_OFF    P6OUT |= BIT1
 
-
 #define STR_LEN 64
 char str_temp[STR_LEN];
 

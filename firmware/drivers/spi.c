@@ -28,8 +28,7 @@ void spi_init(void)
     //Clock polarity select - The inactive state is high
     //MSB first
     UCB1CTL1 = UCSWRST | UCSSEL_2;      //Use SMCLK, keep RESET
-    UCB1BR0 = 16;             //Initial SPI clock
-    //UCB1BR0 = 8;                //Initial SPI clock
+    UCB1BR0 = 8;                //Initial SPI clock
     UCB1BR1 = 0;                //f_UCxCLK = SMCLK/63
     UCB1CTL1 &= ~UCSWRST;       //Release USCI state machine
     UCB1IFG &= ~UCRXIFG;
@@ -52,7 +51,7 @@ void spi_end(void)
 void spi_fast_mode(void)
 {
     UCB1CTL1 |= UCSWRST;        //Put state machine in reset
-    UCB1BR0 = 2;                //f_UCxCLK = 25MHz/2 = 12.5MHz
+    UCB1BR0 = 2;                //SMCLK divider
     UCB1BR1 = 0;
     UCB1CTL1 &= ~UCSWRST;       //Release USCI state machine
 }

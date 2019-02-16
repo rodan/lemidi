@@ -169,8 +169,8 @@
 			 */
 			typedef struct
 			{
-				uint32_t Minimum; /**< Minimum value for the attribute. */
-				uint32_t Maximum; /**< Maximum value for the attribute. */
+				int32_t Minimum; /**< Minimum value for the attribute. */
+				int32_t Maximum; /**< Maximum value for the attribute. */
 			} HID_MinMax_t;
 
 			/** \brief HID Parser Report Item Unit Structure.
@@ -233,10 +233,11 @@
 
 				HID_ReportItem_Attributes_t Attributes;     /**< Report item attributes. */
 
-				uint32_t                    Value;          /**< Current value of the report item - use \ref HID_ALIGN_DATA() when processing
+				int32_t                     Value;          /**< Current value of the report item - use \ref HID_ALIGN_DATA() when processing
 				                                             *   a retrieved value so that it is aligned to a specific type.
 				                                             */
-				uint32_t                    PreviousValue;  /**< Previous value of the report item. */
+				int32_t                     PreviousValue;  /**< Previous value of the report item. */
+                uint8_t                     AxisId;         /**< unique incremented */
 			} HID_ReportItem_t;
 
 			/** \brief HID Parser Report Size Structure.
