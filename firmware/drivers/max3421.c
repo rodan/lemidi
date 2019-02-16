@@ -242,7 +242,6 @@ void poll_joystick(struct ENUMERATION_INFO *ei)
     if ((long)(millis() - qNextPollTime) >= 0L) {
         rcode = inTransfer(ei->address, 1, &length, buf);
         if (!rcode) {
-            //uart0_print("+");
 
             for (rep_cnt = 0; rep_cnt < HID_ri.TotalReportItems; rep_cnt++) {
                 ReportItem = &HID_ri.ReportItems[rep_cnt];

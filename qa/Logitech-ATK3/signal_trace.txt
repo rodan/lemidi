@@ -1,0 +1,63 @@
+
+// legend
+MOSI    // micro out slave in   R - read  W - write
+MISO    // micro in slave out
+
+// HID-related read once every 10ms
+
+c8 ff   // c8 R rHIRQ
+48 48   // 48 FRAMEIRQ + SNDBAVIRQ triggered
+
+ca 40   // ca W rHIRQ 40 // clear serviced irqs
+48 00
+
+60 us
+
+e2 01   // e2 W rPERADDR, 1
+08 00   
+
+d8 ff   // d8 R rMODE
+08 db   // db
+
+da db   // da W rMODE db
+08 00
+
+ea 10   // ea W rHCTL RCVTOG0
+08 00
+
+f2 01   // f2 W HXFR EP0
+08 00
+
+c8 ff   // c8 R rHIRQ
+08 08
+
+c8 ff   // c8 R rHIRQ
+08 08   // 08 RCVDAVIRQ triggered 
+
+c8 ff   // c8 R rHIRQ
+8c 8c   // 8c HXFRDNIRQ + SNDBAVIRQ + RCVDAVIRQ
+
+ca 80   // ca W rHIRQ HXFRDNIRQ
+8c 00
+
+f8 ff   // f8 R rHRSL
+0c 90   // JSTATUS + RCVTOGR0
+
+c8 ff   // c8 R rHIRQ
+0c 0c   // SNDBAVIRQ + RCVDAVIRQ
+
+30 ff   // 30 R rRCVBC
+0c 05   // 5 bytes rcvd
+
+08 ff ff ff ff ff // 08 R rRCVFIFO 5x
+0c 7f 83 bc 00 00 // 7f 83 bc 00 00 <- hid report
+
+ca 04   // W rHIRQ RCVDAVIRQ
+0c 00
+
+f8 ff   // R rHRSL
+08 90
+
+
+
+
