@@ -51,7 +51,8 @@ void spi_end(void)
 void spi_fast_mode(void)
 {
     UCB1CTL1 |= UCSWRST;        //Put state machine in reset
-    UCB1BR0 = 2;                //SMCLK divider
+    //UCB1BR0 = 2;                //SMCLK divider
+    UCB1BR0 = 4;                //SMCLK divider
     UCB1BR1 = 0;
     UCB1CTL1 &= ~UCSWRST;       //Release USCI state machine
 }

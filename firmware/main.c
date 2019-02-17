@@ -53,7 +53,7 @@ int main(void)
 #endif
 
     spi_init();
-    //spi_fast_mode();
+    spi_fast_mode();
     display_menu();
 
     sys_messagebus_register(&timer_a0_ovf_irq, SYS_MSG_TIMER0_IFG);
