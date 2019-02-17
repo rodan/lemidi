@@ -1,0 +1,22 @@
+
+wrong init bug1
+
+c8 ff   // R rHIRQ
+20 20   // CONNIRQ
+
+f8 ff   // R rHRSL
+20 04   // HRSLT2 - periferal returns NAK (on disconnect it's UNDEF, normal is 43)
+
+da d1   // W rMODE, DPPPULLDN | DMPPULLDN | SOFKAENAB | HOST
+20 00
+
+ca 20   // W rHIRQ 20
+20 00   // 
+
+a8 ff   // R rIOPINS2
+00 f0   11110000
+
+aa f0   // W rIOPINS2 11110000
+00 00   
+
+

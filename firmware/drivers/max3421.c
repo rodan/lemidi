@@ -799,7 +799,20 @@ void busprobe(void)
 {
     uint8_t bus_sample;
     uint8_t tmpdata;
+    uint8_t i = 0;
+
     bus_sample = regRd(rHRSL);
+
+    // device not ready, so let's retry (a few hundred times)
+    if ((bus_sample & (bmJSTATUS | bmKSTATUS | 0x0f)) == hrNAK) {
+        while (++i) {
+            bus_sample = regRd(rHRSL);
+            if (bus_sample & (bmJSTATUS | bmKSTATUS)) {
+                break;
+            }
+        }
+    }
+
     bus_sample &= (bmJSTATUS | bmKSTATUS);
     switch (bus_sample) {
         // start full-speed or low-speed host
