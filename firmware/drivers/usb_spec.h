@@ -440,7 +440,7 @@ struct UHS_Device {
     volatile struct UHS_EpInfo *epinfo[UHS_HOST_MAX_INTERFACE_DRIVERS]; // endpoint info pointer
     struct UHS_DeviceAddress address;
     uint8_t epcount; // number of endpoints
-    uint8_t speed; // indicates device speed
+    uint8_t low_speed; // indicates device speed
 } __attribute__((packed));
 
 

@@ -1,0 +1,7 @@
+[44041.968054] usb 2-2: new low-speed USB device number 11 using xhci_hcd
+[44042.099807] usb 2-2: New USB device found, idVendor=046d, idProduct=c215
+[44042.099812] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[44042.099815] usb 2-2: Product: Logitech Extreme 3D Pro
+[44042.099818] usb 2-2: Manufacturer: Logitech
+[44042.104821] input: Logitech Logitech Extreme 3D Pro as /devices/pci0000:00/0000:00:14.0/usb2/2-2/2-2:1.0/0003:046D:C215.0004/input/input19
+[44042.156185] logitech 0003:046D:C215.0004: input,hidraw0: USB HID v1.10 Joystick [Logitech Logitech Extreme 3D Pro] on usb-0000:00:14.0-2/input0

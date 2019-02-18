@@ -47,7 +47,7 @@ volatile uint8_t bus_event;
 
 volatile uint8_t usb_error;
 volatile uint8_t usb_task_state;
-volatile uint8_t usb_host_speed;
+volatile uint8_t usb_host_low_speed; // if 0 it's HIGH speed, 1 is LOW speed
 
 volatile uint8_t ifg_int_last_event;
 volatile uint8_t ifg_gpx_last_event;
@@ -66,7 +66,8 @@ HID_ReportInfo_t HID_ri;
 void VBUS_changed(void)
 {
     /* modify USB task state because Vbus changed or unknown */
-    uint8_t speed = 1;
+    // start with low speed
+    uint8_t low_speed = 1;
     uint8_t iostate;
 
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
@@ -74,10 +75,10 @@ void VBUS_changed(void)
     uart0_print(_utoh(itoa_buf, usb_task_state));
 #endif
     switch (vbusState) {
-    case LSHOST:               // Low speed
-        speed = 0;
+    case LSHOST:               // ? Low speed
+        low_speed = 0;
         // Intentional fall-through
-    case FSHOST:               // Full speed
+    case FSHOST:               // ? Full speed
         // Start device initialization if we are not initializing
         // Resets to the device cause an IRQ
         // usb_task_state == UHS_USB_HOST_STATE_RESET_NOT_COMPLETE;
@@ -109,7 +110,7 @@ void VBUS_changed(void)
         regWr(rIOPINS2, iostate);
         break;
     }
-    usb_host_speed = speed;
+    usb_host_low_speed = low_speed;
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
     uart0_print("-> ");
     uart0_print(_utoh(itoa_buf, usb_task_state));
@@ -164,7 +165,7 @@ void MAX3421_sm(void)
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_WARNING)
         uart0_print("sm conf\r\n");
 #endif
-        x = configure(0, 1, usb_host_speed);
+        x = configure(0, 1, usb_host_low_speed);
         usb_error = x;
         if (usb_task_state == UHS_USB_HOST_STATE_CHECK) {
             if (x) {
@@ -464,7 +465,7 @@ void InitEntry(const uint8_t index)
 {
     thePool[index].address.devAddress = 0;
     thePool[index].epcount = 1;
-    thePool[index].speed = 0;
+    thePool[index].low_speed = 0;
     for (uint8_t i = 0; i < UHS_HOST_MAX_INTERFACE_DRIVERS; i++) {
         thePool[index].epinfo[i] = &dev0ep;
     }
@@ -1332,7 +1333,7 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
     uint8_t mode = regRd(rMODE);
 
     // Set bmLOWSPEED and bmHUBPRE in case of low-speed device, reset them otherwise
-    regWr(rMODE, (p->speed) ? mode & ~(bmHUBPRE | bmLOWSPEED) : mode | bmLOWSPEED);
+    regWr(rMODE, (p->low_speed) ? mode & ~(bmHUBPRE | bmLOWSPEED) : mode | bmLOWSPEED); // FIXME
 
     return 0;
 }
@@ -1767,7 +1768,7 @@ uint8_t doSoftReset(const uint8_t parent, const uint8_t port, const uint8_t addr
 // * @param speed the speed of the device
 // * @return Zero for success, or error code
 
-uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
+uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t low_speed)
 {
     uint8_t rcode = 0;
     uint16_t i;
@@ -1778,15 +1779,15 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     uint8_t ucd_wTotalLength = 0;
     uint8_t uhd_wDescriptorLength = 0;
 
-#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
-    uint8_t i;
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_NONE)
+    //uint8_t i;
 
     uart0_print("* configuring parent ");
     uart0_print(_utoh(itoa_buf, parent));
     uart0_print(" port ");
     uart0_print(_utoh(itoa_buf, port));
-    uart0_print(" speed ");
-    uart0_print(_utoh(itoa_buf, speed));
+    uart0_print(" low_speed ");
+    uart0_print(_utoh(itoa_buf, low_speed));
     uart0_print("\r\n");
 #endif
 
@@ -1796,7 +1797,7 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         return UHS_HOST_ERROR_NO_ADDRESS_IN_POOL;
     }
 
-    p->speed = speed;
+    p->low_speed = low_speed;
     p->epinfo[0][0].maxPktSize = 0x08;
 
     ///////////////////////////////////////
@@ -1847,7 +1848,7 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
     }
     // shift p to address = 1;
     p = GetUsbDevicePtr(ei.address);
-    p->speed = speed;
+    p->low_speed = low_speed;
 
     timer_a0_delay_ccr4(_4ms);
     rcode = doSoftReset(parent, port, ei.address);
@@ -1981,6 +1982,7 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailGetConf;
     }
+
     /////////////////////////////////////////
     // get the HID descriptor report
     //
@@ -2012,7 +2014,9 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailParseHIDr;
     }
-#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+    uart0_print("HID done\r\n");
+//#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_NONE)
     uart0_print("HID items ");
     uart0_print(_utoh(itoa_buf, HID_ri.TotalReportItems));
     uart0_print("\r\n");
@@ -2041,12 +2045,16 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed)
         }
     }
 
+
+
     /////////////////////////////////////////
     // set the idle intervals
     //
 
-    timer_a0_delay_ccr4(_4ms);
-    SetIdle(1, 0, 0, 0);
+    //timer_a0_delay_ccr4(_4ms);
+    //SetIdle(1, 0, 0, 0);
+    
+    uart0_print("config done\r\n");
 
     return 0;
 }

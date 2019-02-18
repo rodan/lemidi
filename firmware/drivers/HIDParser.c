@@ -60,7 +60,7 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 
 		ReportData++;
 		ReportSize--;
-
+        
 		switch (HIDReportItem & HID_RI_DATA_SIZE_MASK)
 		{
 			case HID_RI_DATA_BITS_32:
@@ -310,7 +310,7 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 
 	if (!(ParserData->TotalReportItems))
 	  return HID_PARSE_NoUnfilteredReportItems;
-
+    
 	return HID_PARSE_Successful;
 }
 

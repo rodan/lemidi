@@ -17,13 +17,19 @@ once the prototype is ready and working I will remove this warning.
  prototype pictures available here: https://photos.app.goo.gl/fXdDBng4dvEepq8V7
 
 
- tested joysticks:
-
+ tested and supported joysticks:
     Logitech Attack 3
         ID 046d:c214 Logitech, Inc. ATK3 (Attack III Joystick)
 
     Genius F-23
         ID 0458:1004 KYE Systems Corp. (Mouse Systems) Flight2000 F-23 Joystick
+        (do yourself a favor and get a better joystick. 
+         this one is bad on so many levels)
+
+ not yet supported:
+    Logitech Extreme 3D Pro
+        ID 046d:c215 Logitech, Inc. Extreme 3D Pro
+
 
 
  power consumption

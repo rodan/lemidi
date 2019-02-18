@@ -1,0 +1,7 @@
+[44524.466534] usb 2-2: new low-speed USB device number 13 using xhci_hcd
+[44524.620208] usb 2-2: New USB device found, idVendor=046d, idProduct=c214
+[44524.620215] usb 2-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[44524.620220] usb 2-2: Product: Logitech Attack 3
+[44524.620225] usb 2-2: Manufacturer: Logitech
+[44524.634677] input: Logitech Logitech Attack 3 as /devices/pci0000:00/0000:00:14.0/usb2/2-2/2-2:1.0/0003:046D:C214.0006/input/input21
+[44524.686775] hid-generic 0003:046D:C214.0006: input,hidraw0: USB HID v1.10 Joystick [Logitech Logitech Attack 3] on usb-0000:00:14.0-2/input0

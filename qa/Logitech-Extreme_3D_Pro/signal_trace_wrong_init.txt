@@ -1,0 +1,215 @@
+
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAVIRQ
+
+f8 ff   // R rHRSL
+28 03   // UNDEF ?!
+
+da d1   // W rMODE d1 (HIGH speed)
+28 00
+
+ca 20   // W rHIRQ 20
+14 00
+
+a8 ff   // R rIOPINS2
+08 f0   // f0
+
+aa f0   // W rIOPINS2 f0
+28 00
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAV
+
+f8 ff   // R rHRSL
+28 43   // Kstatus + UNDEF
+
+d8 ff   // R rMODE
+28 d1   // PULL + SEPIRQ + HOST (High speed)
+
+da db   // W rMODE db - LOW speed + SOFKAENAB
+28 00
+
+d8 ff   // R rMODE
+28 db   // db LOW speed 
+
+ca 40   // W rHIRQ FRAMEIRQ
+28 00
+
+da db   // W rMODE db LOW speed
+28 00
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+
+150us
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAVIRQ
+
+f8 ff   // R rHRSL
+28 83   // Jstatus + UNDEF
+
+d8 ff   // R rMODE LOW speed
+28 db   // PULL + SEPIRQ + HOST
+
+da db   // W rMODE db
+28 00
+
+d8 ff   // R rMODE
+28 db   // LOW speed
+
+ca 40   // W rHIRQ FRAMEIRQ
+28 00
+
+da db   // W rMODE db
+28 00   // LOW speed
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+90us
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAVIRQ
+
+f8 ff   // R rHRSL
+28 03   // UNDEF
+
+da d1   W rMODE d1 HIGH speed
+28 00
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+140us
+
+c8 ff   // R rHIRQ
+28 28   // CONNIQ + RCVDAVIRQ
+
+f8 ff   // R rHSRL
+28 43   // Kstatus + UNDEF
+
+d8 ff   // R rMODE
+28 d1   // PULL + SEPIRQ + HOST  HIGH speed
+
+da db   // W rMODE db - HIGH speed + SOFKAENAB
+28 00
+
+db ff   // R rMODE
+28 db   // db LOW speed
+
+ca 40   // W rHIRQ FRAMEIRQ
+28 00
+
+da db   // W rMODE  low speed
+28 00
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+1ms
+
+c8 ff   // R rHIRQ
+48 48   // FRAMEIRQ + RCVDAVIRQ
+
+ca 40   // W rHIRQ FRAMEIRQ
+48 00
+
+0.5ms
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAVIRQ
+
+f8 ff   // R rHRSL
+28 03
+
+da d1   // W rMODE d1 (HIGH speed)
+28 00
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+60us
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAVIRQ
+
+f8 ff   // R rHRSL
+28 03   // UNDEF
+
+da d1   // W rMODE d1 (HIGH speed)
+28 00
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAVIRQ
+
+f8 ff   // R rHRSL
+28 43   // Kstatus + UNDEF
+
+d8 ff   // R rMODE
+28 d1   // PULL + SEPIRQ + HOST  HIGH speed
+
+da db   // W rMODE db - LOW speed + SOFKAENAB
+28 00
+
+d8 ff   // R rMODE db   LOW speed
+28 db
+
+ca 40   // W rHIRQ FRAMEIRQ
+28 00
+
+da db   // W rMODE db   LOW speed
+28 00
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+80us
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAVIRQ
+
+f8 ff   // R rHRSL
+28 03   // UNDEF
+
+da d1   // W rMODE (HIGH speed)
+28 00
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+0.2ms
+
+c8 ff   // R rHIRQ
+28 28   // CONNIRQ + RCVDAVIRQ
+
+f8 ff   // R rHRSL
+28 43   // Kstatus + UNDEF
+
+d8 ff   // R rMODE
+28 d1   // HIGH speed
+
+da db   // W rMODE  LOW speed
+28 00
+
+d8 ff   // R rMODE
+28 db
+
+ca 40   // W rHIRQ FRAMEIRQ
+28 00
+
+da db   // W rMODE LOW speed
+28 00
+
+ca 20   // W rHIRQ CONNIRQ
+28 00
+
+
+
+

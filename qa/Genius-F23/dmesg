@@ -1,0 +1,6 @@
+[44584.131327] usb 2-2: new low-speed USB device number 14 using xhci_hcd
+[44584.263239] usb 2-2: New USB device found, idVendor=0458, idProduct=1004
+[44584.263247] usb 2-2: New USB device strings: Mfr=0, Product=2, SerialNumber=0
+[44584.263252] usb 2-2: Product: 4-axis 8-button joystick
+[44584.268480] input: 4-axis 8-button joystick as /devices/pci0000:00/0000:00:14.0/usb2/2-2/2-2:1.0/0003:0458:1004.0007/input/input22
+[44584.321650] hid-generic 0003:0458:1004.0007: input,hidraw0: USB HID v1.00 Joystick [4-axis 8-button joystick] on usb-0000:00:14.0-2/input0
