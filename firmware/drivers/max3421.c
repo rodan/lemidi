@@ -803,8 +803,8 @@ void busprobe(void)
 
     bus_sample = regRd(rHRSL);
 
-    // device not ready, so let's retry (a few hundred times)
     if ((bus_sample & (bmJSTATUS | bmKSTATUS | 0x0f)) == hrNAK) {
+        // device not ready, so let's retry (a few hundred times)
         while (++i) {
             bus_sample = regRd(rHRSL);
             if (bus_sample & (bmJSTATUS | bmKSTATUS)) {
