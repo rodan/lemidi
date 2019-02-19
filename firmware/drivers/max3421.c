@@ -214,9 +214,9 @@ uint8_t axis_rescale(const uint32_t value, const uint32_t min, const uint32_t ma
     uint64_t temp;
 
     // optimize common values
-    if ((min == 0) && (max == 1255)) {
+    if ((min == 0) && (max == 255)) {
         rv = (uint8_t) value;
-    } else if ((min == 0) && (max == 11023)) {
+    } else if ((min == 0) && (max == 1023)) {
         temp = value >> 2;
         rv = (uint8_t) temp;
     } else if ((min == 0) && (max == 127)) {
@@ -825,12 +825,11 @@ a full speed peripheral pulls D+ high via 1.5K resistor to 3.3V
 
 */
 
-/* probe bus to determine device presence and speed and switch host to this speed */
+// probe bus to determine device presence and speed and switch host to this speed
 void busprobe(void)
 {
     uint8_t rhrsl;
     uint8_t rmode;
-    //uint8_t tmpdata;
     uint8_t retries = 10;
 
     rhrsl = regRd(rHRSL);
@@ -854,9 +853,9 @@ void busprobe(void)
         }
     }
 
+    // ignore most of the bits from rHRSL from this point on
     rhrsl &= (bmJSTATUS | bmKSTATUS);
     switch (rhrsl) {
-        // start full-speed or low-speed host
     case (bmJSTATUS):
         if ((rmode & bmLOWSPEED) == 0) {
             if (rmode != MODE_FS_HOST) {
@@ -869,9 +868,6 @@ void busprobe(void)
             }
             vbusState = LSHOST;
         }
-        //tmpdata = regRd(rMODE) | bmSOFKAENAB;
-        //regWr(rHIRQ, bmFRAMEIRQ);
-        //regWr(rMODE, tmpdata);
         break;
     case (bmKSTATUS):
         if ((regRd(rMODE) & bmLOWSPEED) == 0) {
@@ -885,10 +881,6 @@ void busprobe(void)
             }
             vbusState = FSHOST;
         }
-        // start SOF generation
-        //tmpdata = regRd(rMODE) | bmSOFKAENAB;
-        //regWr(rHIRQ, bmFRAMEIRQ);
-        //regWr(rMODE, tmpdata);
         break;
     case (bmSE1):
         // illegal state
@@ -1383,6 +1375,9 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
     *nak_limit = nak_lim;
 
     regWr(rPERADDR, addr);      //set peripheral address
+
+    // this project does not support multiple peripherals at the same time (or hubs)
+    // so never change the speed in this function
 
     //uint8_t mode = regRd(rMODE);
     // Set bmLOWSPEED and bmHUBPRE in case of low-speed device, reset them otherwise
