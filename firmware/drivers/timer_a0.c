@@ -111,6 +111,10 @@ void timer0_A1_ISR(void)
         //TA0CCTL3 &= ~CCIE;
         milliseconds++;
         timer_a0_delay_noblk_ccr3(125);
+#ifdef USE_WATCHDOG
+        // reset watchdog counter
+        WDTCTL = (WDTCTL & 0xff) | WDTPW | WDTCNTCL;
+#endif
         // timer_a0_last_event |= TIMER_A0_EVENT_CCR3;
         //_BIC_SR_IRQ(LPM3_bits);
     } else if (iv == TA0IV_TA0IFG) {

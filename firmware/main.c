@@ -81,10 +81,9 @@ int main(void)
 
 void main_init(void)
 {
-
     // watchdog triggers after 4 minutes when not cleared
 #ifdef USE_WATCHDOG
-    WDTCTL = WDTPW + WDTIS__8192K + WDTSSEL__ACLK + WDTCNTCL;
+    WDTCTL = WDTPW + WDTIS__8192K + WDTSSEL__SMCLK + WDTCNTCL; // 2^23/8000000Hz ~= 1sec
 #else
     WDTCTL = WDTPW + WDTHOLD;
 #endif
@@ -92,10 +91,8 @@ void main_init(void)
 
     // ports - consult pinout.ods
     P1SEL = 0;
-    //P1OUT = 0x3;
     P1OUT = 0x0;
     P1DIR = 0xfc;
-    //P1REN = 0x3;
     P1REN = 0x0;
 
     // IRQ triggers on a high to low transition
