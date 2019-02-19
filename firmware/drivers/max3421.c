@@ -65,9 +65,9 @@ HID_ReportInfo_t HID_ri;
 
 void VBUS_changed(void)
 {
-    /* modify USB task state because Vbus changed or unknown */
+    // modify USB task state because Vbus changed or unknown
     // start with low speed
-    uint8_t low_speed = 1;
+    uint8_t low_speed = 0;
     uint8_t iostate;
 
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
@@ -76,7 +76,7 @@ void VBUS_changed(void)
 #endif
     switch (vbusState) {
     case LSHOST:               // ? Low speed
-        low_speed = 0;
+        low_speed = 1;
         // Intentional fall-through
     case FSHOST:               // ? Full speed
         // Start device initialization if we are not initializing
@@ -211,11 +211,14 @@ void MAX3421_sm(void)
 uint8_t axis_rescale(const uint32_t value, const uint32_t min, const uint32_t max)
 {
     uint8_t rv;
-    uint32_t temp;
+    uint64_t temp;
 
     // optimize common values
-    if ((min == 0) && (max == 255)) {
+    if ((min == 0) && (max == 1255)) {
         rv = (uint8_t) value;
+    } else if ((min == 0) && (max == 11023)) {
+        temp = value >> 2;
+        rv = (uint8_t) temp;
     } else if ((min == 0) && (max == 127)) {
         temp = value << 1;
         rv = (uint8_t) temp;
@@ -223,6 +226,9 @@ uint8_t axis_rescale(const uint32_t value, const uint32_t min, const uint32_t ma
         temp = value + 127;
         rv = (uint8_t) temp;
     } else {
+        if (min == max) {
+            return 0;
+        }
         // actually calculate the result
         temp = 255 * (value - min) / (max - min);
         rv = (uint8_t) temp;
@@ -795,61 +801,109 @@ uint8_t gpioRdOutput(void)
     return (gpout);
 }
 
+/*
+if LOWSPEED == 0
+    J-state means  D+ high D- low   - full speed peripheral
+    K-state means  D+ low  D- high  - low speed peripheral
+
+if LOWSPEED == 1
+    J-state means D+ low  D- high   - low speed peripheral
+    K-state means D+ high D- low    - full speed peripheral
+
+
+SIE weakly pulls both D- and D+ low via 15K resistors
+
+a low speed peripheral pulls D- high via 1.5K resistor
+    D- high, D+ low
+    J state if LOWSPEED == 1
+    K state if LOWSPEED == 0
+
+a full speed peripheral pulls D+ high via 1.5K resistor to 3.3V
+    D- low, D+ high
+    J state if LOWSPEED == 1
+    K state if LOWSPEED == 0
+
+*/
+
 /* probe bus to determine device presence and speed and switch host to this speed */
 void busprobe(void)
 {
-    uint8_t bus_sample;
-    uint8_t tmpdata;
-    uint8_t i = 0;
+    uint8_t rhrsl;
+    uint8_t rmode;
+    //uint8_t tmpdata;
+    uint8_t retries = 10;
 
-    bus_sample = regRd(rHRSL);
+    rhrsl = regRd(rHRSL);
+    rmode = regRd(rMODE);
 
-    if ((bus_sample & (bmJSTATUS | bmKSTATUS | 0x0f)) == hrNAK) {
-        // device not ready, so let's retry (a few hundred times)
-        while (++i) {
-            bus_sample = regRd(rHRSL);
-            if (bus_sample & (bmJSTATUS | bmKSTATUS)) {
+    if ((rhrsl & (bmJSTATUS | bmKSTATUS | 0x0f)) == hrNAK) {
+        // force a fresh bus sample since we should have never ended up 
+        // with CONNIRQ asserted and JSTATUS and KSTATUS zero during a peripheral connect
+
+        regWr(rHCTL, bmSAMPLEBUS);
+        while (!(regRd(rHCTL) & bmSAMPLEBUS)) {
+            __nop(); // for breakpoints
+        }
+
+        // device still not ready, so let's retry
+        while (--retries) {
+            rhrsl = regRd(rHRSL);
+            if (rhrsl & (bmJSTATUS | bmKSTATUS)) {
                 break;
             }
         }
     }
 
-    bus_sample &= (bmJSTATUS | bmKSTATUS);
-    switch (bus_sample) {
+    rhrsl &= (bmJSTATUS | bmKSTATUS);
+    switch (rhrsl) {
         // start full-speed or low-speed host
     case (bmJSTATUS):
-        if ((regRd(rMODE) & bmLOWSPEED) == 0) {
-            regWr(rMODE, MODE_FS_HOST);
+        if ((rmode & bmLOWSPEED) == 0) {
+            if (rmode != MODE_FS_HOST) {
+                regWr(rMODE, MODE_FS_HOST);
+            }
             vbusState = FSHOST;
         } else {
-            regWr(rMODE, MODE_LS_HOST);
+            if (rmode != MODE_LS_HOST) {
+                regWr(rMODE, MODE_LS_HOST);
+            }
             vbusState = LSHOST;
         }
-        tmpdata = regRd(rMODE) | bmSOFKAENAB;
-        regWr(rHIRQ, bmFRAMEIRQ);
-        regWr(rMODE, tmpdata);
+        //tmpdata = regRd(rMODE) | bmSOFKAENAB;
+        //regWr(rHIRQ, bmFRAMEIRQ);
+        //regWr(rMODE, tmpdata);
         break;
     case (bmKSTATUS):
         if ((regRd(rMODE) & bmLOWSPEED) == 0) {
-            regWr(rMODE, MODE_LS_HOST);
+            if (rmode != MODE_LS_HOST) {
+                regWr(rMODE, MODE_LS_HOST);
+            }
             vbusState = LSHOST;
         } else {
-            regWr(rMODE, MODE_FS_HOST);
+            if (rmode != MODE_FS_HOST) {
+                regWr(rMODE, MODE_FS_HOST);
+            }
             vbusState = FSHOST;
         }
         // start SOF generation
-        tmpdata = regRd(rMODE) | bmSOFKAENAB;
-        regWr(rHIRQ, bmFRAMEIRQ);
-        regWr(rMODE, tmpdata);
+        //tmpdata = regRd(rMODE) | bmSOFKAENAB;
+        //regWr(rHIRQ, bmFRAMEIRQ);
+        //regWr(rMODE, tmpdata);
         break;
     case (bmSE1):
         // illegal state
-        regWr(rMODE, (bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ));
+        // disable SOF generation
+        if (rmode != (bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ)) {
+            regWr(rMODE, (bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ));
+        }
         vbusState = SE1;
         break;
     case (bmSE0):
         // disconnected state
-        regWr(rMODE, (bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ));
+        // disable SOF generation
+        if (rmode != (bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ)) {
+            regWr(rMODE, (bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ));
+        }
         vbusState = SE0;
         break;
     }
@@ -1330,10 +1384,9 @@ uint8_t SetAddress(const uint8_t addr, const uint8_t ep, struct UHS_EpInfo ** pp
 
     regWr(rPERADDR, addr);      //set peripheral address
 
-    uint8_t mode = regRd(rMODE);
-
+    //uint8_t mode = regRd(rMODE);
     // Set bmLOWSPEED and bmHUBPRE in case of low-speed device, reset them otherwise
-    regWr(rMODE, (p->low_speed) ? mode & ~(bmHUBPRE | bmLOWSPEED) : mode | bmLOWSPEED); // FIXME
+    //regWr(rMODE, (p->low_speed) ? mode & ~(bmHUBPRE | bmLOWSPEED) : mode | bmLOWSPEED); // FIXME
 
     return 0;
 }
@@ -2008,13 +2061,11 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t low_sp
     }
     uart0_print("\r\nuhd ^\r\n");
 #endif
-
     rcode = USB_ProcessHIDReport(buf, uhd_wDescriptorLength, &HID_ri);
     if (rcode) {
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailParseHIDr;
     }
-    uart0_print("HID done\r\n");
 //#if (CONFIG_LOG_LEVEL > LOG_LEVEL_DEBUG)
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_NONE)
     uart0_print("HID items ");
@@ -2052,10 +2103,8 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t low_sp
     //
 
     //timer_a0_delay_ccr4(_4ms);
-    //SetIdle(1, 0, 0, 0);
+    SetIdle(1, 0, 0, 0);
     
-    uart0_print("config done\r\n");
-
     return 0;
 }
 
