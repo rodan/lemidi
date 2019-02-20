@@ -37,7 +37,7 @@ void parse_user_input(void)
     char buf[18];
 
     if (d == '?') {
-        display_menu();
+        //display_menu();
     } else if (d == 'b') {
         if (id == '0') {
             if (strstr(in, "on")) {

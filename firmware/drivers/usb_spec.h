@@ -34,6 +34,7 @@ extern "C" {
 #define                   UHS_USB_HOST_STATE_WAIT_SOF 0x04U
 #define             UHS_USB_HOST_STATE_WAIT_BUS_READY 0x05U
 #define               UHS_USB_HOST_STATE_VBUS_FLAGGED 0x06U // the MAX4789 that provides the VBUS voltage has flagged us
+#define               UHS_USB_HOST_STATE_REINITIALIZE 0x07U
 #define               UHS_USB_HOST_STATE_RESET_DEVICE 0x0AU
 #define                UHS_USB_HOST_STATE_CONFIGURING 0x0CU // Looks like "CO"nfig (backwards)
 #define           UHS_USB_HOST_STATE_CONFIGURING_DONE 0x0DU // Looks like "DO"one (backwards)

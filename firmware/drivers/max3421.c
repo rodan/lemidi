@@ -47,7 +47,7 @@ volatile uint8_t bus_event;
 
 volatile uint8_t usb_error;
 volatile uint8_t usb_task_state;
-volatile uint8_t usb_host_low_speed; // if 0 it's HIGH speed, 1 is LOW speed
+volatile uint8_t usb_host_low_speed;    // if 0 it's HIGH speed, 1 is LOW speed
 
 volatile uint8_t ifg_int_last_event;
 volatile uint8_t ifg_gpx_last_event;
@@ -199,6 +199,20 @@ void MAX3421_sm(void)
         break;
     case UHS_USB_HOST_STATE_RUNNING:
         poll_joystick(&ei);
+        break;
+    case UHS_USB_HOST_STATE_VBUS_FLAGGED:
+        usb_task_state = UHS_USB_HOST_STATE_REINITIALIZE;
+        // an overcurrent limit was reached, try to re-init in a while
+        timer_a0_delay_noblk_ccr2(_500ms);
+        break;
+    case UHS_USB_HOST_STATE_REINITIALIZE:
+        x = MAX3421_postinit();
+        if (x) {
+            usb_task_state = UHS_USB_HOST_STATE_REINITIALIZE;
+            timer_a0_delay_noblk_ccr2(_500ms);
+        } else {
+            usb_task_state = UHS_USB_HOST_STATE_INITIALIZE;
+        }
         break;
     default:
         // Do nothing
@@ -393,33 +407,85 @@ void poll_joystick(struct ENUMERATION_INFO *ei)
 
 static void gpx_irq_handler(const uint16_t msg)
 {
-    uint8_t iv, ret_iv = 0x0;
+    uint8_t rgpinirq, ret_rgpinirq = 0x0;
+    uint8_t rusbirq, ret_rusbirq = 0x0;
     uint8_t iostate;
 
     gpx_cnt_hl++;
 
-    // assert led1 (red)
-    iostate = regRd(rIOPINS2) | bmGPOUT6;
-    regWr(rIOPINS2, iostate);
+    // read io port interrupt register from SIE
+    rgpinirq = regRd(rGPINIRQ);
 
-    // read interrupt register from SIE
-    iv = regRd(rGPINIRQ);
+    // read usb vbus interrupt register from SIE
+    rusbirq = regRd(rUSBIRQ);
 
-    if (iv & bmGPINIRQ7) {
-        // stop VBUS since MAX4789's FLAG has been asserted
-        // FIXME
-        // clear interrupt
-        ret_iv |= bmGPINIRQ7;
-        // red led remains on as warning
-    } else {
-        // fake activation?
-        // deassert red led
-        iostate = regRd(rIOPINS2) & ~bmGPOUT6;
-        regWr(rIOPINS2, iostate);
+    if (rgpinirq) {
+        if (rgpinirq & bmGPINIRQ7) {
+            // emergency poweroff since we got flagged by MAX4789
+            ret_rgpinirq |= bmGPINIRQ7;
+            // red led remains on as warning
+            // remove all VBUS-related interrupts
+            //regWr(rUSBIEN, 0);
+            // MAX4789's enable pin is connected to GPOUT0
+            // disable VBUS 
+            regWr(rIOPINS1, 0);
+            usb_task_state = UHS_USB_HOST_STATE_VBUS_FLAGGED;
+            // send the chip into reset
+            MAX3421E_RST_ON;
+            // assert led1 (red)
+            iostate = regRd(rIOPINS2) | bmGPOUT6;
+            regWr(rIOPINS2, iostate);
+            // de-assert green led
+            iostate = regRd(rIOPINS2) & ~bmGPOUT7;
+            regWr(rIOPINS2, iostate);
+            // free peripheral
+            FreeAddress(1);
+            // signal the state machine after a while
+            timer_a0_delay_noblk_ccr2(_500ms);
+        } else {
+            //uart0_print("unhandled gpx irq ");
+            //uart0_print(_utoh(itoa_buf, ));
+            //uart0_print("\r\n");
+        }
+        // clear serviced irqs
+        if (ret_rgpinirq) {
+            regWr(rGPINIRQ, ret_rgpinirq);
+        }
     }
 
-    // clear serviced irqs
-    regWr(rGPINIRQ, ret_iv);
+    if (rusbirq) {
+        if (rusbirq & bmNOVBUSIRQ) {
+            // emergency poweroff
+            ret_rusbirq |= bmNOVBUSIRQ;
+            // red led remains on as warning
+            // remove all VBUS-related interrupts
+            //regWr(rUSBIEN, 0);
+            // MAX4789's enable pin is connected to GPOUT0
+            // disable VBUS 
+            regWr(rIOPINS1, 0);
+            usb_task_state = UHS_USB_HOST_STATE_VBUS_FLAGGED;
+            // send the chip into reset
+            MAX3421E_RST_ON;
+            // assert led1 (red)
+            iostate = regRd(rIOPINS2) | bmGPOUT6;
+            regWr(rIOPINS2, iostate);
+            // de-assert green led
+            iostate = regRd(rIOPINS2) & ~bmGPOUT7;
+            regWr(rIOPINS2, iostate);
+            // free peripheral
+            FreeAddress(1);
+            // signal the state machine after a while
+            timer_a0_delay_noblk_ccr2(_500ms);
+        } else {
+            //uart0_print("unhandled gpx irq ");
+            //uart0_print(_utoh(itoa_buf, rusbirq));
+            //uart0_print("\r\n");
+        }
+        // clear serviced irqs
+        if (ret_rusbirq) {
+            regWr(rUSBIRQ, ret_rusbirq);
+        }
+    }
 }
 
 static void int_irq_handler(const uint16_t msg)
@@ -433,7 +499,6 @@ static void int_irq_handler(const uint16_t msg)
     bus_event &= ~counted;
 
     if (iv & bmBUSEVENTIRQ) {
-        //int_cnt_hl++;
         ret_iv |= bmBUSEVENTIRQ;
         if (!(bus_event & doingreset)) {
             bus_event |= condet;
@@ -465,6 +530,12 @@ static void int_irq_handler(const uint16_t msg)
     if (!sof_countdown && !(bus_event & counted)) {
         MAX3421_sm();
     }
+}
+
+// timer based interrupt that services the state machine
+static void ccr2_irq_handler(const uint16_t msg)
+{
+    MAX3421_sm();
 }
 
 void InitEntry(const uint8_t index)
@@ -608,14 +679,10 @@ void doHostReset(void)
     interrupts();
 }
 
-uint8_t MAX3421_init(void)
+uint8_t MAX3421_postinit(void)
 {
     uint16_t i = 0;
 
-    int_cnt = 0;
-    int_cnt_hl = 0;
-    gpx_cnt = 0;
-    gpx_cnt_hl = 0;
     bus_event = 0;
     sof_countdown = 0;
     ifg_int_last_event = 0;
@@ -630,37 +697,46 @@ uint8_t MAX3421_init(void)
     dev0ep.bmNakPower = UHS_USB_NAK_MAX_POWER;
     InitAllAddresses();
 
-    usb_task_state = UHS_USB_HOST_STATE_INITIALIZE;
-    //regWr(rPINCTL, bmFDUPSPI);
-
-    // red led on
+    // assert red led - it will remain on if init fails in any way
     regWr(rIOPINS2, bmGPOUT6);
 
     // remove RST signal
     MAX3421E_RST_OFF;
 
-    // clear old irqs, reset iopins
+    // set full duplex SPI - needed for any regRd, edge-active INT interrupt
+    regWr(rPINCTL, bmFDUPSPI | GPX_INIRQ);
+
+    // reset io pins
     regWr(rIOPINS1, 0x0);
-    regWr(rUSBIRQ, (bmVBUSIRQ | bmNOVBUSIRQ | bmOSCOKIRQ));
-    // detect presence and absence of VBUS
-    regWr(rUSBIEN, bmVBUSIE);
 
-    // set full duplex SPI, edge-active INT interrupt
-    //regWr(rPINCTL, bmFDUPSPI | GPX_INIRQ);
-    regWr(rPINCTL, bmFDUPSPI | GPX_VBDET);
+    // VBUS related - detect early if there is a large current sink attached to USB
+    // MAX4789 has the FLAG pin tied to GPINIE7
+    regWr(rGPINIRQ, 0xff);
 
-    // MAX4789 is connected to GPOUT0 to controls the VBUS
+    // MAX4789's enable pin is connected to GPOUT0
     // enable VBUS 
     regWr(rIOPINS1, bmGPOUT0);
 
     // detect if VBUS is up
     while (++i) {
-        if ((regRd(rUSBIRQ) & bmVBUSIRQ)) {
+        if (regRd(rUSBIRQ) & bmVBUSIRQ) {
             break;
         }
     }
     if (!i) {
         // VBUS voltage did not reach 5v after 2^16 ticks
+        // disable VBUS
+        regWr(rIOPINS1, 0);
+        MAX3421E_RST_ON;
+        return EXIT_FAILURE;
+    }
+
+    if ((regRd(rGPINIRQ) & bmGPINIRQ7) | !(regRd(rIOPINS2) & bmGPIN7)) {
+        // FLAG is asserted, shut down
+        // disable VBUS
+        regWr(rIOPINS1, 0);
+        MAX3421E_RST_ON;
+        usb_task_state = UHS_USB_HOST_STATE_VBUS_FLAGGED;
         return EXIT_FAILURE;
     }
     // reset the chip, verify OSCOKIRQ
@@ -679,14 +755,14 @@ uint8_t MAX3421_init(void)
     // enable useful interrupts
     regWr(rUSBIRQ, (bmVBUSIRQ | bmNOVBUSIRQ | bmOSCOKIRQ));
     regWr(rUSBIEN, (bmVBUSIE | bmNOVBUSIE));
-
-    // MAX4789 has the FLAG pin tied to GPINIE7
-    regWr(rGPINIRQ, 0xff);
     regWr(rGPINIEN, bmGPINIEN7);
+
+    // Full duplex, input port interrupt
+    regWr(rPINCTL, bmFDUPSPI | GPX_INIRQ);
 
     // set host mode
     // set pulldowns for peripheral plugin and speed detection
-    regWr(rMODE, bmDPPULLDN | bmDMPULLDN | bmHOST);
+    regWr(rMODE, bmDPPULLDN | bmDMPULLDN | bmHOST | bmSEPIRQ);
 
     // peripheral and frame generator interrupt enable
     regWr(rHIEN, bmCONNIE | bmFRAMEIE | bmBUSEVENTIE);
@@ -695,6 +771,7 @@ uint8_t MAX3421_init(void)
     regWr(rHCTL, bmSAMPLEBUS);
     while (!(regRd(rHCTL) & bmSAMPLEBUS)) ;     //wait for sample operation to finish
 
+    usb_task_state = UHS_USB_HOST_STATE_INITIALIZE;
     busprobe();
     VBUS_changed();
 
@@ -703,13 +780,27 @@ uint8_t MAX3421_init(void)
     // enable INT pin
     regWr(rCPUCTL, bmIE);
 
-    sys_messagebus_register(&gpx_irq_handler, SYS_MSG_P1IFG_GPX);
-    sys_messagebus_register(&int_irq_handler, SYS_MSG_P1IFG_INT);
-
     // status leds off
     regWr(rIOPINS2, 0);
 
     return EXIT_SUCCESS;
+}
+
+uint8_t MAX3421_init(void)
+{
+    uint8_t rv;
+
+    int_cnt = 0;
+    int_cnt_hl = 0;
+    gpx_cnt = 0;
+    gpx_cnt_hl = 0;
+
+    sys_messagebus_register(&gpx_irq_handler, SYS_MSG_P1IFG_GPX);
+    sys_messagebus_register(&int_irq_handler, SYS_MSG_P1IFG_INT);
+    sys_messagebus_register(&ccr2_irq_handler, SYS_MSG_TIMER0_CRR2);
+
+    rv = MAX3421_postinit();
+    return rv;
 }
 
 uint8_t MAX3421_getVbusState(void)
@@ -810,7 +901,6 @@ if LOWSPEED == 1
     J-state means D+ low  D- high   - low speed peripheral
     K-state means D+ high D- low    - full speed peripheral
 
-
 SIE weakly pulls both D- and D+ low via 15K resistors
 
 a low speed peripheral pulls D- high via 1.5K resistor
@@ -841,7 +931,7 @@ void busprobe(void)
 
         regWr(rHCTL, bmSAMPLEBUS);
         while (!(regRd(rHCTL) & bmSAMPLEBUS)) {
-            __nop(); // for breakpoints
+            __nop();            // for breakpoints
         }
 
         // device still not ready, so let's retry
@@ -852,7 +942,6 @@ void busprobe(void)
             }
         }
     }
-
     // ignore most of the bits from rHRSL from this point on
     rhrsl &= (bmJSTATUS | bmKSTATUS);
     switch (rhrsl) {
@@ -1827,9 +1916,7 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t low_sp
     uint8_t ucd_wTotalLength = 0;
     uint8_t uhd_wDescriptorLength = 0;
 
-#if (CONFIG_LOG_LEVEL > LOG_LEVEL_NONE)
-    //uint8_t i;
-
+#if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
     uart0_print("* configuring parent ");
     uart0_print(_utoh(itoa_buf, parent));
     uart0_print(" port ");
@@ -2030,7 +2117,6 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t low_sp
         FreeAddress(ei.address);
         return UHS_HOST_ERROR_FailGetConf;
     }
-
     /////////////////////////////////////////
     // get the HID descriptor report
     //
@@ -2091,15 +2177,13 @@ uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t low_sp
         }
     }
 
-
-
     /////////////////////////////////////////
     // set the idle intervals
     //
 
     //timer_a0_delay_ccr4(_4ms);
     SetIdle(1, 0, 0, 0);
-    
+
     return 0;
 }
 
@@ -2155,7 +2239,9 @@ void Port1_ISR(void)
         ifg_int_last_event = 1;
         P1IFG &= ~INT_TRIG;
         __bic_SR_register_on_exit(LPM3_bits);
-    } else if (iv & GPX_TRIG) {
+    }
+    
+    if (iv & GPX_TRIG) {
         gpx_cnt++;
         ifg_gpx_last_event = 1;
         P1IFG &= ~GPX_TRIG;

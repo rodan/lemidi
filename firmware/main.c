@@ -25,20 +25,6 @@ static void parse_UI(const uint16_t msg)
 }
 #endif
 
-static void timer_a0_ovf_irq(const uint16_t msg)
-{
-    //LED_SWITCH;
-    /*
-    if (timer_a0_ovf >= tfr) {
-        if (timer_a0_ovf > 65535 - SLOW_REFRESH_DELAY) {
-            return;
-        }
-        tfr = timer_a0_ovf + SLOW_REFRESH_DELAY;
-        get_temperature();
-    }
-    */
-}
-
 int main(void)
 {
     main_init();
@@ -54,9 +40,6 @@ int main(void)
 
     spi_init();
     spi_fast_mode();
-    display_menu();
-
-    sys_messagebus_register(&timer_a0_ovf_irq, SYS_MSG_TIMER0_IFG);
 
     // stay a while and listen
     while (millis() < 1000) {
@@ -67,14 +50,14 @@ int main(void)
 
     // main loop
     while (1) {
-        __bis_SR_register(LPM3_bits + GIE);
+        //__bis_SR_register(LPM3_bits + GIE);
         //__no_operation();
 #ifdef USE_WATCHDOG
         // reset watchdog counter
-        WDTCTL = (WDTCTL & 0xff) | WDTPW | WDTCNTCL;
+        //WDTCTL = (WDTCTL & 0xff) | WDTPW | WDTCNTCL;
 #endif
-        check_events();
-        check_events();
+        //check_events();
+        //check_events();
         check_events();
     }
 }
@@ -183,6 +166,7 @@ void check_events(void)
         msg |= timer_a0_get_event();
         timer_a0_rst_event();
     }
+
     // drivers/uart0
     if (uart0_get_event() & UART0_EV_RX) {
         msg |= SYS_MSG_UART0_RX;

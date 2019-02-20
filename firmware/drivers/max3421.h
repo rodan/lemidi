@@ -17,6 +17,7 @@ extern "C" {
 
 void doHostReset(void);
 uint8_t MAX3421_init(void);
+uint8_t MAX3421_postinit(void);
 uint8_t MAX3421_getVbusState(void);
 uint8_t configure(const uint8_t parent, const uint8_t port, const uint8_t speed);
 void poll_joystick(struct ENUMERATION_INFO *ei);
