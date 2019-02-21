@@ -42,9 +42,7 @@ int main(void)
     spi_fast_mode();
 
     // stay a while and listen
-    while (millis() < 1000) {
-        __nop();
-    }
+    while (millis() < 1000) {}
 
     MAX3421_init();
 
