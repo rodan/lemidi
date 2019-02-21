@@ -50,29 +50,28 @@ int main(void)
 
     // main loop
     while (1) {
-        //__bis_SR_register(LPM3_bits + GIE);
-        //__no_operation();
+        __bis_SR_register(LPM0_bits + GIE);
 #ifdef USE_WATCHDOG
         // reset watchdog counter
-        //WDTCTL = (WDTCTL & 0xff) | WDTPW | WDTCNTCL;
+        WDTCTL = (WDTCTL & 0xff) | WDTPW | WDTCNTCL;
 #endif
-        //check_events();
-        //check_events();
+        check_events();
+        check_events();
         check_events();
     }
 }
 
 void main_init(void)
 {
-    // watchdog triggers after 4 minutes when not cleared
+    // watchdog triggers after 1 second when not cleared
 #ifdef USE_WATCHDOG
-    WDTCTL = WDTPW + WDTIS__8192K + WDTSSEL__SMCLK + WDTCNTCL; // 2^23/8000000Hz ~= 1sec
+    // 2^23/8000000Hz ~= 1sec
+    WDTCTL = WDTPW + WDTIS__8192K + WDTSSEL__SMCLK + WDTCNTCL;
 #else
     WDTCTL = WDTPW + WDTHOLD;
 #endif
-    //SetVCore(3);
 
-    // ports - consult pinout.ods
+    // ports - consult the pinout file
     P1SEL = 0;
     P1OUT = 0x0;
     P1DIR = 0xfc;
@@ -115,8 +114,8 @@ void main_init(void)
     P6DIR = 0xff;
     P6REN = 0x0;
 
-    //PJOUT = 0x00;
-    //PJDIR = 0xFF;
+    PJOUT = 0x00;
+    PJDIR = 0xFF;
 
     // disable VUSB LDO and SLDO
     USBKEYPID = 0x9628;

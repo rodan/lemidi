@@ -425,10 +425,27 @@ uint8_t CALLBACK_HIDParser_FilterHIDReportItem(HID_ReportItem_t* const CurrentIt
 	 * only store BUTTON and GENERIC_DESKTOP_CONTROL items into the Processed HID Report
 	 * structure to save RAM and ignore the rest
 	 */
+     /*
 	return ((CurrentItem->Attributes.Usage.Page == USAGE_PAGE_BUTTON) ||
 	        (CurrentItem->Attributes.Usage.Page == USAGE_PAGE_GENERIC_DCTRL) ||
 	        (CurrentItem->Attributes.Usage.Page == USAGE_X) ||
 	        (CurrentItem->Attributes.Usage.Page == USAGE_Y) ||
 	        (CurrentItem->Attributes.Usage.Page == USAGE_Z));
+            */
+
+            // 0x09 - button
+            // 0x30 - X axis
+            // 0x31 - Y axis
+            // 0x32 - Z axis
+            // 0x35 - Rz axis
+            // 0x36 - slider
+
+    return (((CurrentItem->Attributes.Usage.Page == 0x09) && (CurrentItem->Attributes.Usage.Usage < 5)) ||
+            (CurrentItem->Attributes.Usage.Usage == 0x30) ||
+            (CurrentItem->Attributes.Usage.Usage == 0x31) ||
+            (CurrentItem->Attributes.Usage.Usage == 0x32) ||
+            (CurrentItem->Attributes.Usage.Usage == 0x35) ||
+            (CurrentItem->Attributes.Usage.Usage == 0x36));
+
 }
 
