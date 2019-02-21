@@ -938,7 +938,7 @@ void busprobe(void)
 
         regWr(rHCTL, bmSAMPLEBUS);
         while (!(regRd(rHCTL) & bmSAMPLEBUS)) {
-            __nop();            // for breakpoints
+            _NOP();            // for breakpoints
         }
 
         // device still not ready, so let's retry
