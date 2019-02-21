@@ -111,7 +111,7 @@
 			 *  overridden by defining \c HID_MAX_COLLECTIONS to another value in the user project makefile, passing
 			 *  the define to the compiler using the -D compiler switch.
 			 */
-			#define HID_MAX_COLLECTIONS           10
+			#define HID_MAX_COLLECTIONS           4
 		#endif
 
 		#if !defined(HID_MAX_REPORTITEMS) || defined(__DOXYGEN__)
@@ -121,7 +121,7 @@
 			 *  but this can be overridden by defining \c HID_MAX_REPORTITEMS to another value in the user project
 			 *  makefile, and passing the define to the compiler using the -D compiler switch.
 			 */
-			#define HID_MAX_REPORTITEMS           20    // 20
+			#define HID_MAX_REPORTITEMS           10    // 20
 		#endif
 
 		#if !defined(HID_MAX_REPORT_IDS) || defined(__DOXYGEN__)
@@ -132,7 +132,7 @@
 			 *  makefile, and passing the define to the compiler using the -D compiler switch. Note that IN, OUT and FEATURE
 			 *  items sharing the same report ID consume only one size item in the array.
 			 */
-			#define HID_MAX_REPORT_IDS            10    // 10
+			#define HID_MAX_REPORT_IDS            2    // 10
 		#endif
 
 		/** Returns the value a given HID report item (once its value has been fetched via \ref USB_GetHIDReportItemInfo())
