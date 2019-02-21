@@ -540,17 +540,20 @@ static void ccr2_irq_handler(const uint16_t msg)
 
 void InitEntry(const uint8_t index)
 {
+    uint8_t i;
+
     thePool[index].address.devAddress = 0;
     thePool[index].epcount = 1;
     thePool[index].low_speed = 0;
-    for (uint8_t i = 0; i < UHS_HOST_MAX_INTERFACE_DRIVERS; i++) {
+    for (i = 0; i < UHS_HOST_MAX_INTERFACE_DRIVERS; i++) {
         thePool[index].epinfo[i] = &dev0ep;
     }
 };
 
 uint8_t FindAddressIndex(const uint8_t address)
 {
-    for (uint8_t i = 1; i < UHS_HOST_MAX_INTERFACE_DRIVERS; i++) {
+    uint8_t i;
+    for (i = 1; i < UHS_HOST_MAX_INTERFACE_DRIVERS; i++) {
         if (thePool[i].address.devAddress == address)
             return i;
     }
@@ -560,7 +563,8 @@ uint8_t FindAddressIndex(const uint8_t address)
 // Returns thePool child index for a given parent
 uint8_t FindChildIndex(struct UHS_DeviceAddress addr, const uint8_t start)
 {
-    for (uint8_t i = (start < 1 || start >= UHS_HOST_MAX_INTERFACE_DRIVERS) ? 1 : start;
+    uint8_t i;
+    for (i = (start < 1 || start >= UHS_HOST_MAX_INTERFACE_DRIVERS) ? 1 : start;
          i < UHS_HOST_MAX_INTERFACE_DRIVERS; i++) {
         if (thePool[i].address.bmParent == addr.bmAddress)
             return i;
@@ -571,6 +575,8 @@ uint8_t FindChildIndex(struct UHS_DeviceAddress addr, const uint8_t start)
 // Frees address entry specified by index parameter
 void FreeAddressByIndex(const uint8_t index)
 {
+    uint8_t i;
+
     // Zero field is reserved and should not be affected
     if (index == 0)
         return;
@@ -578,7 +584,7 @@ void FreeAddressByIndex(const uint8_t index)
     struct UHS_DeviceAddress uda = thePool[index].address;
     // If a hub was switched off all port addresses should be freed
     if (uda.bmHub == 1) {
-        for (uint8_t i = 1; (i = FindChildIndex(uda, i));)
+        for (i = 1; (i = FindChildIndex(uda, i));)
             FreeAddressByIndex(i);
     }
     InitEntry(index);
@@ -586,7 +592,8 @@ void FreeAddressByIndex(const uint8_t index)
 
 void InitAllAddresses(void)
 {
-    for (uint8_t i = 1; i < UHS_HOST_MAX_INTERFACE_DRIVERS; i++)
+    uint8_t i;
+    for (i = 1; i < UHS_HOST_MAX_INTERFACE_DRIVERS; i++)
         InitEntry(i);
 }
 
@@ -1028,6 +1035,8 @@ uint8_t getNextInterface(struct ENUMERATION_INFO * ei, struct UHS_EpInfo * pep, 
     uint8_t rcode = UHS_HOST_ERROR_END_OF_STREAM;
     uint8_t *ptr;
     uint8_t epc = 0;
+    uint8_t i;
+
     ei->interface.numep = 0;
     ei->interface.klass = 0;
     ei->interface.subklass = 0;
@@ -1050,7 +1059,7 @@ uint8_t getNextInterface(struct ENUMERATION_INFO * ei, struct UHS_EpInfo * pep, 
         if (ty == USB_DESCRIPTOR_INTERFACE) {
             //HOST_DUBUG("INTERFACE DESCRIPTOR FOUND\r\n");
             ptr = (uint8_t *) (&(ei->interface.bInterfaceNumber));
-            for (int i = 0; i < 6; i++) {
+            for (i = 0; i < 6; i++) {
                 rcode = getone(pep, left, read, data, offset);
                 if (rcode)
                     return rcode;
@@ -1393,6 +1402,7 @@ uint8_t setEpInfoEntry(uint8_t addr, uint8_t iface, uint8_t epcount, struct UHS_
 
 struct UHS_EpInfo *getEpInfoEntry(const uint8_t addr, const uint8_t ep)
 {
+    uint8_t i, j;
     struct UHS_Device *p = GetUsbDevicePtr(addr);
 
     if (!p || !p->epinfo) {
@@ -1400,10 +1410,10 @@ struct UHS_EpInfo *getEpInfoEntry(const uint8_t addr, const uint8_t ep)
     }
 
     struct UHS_EpInfo *pep;
-    for (uint8_t j = 0; j < UHS_HOST_MAX_INTERFACE_DRIVERS; j++) {
+    for (j = 0; j < UHS_HOST_MAX_INTERFACE_DRIVERS; j++) {
         pep = (struct UHS_EpInfo *)(p->epinfo[j]);
 
-        for (uint8_t i = 0; i < p->epcount; i++) {
+        for (i = 0; i < p->epcount; i++) {
             if ((pep)->epAddr == ep) {
 #if (CONFIG_LOG_LEVEL > LOG_LEVEL_INFO)
                 uart0_print("* getEpInfoEntry if ");

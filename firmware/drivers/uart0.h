@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include <inttypes.h>
+
 #define  UART0_EV_NULL 0
 #define    UART0_EV_RX 0x1
 #define    UART0_EV_TX 0x2
