@@ -46,6 +46,8 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 	uint16_t              UsageList[HID_USAGE_STACK_DEPTH];
 	uint8_t               UsageListSize      = 0;
 	HID_MinMax_t          UsageMinMax        = {0, 0};
+    uint8_t i;
+    uint8_t ReportItemNum;
 
 	memset(ParserData,       0x00, sizeof(HID_ReportInfo_t));
 	memset(CurrStateTable,   0x00, sizeof(HID_StateTable_t));
@@ -153,7 +155,7 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 				{
 					CurrReportIDInfo = NULL;
 
-					for (uint8_t i = 0; i < ParserData->TotalDeviceReports; i++)
+					for (i = 0; i < ParserData->TotalDeviceReports; i++)
 					{
 						if (ParserData->ReportIDSizes[i].ReportID == CurrStateTable->ReportID)
 						{
@@ -221,7 +223,7 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 				{
 					CurrCollectionPath->Usage.Usage = UsageList[0];
 
-					for (uint8_t i = 1; i < UsageListSize; i++)
+					for (i = 1; i < UsageListSize; i++)
 					  UsageList[i - 1] = UsageList[i];
 
 					UsageListSize--;
@@ -243,7 +245,7 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 			case HID_RI_INPUT(0):
 			case HID_RI_OUTPUT(0):
 			case HID_RI_FEATURE(0):
-				for (uint8_t ReportItemNum = 0; ReportItemNum < CurrStateTable->ReportCount; ReportItemNum++)
+				for (ReportItemNum = 0; ReportItemNum < CurrStateTable->ReportCount; ReportItemNum++)
 				{
 					HID_ReportItem_t NewReportItem;
 
@@ -259,7 +261,7 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 					{
 						NewReportItem.Attributes.Usage.Usage = UsageList[0];
 
-						for (uint8_t i = 1; i < UsageListSize; i++)
+						for (i = 1; i < UsageListSize; i++)
 						  UsageList[i - 1] = UsageList[i];
 
 						UsageListSize--;
@@ -379,9 +381,12 @@ uint16_t USB_GetHIDReportSize(HID_ReportInfo_t* const ParserData,
                               const uint8_t ReportID,
                               const uint8_t ReportType)
 {
-	for (uint8_t i = 0; i < HID_MAX_REPORT_IDS; i++)
+    uint8_t i;
+    uint16_t ReportSizeBits;
+
+	for (i = 0; i < HID_MAX_REPORT_IDS; i++)
 	{
-		uint16_t ReportSizeBits = ParserData->ReportIDSizes[i].ReportSizeBits[ReportType];
+		ReportSizeBits = ParserData->ReportIDSizes[i].ReportSizeBits[ReportType];
 
 		if (ParserData->ReportIDSizes[i].ReportID == ReportID)
 		  return (ReportSizeBits / 8) + ((ReportSizeBits % 8) ? 1 : 0);
@@ -402,12 +407,13 @@ uint16_t USB_GetHIDReportSize(HID_ReportInfo_t* const ParserData,
 uint8_t CALLBACK_HIDParser_FilterHIDReportItem(HID_ReportItem_t* const CurrentItem)
 {
 	uint8_t IsJoystick = 0;
+    HID_CollectionPath_t* CurrPath;
 
 	/* Iterate through the item's collection path, until either the root collection node or a collection with the
 	 * Joystick Usage is found - this prevents Mice, which use identical descriptors except for the Joystick usage
 	 * parent node, from being erroneously treated as a joystick by the demo
 	 */
-	for (HID_CollectionPath_t* CurrPath = CurrentItem->CollectionPath; CurrPath != NULL; CurrPath = CurrPath->Parent)
+	for (CurrPath = CurrentItem->CollectionPath; CurrPath != NULL; CurrPath = CurrPath->Parent)
 	{
 		if ((CurrPath->Usage.Page  == USAGE_PAGE_GENERIC_DCTRL) &&
 		    (CurrPath->Usage.Usage == USAGE_JOYSTICK))
@@ -425,27 +431,13 @@ uint8_t CALLBACK_HIDParser_FilterHIDReportItem(HID_ReportItem_t* const CurrentIt
 	 * only store BUTTON and GENERIC_DESKTOP_CONTROL items into the Processed HID Report
 	 * structure to save RAM and ignore the rest
 	 */
-     /*
-	return ((CurrentItem->Attributes.Usage.Page == USAGE_PAGE_BUTTON) ||
-	        (CurrentItem->Attributes.Usage.Page == USAGE_PAGE_GENERIC_DCTRL) ||
-	        (CurrentItem->Attributes.Usage.Page == USAGE_X) ||
-	        (CurrentItem->Attributes.Usage.Page == USAGE_Y) ||
-	        (CurrentItem->Attributes.Usage.Page == USAGE_Z));
-            */
 
-            // 0x09 - button
-            // 0x30 - X axis
-            // 0x31 - Y axis
-            // 0x32 - Z axis
-            // 0x35 - Rz axis
-            // 0x36 - slider
-
-    return (((CurrentItem->Attributes.Usage.Page == 0x09) && (CurrentItem->Attributes.Usage.Usage < 5)) ||
-            (CurrentItem->Attributes.Usage.Usage == 0x30) ||
-            (CurrentItem->Attributes.Usage.Usage == 0x31) ||
-            (CurrentItem->Attributes.Usage.Usage == 0x32) ||
-            (CurrentItem->Attributes.Usage.Usage == 0x35) ||
-            (CurrentItem->Attributes.Usage.Usage == 0x36));
+    return (((CurrentItem->Attributes.Usage.Page == USAGE_PAGE_BUTTON) && (CurrentItem->Attributes.Usage.Usage < 5)) ||
+            (CurrentItem->Attributes.Usage.Usage == USAGE_X) ||
+            (CurrentItem->Attributes.Usage.Usage == USAGE_Y) ||
+            (CurrentItem->Attributes.Usage.Usage == USAGE_Z) ||
+            (CurrentItem->Attributes.Usage.Usage == USAGE_RZ) ||
+            (CurrentItem->Attributes.Usage.Usage == USAGE_SLIDER));
 
 }
 

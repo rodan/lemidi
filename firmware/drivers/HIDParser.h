@@ -374,6 +374,9 @@
 	/** HID Report Descriptor Usage value for a Y axis movement. */
 	#define USAGE_Z                     0x32
 
+	#define USAGE_RZ                    0x35
+	#define USAGE_SLIDER                0x36
+
 	/** HID Report Descriptor Usage Page value for a toggle button. */
 	#define USAGE_PAGE_BUTTON           0x09
 

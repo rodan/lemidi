@@ -1097,7 +1097,7 @@ uint8_t getNextInterface(struct ENUMERATION_INFO * ei, struct UHS_EpInfo * pep, 
                 if (ty == USB_DESCRIPTOR_ENDPOINT) {
                     //HOST_DUBUG("ENDPOINT DESCRIPTOR: %i\r\n", epc);
                     ptr = (uint8_t *) (&(ei->interface.epInfo[epc].bEndpointAddress));
-                    for (unsigned int i = 0; i < sizeof(struct ENDPOINT_INFO); i++) {
+                    for (i = 0; i < sizeof(struct ENDPOINT_INFO); i++) {
                         rcode = getone(pep, left, read, data, offset);
                         if (rcode) {
                             //HOST_DUBUG("ENDPOINT DESCRIPTOR DIED LATE\r\n");
