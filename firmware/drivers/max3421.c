@@ -222,7 +222,7 @@ void MAX3421_sm(void)
 
 // function that rescales the input value to an unsigned uint8_t
 // will work as long as max <= 2^16
-uint8_t axis_rescale(const uint32_t value, const uint32_t min, const uint32_t max)
+uint8_t axis_rescale(const int32_t value, const int32_t min, const int32_t max)
 {
     uint8_t rv;
     uint64_t temp;
