@@ -1,6 +1,6 @@
 
  an interface based on a MSP430F5510 that allows the use of usb 1.x-2.0 joysticks 
- to be used with retro gaming PCs that have a midi/joystick game port.
+ with retro gaming PCs that have a game port.
 
  source:       https://github.com/rodan/lemidi
                https://cadlab.io/projects/lemidi
@@ -37,6 +37,7 @@ green led - ON  - if peripheral is supported and succesfully initialized
 
 red led -   ON  - if init failed or during overcurrent condition
            OFF  - end of init
+           OFF  - end of overcurrent condition
    short blink  - during device power-on
 
 
