@@ -1,5 +1,6 @@
 
- an interface based on a MSP430F5510 that allows the use of usb 1.x-2.0 joysticks to be used with retro gaming PCs that have a midi/joystick port.
+ an interface based on a MSP430F5510 that allows the use of usb 1.x-2.0 joysticks 
+ to be used with retro gaming PCs that have a midi/joystick game port.
 
  source:       https://github.com/rodan/lemidi
                https://cadlab.io/projects/lemidi
@@ -17,4 +18,25 @@
 
     Genius F-23
         ID 0458:1004 KYE Systems Corp. (Mouse Systems) Flight2000 F-23 Joystick
+
+ tested game ports:
+
+    Sound Blaster Live! CT-4810
+    (any game port should be supported)
+
+ the interface has an inbuilt overcurrent protection that activates if the 
+ connected peripheral sinks over 200mA on the 5V bus. once the peripheral is 
+ removed service will resume.
+
+
+LED statuses:
+
+green led - ON  - if peripheral is supported and succesfully initialized
+           OFF  - if supported peripheral is disconnected
+           OFF  - if overcurrent condition is triggered
+
+red led -   ON  - if init failed or during overcurrent condition
+           OFF  - end of init
+   short blink  - during device power-on
+
 
